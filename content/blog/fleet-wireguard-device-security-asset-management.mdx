@@ -1,104 +1,220 @@
 ---
-title: "Fleet: WireGuard Device Security and Asset Management"
-excerpt: "How Fleet enables WireGuard-based device security, endpoint visibility, and structured asset management for modern teams."
+title: "Fleet + OpenEDR + Wazuh: A Unified Stack for SOC 2, HIPAA & PCI DSS Compliance"
+excerpt: "A technical deep-dive into combining Fleet, OpenEDR, and Wazuh into a cohesive compliance stack that produces audit-ready evidence for SOC 2, HIPAA, and PCI DSS."
 category: "Asset Management"
-date: "2026-02-26"
-readTime: "9 min"
+date: "2026-02-28"
+readTime: "15 min"
 ---
 
-## Overview
+*Security Engineering · Technical Deep-Dive*
 
-Fleet provides:
+Security compliance frameworks exist to answer one uncomfortable question: Can you prove your systems are secure? Not claim it — prove it with logs, alerts, and audit trails that hold up under third-party scrutiny. This document walks through a practical architecture combining Fleet (osquery management), OpenEDR (endpoint detection and response), and Wazuh (SIEM + compliance monitoring) into a cohesive stack that produces the evidence SOC 2, HIPAA, and PCI DSS auditors require.
 
-- Device inventory visibility
-- Endpoint query capabilities
-- Policy enforcement
-- Secure remote access
-- Asset tracking across users and devices
+---
 
-When combined with WireGuard, it strengthens:
+## Why These Three Tools?
 
-- Encrypted device connectivity
-- Controlled access to internal resources
-- Zero-trust style architecture
+### Fleet — Query & Inventory Layer
 
-## WireGuard Integration Concept
+Fleet is an open-source platform for managing osquery across all endpoints — servers, workstations, and cloud instances. Rather than pushing data, Fleet lets you query your infrastructure like a database. Scheduled queries run continuously and ship results to a central log store, giving auditors a queryable record of system state over time rather than a point-in-time snapshot.
 
-WireGuard provides:
+### OpenEDR — Behavioral Detection Layer
 
-- Lightweight VPN tunnels
-- Strong encryption
-- Minimal attack surface
-- High performance connectivity
+OpenEDR provides continuous behavioral monitoring — watching for suspicious process trees, credential access patterns, lateral movement, and file system anomalies. It generates telemetry modeled on the MITRE ATT&CK framework, capturing the full story of what happened on an endpoint: which process spawned what child, what file was accessed, what network connection was established.
 
-Fleet complements this by:
+### Wazuh — SIEM & Compliance Engine
 
-- Tracking which device owns which key
-- Mapping devices to users
-- Monitoring device posture
-- Logging access patterns
+Wazuh is the integration layer. It ingests logs from virtually any source, applies correlation rules to detect threats and policy violations, and ships with out-of-the-box compliance decoders for SOC 2, HIPAA, PCI DSS, NIST 800-53, and GDPR. Its compliance dashboards map every event to specific control requirements, producing audit-ready reporting without weeks of manual work.
 
-## Asset Management Structure
+---
 
-Core asset categories:
+## Compliance Control Mapping
 
-- Users
-- Devices
-- Vendors
-- Access policies
+The same telemetry stream simultaneously satisfies requirements across all three frameworks:
 
-Each device record can include:
+| Framework | Control Requirement | How the Stack Satisfies It |
+|---|---|---|
+| SOC 2 CC6.1 | Logical access controls | Fleet queries for unauthorized accounts; Wazuh alerts on privilege escalation via OpenEDR |
+| SOC 2 CC7.2 | System monitoring for anomalies | OpenEDR continuous behavioral monitoring; Wazuh correlation and alerting |
+| HIPAA §164.312(b) | Audit controls — hardware, software, activity | Fleet captures system state; OpenEDR captures process/file activity; Wazuh provides 90-day+ retention |
+| HIPAA §164.312(a) | Encryption and decryption | Fleet queries disk encryption status (FileVault/BitLocker); Wazuh alerts on non-compliant hosts |
+| PCI DSS 10.2 | Audit log implementation | Wazuh aggregates logs from Fleet, OpenEDR, and OS event logs into immutable OpenSearch store |
+| PCI DSS 10.6 | Daily log review | Wazuh automated rule engine reviews all events continuously; critical alerts trigger notifications |
+| PCI DSS 11.5 | Change detection | Fleet detects software changes; OpenEDR detects file modifications; Wazuh FIM for config files |
 
-- Owner
-- Operating system
-- Encryption status
-- Installed software
-- Last check-in
-- Assigned access roles
+---
 
-## User Access Governance
+## Integration Setup
 
-Fleet enables:
+### Step 1: Configure Fleet Log Output
 
-- Role-based access
-- Query-based compliance checks
-- Device approval workflows
-- Audit logging
+Set Fleet to write osquery results as JSON to a log file that can be picked up by Filebeat:
 
-This allows teams to:
+```yaml
+# fleet.yml — result log configuration
+logging:
+  result:
+    plugin: filesystem
+    config:
+      result_log_file: /var/log/fleet/osquery_results.log
+  status:
+    plugin: filesystem
+    config:
+      status_log_file: /var/log/fleet/osquery_status.log
+```
 
-- Remove stale devices
-- Detect unauthorized software
-- Enforce encryption policies
-- Validate patch levels
+### Step 2: Forward Fleet Logs to Wazuh via Filebeat
 
-## Security Benefits
+```yaml
+# filebeat.yml
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/fleet/osquery_results.log
+    fields:
+      source: fleet-osquery
+      compliance: true
 
-- Centralized visibility
-- Reduced shadow IT
-- Enforced endpoint compliance
-- Structured audit readiness
+output.logstash:
+  hosts: ["wazuh-manager:5044"]
+  ssl.certificate_authorities: ["/etc/filebeat/wazuh-ca.pem"]
+```
 
-## Infrastructure Flow
+### Step 3: Ingest OpenEDR Telemetry via Wazuh Agent
 
-- Device enrolls in Fleet
-- WireGuard key assigned
-- Policies applied
-- Queries run on schedule
-- Results logged for compliance
-- Access granted or restricted
+Deploy the Wazuh agent alongside OpenEDR on each endpoint. Configure the agent to read OpenEDR's JSON telemetry directly:
 
-## Why This Matters
+```xml
+<!-- ossec.conf — on each endpoint -->
+<ossec_config>
+  <localfile>
+    <log_format>json</log_format>
+    <location>C:\ProgramData\OpenEDR\Logs\*.json</location>
+    <label key="source">openedr</label>
+  </localfile>
+  <!-- Windows Security Event Log for HIPAA audit trail -->
+  <localfile>
+    <log_format>eventchannel</log_format>
+    <location>Security</location>
+  </localfile>
+</ossec_config>
+```
 
-Modern asset management requires:
+### Step 4: Add Wazuh Rules for OpenEDR Events
 
-- Real-time device state
-- Encrypted connectivity
-- Clear ownership mapping
-- Structured reporting
+Map OpenEDR's MITRE ATT&CK categories to compliance control groups so Wazuh tags events automatically:
 
-Fleet combined with WireGuard creates:
+```xml
+<!-- openedr_rules.xml -->
+<group name="openedr,mitre,">
+  <rule id="91001" level="12">
+    <decoded_as>json</decoded_as>
+    <field name="source">openedr</field>
+    <field name="threat.type">credential_access</field>
+    <description>OpenEDR: Credential access attempt detected</description>
+    <mitre><id>T1003</id></mitre>
+    <group>pci_dss_10.6.1,hipaa_164.312.b,</group>
+  </rule>
+</group>
+```
 
-- Secure remote device control
-- Continuous compliance visibility
-- Scalable asset governance
+---
+
+## Key Fleet Compliance Queries
+
+Schedule these osquery queries in Fleet to continuously collect evidence. Results are forwarded to Wazuh automatically.
+
+### Disk Encryption Status — HIPAA / SOC 2
+
+Detects any unencrypted disks across all hosts:
+
+```sql
+SELECT de.name, de.encrypted, de.type, h.hostname
+FROM disk_encryption de
+JOIN system_info h
+WHERE de.encrypted = 0;
+```
+
+### Local Admin Accounts — SOC 2 CC6 / PCI DSS 8
+
+Lists all non-root privileged accounts:
+
+```sql
+SELECT u.username, u.uid, g.groupname
+FROM users u
+JOIN user_groups ug ON u.uid = ug.uid
+JOIN groups g ON ug.gid = g.gid
+WHERE g.groupname IN ('admin', 'sudo', 'wheel')
+  AND u.username != 'root';
+```
+
+### Outdated Packages — PCI DSS 6 / SOC 2 CC7
+
+Cross-references installed packages against a vulnerability list:
+
+```sql
+SELECT name, version, source
+FROM deb_packages
+WHERE name IN ('openssl', 'libssl-dev', 'curl')
+ORDER BY name;
+```
+
+---
+
+## Log Retention by Framework
+
+Configure Wazuh's OpenSearch Index Lifecycle Management (ILM) to meet each framework's retention requirements:
+
+| Tier | Duration | Purpose |
+|---|---|---|
+| Hot | 0–30 days | Full resolution, immediate query access for incident response |
+| Warm | 30–365 days | Compressed, available within minutes — satisfies PCI DSS 12-month requirement |
+| Cold/Archive | 1–6 years | Encrypted snapshots to S3-compatible storage — required for HIPAA's 6-year mandate |
+| SIEM access logs | Ongoing | Record of who queried the SIEM and when — required for SOC 2 CC6.1 |
+
+---
+
+## Alerting Configuration
+
+Route Wazuh alerts by severity to ensure the right team is notified at the right time:
+
+| Severity | Destination | Trigger Conditions |
+|---|---|---|
+| Level 12+ (critical) | PagerDuty / OpsGenie | Active threats, credential access, policy breach |
+| Level 8–11 (high) | Slack #security | New admin accounts, failed login bursts, config drift |
+| Weekly digest | Email | Compliance pass/fail rates and alert trends |
+| Pre-audit export | PDF | Wazuh compliance dashboards export directly for SOC 2 / PCI evidence packages |
+
+---
+
+## Answering Auditor Questions
+
+**"Show me your access control monitoring."**
+Export the Wazuh SOC 2 CC6 dashboard. Fleet query history shows every host's user account state across the entire audit period.
+
+**"Show me your incident detection capability."**
+OpenEDR's MITRE ATT&CK coverage map combined with Wazuh rule statistics demonstrates active detection across the full attack surface.
+
+**"Were there any security incidents during the audit period?"**
+Wazuh's alert history provides a complete, timestamped, immutable record. Incidents present means your detection-and-response process worked as designed.
+
+**"How do you detect unauthorized software changes?"**
+Fleet's software inventory queries and Wazuh File Integrity Monitoring (FIM) provide a continuous record of what was installed, when, and on which host.
+
+---
+
+## Getting Started
+
+Deploy in this order to reach a working compliance baseline as quickly as possible:
+
+1. Deploy Wazuh Manager + Indexer + Dashboard *(min. 4-core, 8GB RAM for production)*
+2. Install Wazuh agents on all in-scope endpoints
+3. Stand up Fleet server and enroll endpoints with the osquery agent
+4. Configure Fleet → Filebeat → Wazuh log pipeline
+5. Enable Wazuh compliance modules: PCI DSS, HIPAA, NIST 800-53
+6. Schedule Fleet compliance queries (disk encryption, user accounts, software inventory)
+7. Configure alert routing to PagerDuty and Slack
+8. Set ILM retention policies matching your longest compliance requirement
+
+This architecture scales from a 50-endpoint startup pursuing SOC 2 Type I to a 10,000-endpoint enterprise maintaining PCI DSS certification. The open-source foundation keeps licensing costs near zero, and the modular design allows adding commercial EDR feeds, cloud security logs, or network monitoring without replacing the core pipeline.
