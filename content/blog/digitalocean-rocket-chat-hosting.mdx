@@ -1,0 +1,56 @@
+---
+title: "DigitalOcean + Rocket.Chat: Practical Hosting Overview"
+excerpt: "A practical deployment guide for hosting Rocket.Chat on DigitalOcean with production-ready infrastructure considerations."
+category: "App + API Hosting"
+date: "2026-02-24"
+readTime: "7 min"
+---
+
+## What You're Hosting
+
+- Node.js runtime
+- MongoDB database
+- Reverse proxy (Nginx or Caddy)
+- SSL certificate
+- Persistent file storage
+
+## Infrastructure on DigitalOcean
+
+- Droplets (Ubuntu 22.04 LTS recommended)
+- Managed MongoDB (recommended for production)
+- VPC networking
+- Cloud Firewalls
+- Snapshots & automated backups
+
+## Recommended Production Architecture
+
+- App Droplet running Rocket.Chat via Docker
+- Managed MongoDB cluster
+- Object storage (DigitalOcean Spaces) for uploads
+- Nginx reverse proxy
+- Let's Encrypt SSL
+
+## Deployment Flow
+
+- Create Droplet
+- Install Docker & Docker Compose
+- Configure docker-compose.yml
+- Define environment variables
+- Start containers
+- Configure reverse proxy
+- Enable SSL
+- Configure firewall rules
+
+## Scaling Strategy
+
+- Increase Droplet size vertically first
+- Move database to managed service early
+- Offload uploads to object storage
+- Introduce load balancer when needed
+
+## Benefits
+
+- Full infrastructure control
+- Predictable pricing
+- API extensibility
+- Custom compliance configuration
