@@ -29,7 +29,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
-        <div className="container max-w-3xl py-12">
+        <div className="mx-auto w-full max-w-3xl px-6 sm:px-12 lg:px-16 py-12">
           <Link
             href="/blog"
             className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"

@@ -8,7 +8,7 @@ export default function Home() {
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
-        <div className="container py-12">
+        <div className="mx-auto w-full max-w-[1400px] px-6 sm:px-12 lg:px-24 py-12">
           <div className="mb-10 max-w-lg">
             <h1 className="font-heading text-2xl font-bold tracking-tight text-foreground mb-2">
               Open Technology
