@@ -10,7 +10,7 @@ export default async function BlogPage() {
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
-        <div className="page-wrap py-12">
+        <div className="mx-auto w-full max-w-5xl px-6 sm:px-8 py-12">
           <Suspense>
             <BlogList posts={posts} />
           </Suspense>

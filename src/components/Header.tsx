@@ -23,7 +23,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-      <div className="page-wrap flex h-16 items-center justify-between">
+      <div className="mx-auto w-full max-w-5xl px-6 sm:px-8 flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-md gradient-brand">
             <span className="text-sm font-bold text-primary-foreground">OT</span>
