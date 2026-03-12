@@ -3,6 +3,7 @@ import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageWrap from "@/components/PageWrap";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
@@ -29,7 +30,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
-        <div className="page-wrap py-12" style={{ maxWidth: '48rem' }}>
+        <PageWrap className="py-12" style={{ maxWidth: '48rem' }}>
           <Link
             href="/blog"
             className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
@@ -67,7 +68,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <article className="prose prose-neutral dark:prose-invert max-w-none">
             <MDXRemote source={post.content} />
           </article>
-        </div>
+        </PageWrap>
       </main>
       <Footer />
     </div>

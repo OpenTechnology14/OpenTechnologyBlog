@@ -2,14 +2,15 @@ import TechBullets from "@/components/TechBullets";
 import ContactForm from "@/components/ContactForm";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageWrap from "@/components/PageWrap";
 
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
-        <div className="page-wrap py-12">
-          <div className="mb-10 max-w-lg mx-auto">
+        <PageWrap className="py-12">
+          <div className="mb-10 max-w-lg">
             <h1 className="font-heading text-2xl font-bold tracking-tight text-foreground mb-2">
               Open Technology
             </h1>
@@ -23,10 +24,10 @@ export default function Home() {
             <TechBullets />
           </div>
 
-          <div className="max-w-md mx-auto">
+          <div className="max-w-md">
             <ContactForm />
           </div>
-        </div>
+        </PageWrap>
       </main>
       <Footer />
     </div>

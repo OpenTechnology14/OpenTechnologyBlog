@@ -12,6 +12,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
+const wrapStyle: React.CSSProperties = {
+  width: "100%",
+  maxWidth: "64rem",
+  marginLeft: "auto",
+  marginRight: "auto",
+  paddingLeft: "1.5rem",
+  paddingRight: "1.5rem",
+};
+
 export default function Header() {
   const [isDark, setIsDark] = useState(false);
   const pathname = usePathname();
@@ -23,7 +32,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-      <div className="page-wrap flex h-16 items-center justify-between">
+      <div style={wrapStyle} className="flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-md gradient-brand">
             <span className="text-sm font-bold text-primary-foreground">OT</span>
