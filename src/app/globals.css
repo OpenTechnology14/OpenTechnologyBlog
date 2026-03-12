@@ -133,3 +133,12 @@
 @utility shadow-card-hover {
   box-shadow: var(--shadow-card-hover);
 }
+
+@utility page-wrap {
+  width: 100%;
+  max-width: 64rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
