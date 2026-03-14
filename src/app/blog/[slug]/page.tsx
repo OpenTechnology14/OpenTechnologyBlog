@@ -14,6 +14,8 @@ import SecurityMatrix from "@/components/mdx/SecurityMatrix";
 import CostSavings from "@/components/mdx/CostSavings";
 import PikaPodsApps from "@/components/mdx/PikaPodsApps";
 import PikaPodsSavings from "@/components/mdx/PikaPodsSavings";
+import LogRetention from "@/components/mdx/LogRetention";
+import AlertingConfig from "@/components/mdx/AlertingConfig";
 import React from "react";
 
 function MdxTable(props: React.HTMLAttributes<HTMLTableElement>) {
@@ -145,6 +147,8 @@ function applyInjections(content: string, injections: VisualInjection[]): Conten
 const SLUG_VISUALS: Record<string, VisualInjection[]> = {
   "fleet-wireguard-device-security-asset-management": [
     { heading: "## Compliance Control Mapping", component: <ComplianceMatrix />, skipSection: true },
+    { heading: "## Log Retention by Framework", component: <LogRetention />, skipSection: true },
+    { heading: "## Alerting Configuration", component: <AlertingConfig />, skipSection: true },
   ],
   "brave-browser-workflow-management": [
     { heading: "## Security Comparison", component: <SecurityMatrix />, skipSection: true },
