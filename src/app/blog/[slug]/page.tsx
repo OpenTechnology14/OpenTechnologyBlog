@@ -9,6 +9,9 @@ import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import { Category } from "@/data/content";
 import CollapsibleCode from "@/components/mdx/CollapsibleCode";
+import ComplianceMatrix from "@/components/mdx/ComplianceMatrix";
+import SecurityMatrix from "@/components/mdx/SecurityMatrix";
+import CostSavings from "@/components/mdx/CostSavings";
 import React from "react";
 
 function MdxTable(props: React.HTMLAttributes<HTMLTableElement>) {
@@ -87,6 +90,30 @@ const categoryColors: Record<Category, string> = {
   "Asset Management": "bg-destructive/10 text-destructive border-destructive/20",
 };
 
+// Split MDX content at a heading, returning [before_including_heading, after_heading]
+function splitAtHeading(content: string, heading: string): [string, string] | null {
+  const idx = content.indexOf(heading);
+  if (idx === -1) return null;
+  const splitPoint = idx + heading.length;
+  return [content.slice(0, splitPoint), content.slice(splitPoint)];
+}
+
+// Find the next section boundary (--- or ## or ###) and split there
+function splitAtNextSection(content: string): [string, string] {
+  // Look for next heading or horizontal rule after some content
+  const patterns = [/\n---\n/, /\n## /, /\n### /];
+  let earliest = -1;
+  for (const pattern of patterns) {
+    const match = pattern.exec(content.slice(1)); // skip first char to avoid matching at pos 0
+    if (match && match.index !== undefined) {
+      const pos = match.index + 1;
+      if (earliest === -1 || pos < earliest) earliest = pos;
+    }
+  }
+  if (earliest === -1) return [content, ""];
+  return [content.slice(0, earliest), content.slice(earliest)];
+}
+
 export async function generateStaticParams() {
   const posts = getAllPosts();
   return posts.map((p) => ({ slug: p.slug }));
@@ -96,6 +123,60 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const { slug } = await params;
   const post = getPostBySlug(slug);
   if (!post) notFound();
+
+  // Determine slug-specific visual injection
+  type VisualInjection = {
+    heading: string;
+    component: React.ReactNode;
+    skipSection?: boolean; // if true, skip the original markdown section (table) after heading
+  };
+
+  const visuals: Record<string, VisualInjection> = {
+    "fleet-wireguard-device-security-asset-management": {
+      heading: "## Compliance Control Mapping",
+      component: <ComplianceMatrix />,
+      skipSection: true,
+    },
+    "brave-browser-workflow-management": {
+      heading: "## Security Comparison",
+      component: <SecurityMatrix />,
+      skipSection: true,
+    },
+    "digitalocean-rocket-chat-hosting": {
+      heading: "### Dramatic Cost Savings vs. SaaS Alternatives",
+      component: <CostSavings />,
+      skipSection: true,
+    },
+  };
+
+  const injection = visuals[slug];
+
+  // Build article content
+  let articleParts: Array<{ content: string; after?: React.ReactNode }> = [];
+
+  if (injection) {
+    const split = splitAtHeading(post.content, injection.heading);
+    if (split) {
+      const [before, after] = split;
+      let afterContent = after;
+      let skipped = "";
+      if (injection.skipSection) {
+        // Skip the markdown table/content for this section, use visual instead
+        const [sectionContent, rest] = splitAtNextSection(after);
+        skipped = sectionContent;
+        afterContent = rest;
+      }
+      articleParts = [
+        { content: before, after: injection.component },
+        { content: afterContent },
+      ];
+      void skipped; // intentionally skipped — replaced by visual component
+    } else {
+      articleParts = [{ content: post.content }];
+    }
+  } else {
+    articleParts = [{ content: post.content }];
+  }
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -137,7 +218,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </div>
 
           <article className="prose prose-neutral dark:prose-invert max-w-none">
-            <MDXRemote source={post.content} components={mdxComponents} />
+            {articleParts.map((part, i) => (
+              <React.Fragment key={i}>
+                {part.content && (
+                  <MDXRemote source={part.content} components={mdxComponents} />
+                )}
+                {part.after}
+              </React.Fragment>
+            ))}
           </article>
         </PageWrap>
       </main>
