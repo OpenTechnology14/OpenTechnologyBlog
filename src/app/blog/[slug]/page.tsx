@@ -8,6 +8,17 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import { Category } from "@/data/content";
+import CollapsibleCode from "@/components/mdx/CollapsibleCode";
+import SecurityMatrix from "@/components/mdx/SecurityMatrix";
+import ComplianceMatrix from "@/components/mdx/ComplianceMatrix";
+import AlertingMatrix from "@/components/mdx/AlertingMatrix";
+
+const mdxComponents = {
+  pre: CollapsibleCode,
+  SecurityMatrix,
+  ComplianceMatrix,
+  AlertingMatrix,
+};
 
 const categoryColors: Record<Category, string> = {
   "App + API Dev": "bg-primary/10 text-primary border-primary/20",
@@ -66,7 +77,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </div>
 
           <article className="prose prose-neutral dark:prose-invert max-w-none">
-            <MDXRemote source={post.content} />
+            <MDXRemote source={post.content} components={mdxComponents} />
           </article>
         </PageWrap>
       </main>

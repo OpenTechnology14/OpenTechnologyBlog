@@ -32,15 +32,7 @@ Wazuh is the integration layer. It ingests logs from virtually any source, appli
 
 The same telemetry stream simultaneously satisfies requirements across all three frameworks:
 
-| Framework | Control Requirement | How the Stack Satisfies It |
-|---|---|---|
-| SOC 2 CC6.1 | Logical access controls | Fleet queries for unauthorized accounts; Wazuh alerts on privilege escalation via OpenEDR |
-| SOC 2 CC7.2 | System monitoring for anomalies | OpenEDR continuous behavioral monitoring; Wazuh correlation and alerting |
-| HIPAA §164.312(b) | Audit controls — hardware, software, activity | Fleet captures system state; OpenEDR captures process/file activity; Wazuh provides 90-day+ retention |
-| HIPAA §164.312(a) | Encryption and decryption | Fleet queries disk encryption status (FileVault/BitLocker); Wazuh alerts on non-compliant hosts |
-| PCI DSS 10.2 | Audit log implementation | Wazuh aggregates logs from Fleet, OpenEDR, and OS event logs into immutable OpenSearch store |
-| PCI DSS 10.6 | Daily log review | Wazuh automated rule engine reviews all events continuously; critical alerts trigger notifications |
-| PCI DSS 11.5 | Change detection | Fleet detects software changes; OpenEDR detects file modifications; Wazuh FIM for config files |
+<ComplianceMatrix />
 
 ---
 
@@ -179,12 +171,7 @@ Configure Wazuh's OpenSearch Index Lifecycle Management (ILM) to meet each frame
 
 Route Wazuh alerts by severity to ensure the right team is notified at the right time:
 
-| Severity | Destination | Trigger Conditions |
-|---|---|---|
-| Level 12+ (critical) | PagerDuty / OpsGenie | Active threats, credential access, policy breach |
-| Level 8–11 (high) | Slack #security | New admin accounts, failed login bursts, config drift |
-| Weekly digest | Email | Compliance pass/fail rates and alert trends |
-| Pre-audit export | PDF | Wazuh compliance dashboards export directly for SOC 2 / PCI evidence packages |
+<AlertingMatrix />
 
 ---
 
