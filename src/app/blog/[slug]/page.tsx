@@ -9,15 +9,75 @@ import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import { Category } from "@/data/content";
 import CollapsibleCode from "@/components/mdx/CollapsibleCode";
-import SecurityMatrix from "@/components/mdx/SecurityMatrix";
-import ComplianceMatrix from "@/components/mdx/ComplianceMatrix";
-import AlertingMatrix from "@/components/mdx/AlertingMatrix";
+import React from "react";
+
+function MdxTable(props: React.HTMLAttributes<HTMLTableElement>) {
+  return (
+    <div className="my-6 w-full overflow-x-auto rounded-lg border"
+         style={{ borderColor: 'hsl(var(--border))' }}>
+      <table
+        className="w-full border-collapse text-sm"
+        {...props}
+      />
+    </div>
+  );
+}
+
+function MdxThead(props: React.HTMLAttributes<HTMLTableSectionElement>) {
+  return (
+    <thead
+      className="border-b"
+      style={{
+        borderColor: 'hsl(var(--border))',
+        background: 'hsl(var(--primary) / 0.08)',
+      }}
+      {...props}
+    />
+  );
+}
+
+function MdxTbody(props: React.HTMLAttributes<HTMLTableSectionElement>) {
+  return <tbody {...props} />;
+}
+
+function MdxTr(props: React.HTMLAttributes<HTMLTableRowElement>) {
+  return (
+    <tr
+      className="border-b last:border-b-0 transition-colors even:bg-[hsl(var(--muted)/0.4)]"
+      style={{ borderColor: 'hsl(var(--border))' }}
+      {...props}
+    />
+  );
+}
+
+function MdxTh(props: React.HTMLAttributes<HTMLTableCellElement>) {
+  return (
+    <th
+      className="px-4 py-3 text-left font-semibold tracking-wide text-xs uppercase"
+      style={{ color: 'hsl(var(--foreground))' }}
+      {...props}
+    />
+  );
+}
+
+function MdxTd(props: React.TdHTMLAttributes<HTMLTableCellElement>) {
+  return (
+    <td
+      className="px-4 py-3 align-top"
+      style={{ color: 'hsl(var(--foreground) / 0.85)' }}
+      {...props}
+    />
+  );
+}
 
 const mdxComponents = {
   pre: CollapsibleCode,
-  SecurityMatrix,
-  ComplianceMatrix,
-  AlertingMatrix,
+  table: MdxTable,
+  thead: MdxThead,
+  tbody: MdxTbody,
+  tr: MdxTr,
+  th: MdxTh,
+  td: MdxTd,
 };
 
 const categoryColors: Record<Category, string> = {
