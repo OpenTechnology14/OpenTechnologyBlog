@@ -25,13 +25,13 @@ export default function TechBullets() {
           const tools = TECH_TOOLS.filter((t) => t.category === cat);
           return (
             <div key={cat}>
-              <div className="flex items-center gap-2 mb-3">
+              <div className="flex items-center justify-center gap-2 mb-3">
                 <span className={`h-2 w-2 rounded-full bg-current ${categoryColors[cat]}`} />
                 <h3 className={`font-semibold text-sm uppercase tracking-wider ${categoryColors[cat]}`}>
                   {cat}
                 </h3>
               </div>
-              <div className="flex flex-wrap gap-3 pl-4">
+              <div className="flex flex-wrap justify-center gap-3">
                 {tools.map((tool) => (
                   <Tooltip key={tool.name}>
                     <TooltipTrigger asChild>

@@ -9,8 +9,8 @@ export default function Home() {
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
-        <PageWrap className="py-12">
-          <div className="mb-10 max-w-lg">
+        <PageWrap className="py-12 flex flex-col items-center">
+          <div className="mb-10 max-w-lg text-center">
             <h1 className="font-heading text-2xl font-bold tracking-tight text-foreground mb-2">
               Open Technology
             </h1>
@@ -20,11 +20,11 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="mb-16">
+          <div className="mb-16 w-full">
             <TechBullets />
           </div>
 
-          <div className="max-w-md">
+          <div className="w-full max-w-md">
             <ContactForm />
           </div>
         </PageWrap>
