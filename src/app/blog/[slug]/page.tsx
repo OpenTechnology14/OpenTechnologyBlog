@@ -16,6 +16,7 @@ import PikaPodsApps from "@/components/mdx/PikaPodsApps";
 import PikaPodsSavings from "@/components/mdx/PikaPodsSavings";
 import LogRetention from "@/components/mdx/LogRetention";
 import AlertingConfig from "@/components/mdx/AlertingConfig";
+import ContactForm from "@/components/ContactForm";
 import React from "react";
 
 function MdxTable(props: React.HTMLAttributes<HTMLTableElement>) {
@@ -226,6 +227,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               </React.Fragment>
             ))}
           </article>
+
+          <div className="mt-16 max-w-md">
+            <ContactForm />
+          </div>
         </PageWrap>
       </main>
       <Footer />
