@@ -17,9 +17,7 @@ export interface TechTool {
 
 export const TECH_TOOLS: TechTool[] = [
   { name: "Penpot", icon: "🎨", logo: "/logos/penpot.svg", category: "App + API Dev", url: "https://penpot.app" },
-  { name: "DeepSeek", icon: "🔍", logo: "/logos/deepseek.png", category: "App + API Dev", url: "https://deepseek.com" },
   { name: "Claude", icon: "🤖", logo: "/logos/claude.svg", category: "App + API Dev", url: "https://claude.ai" },
-  { name: "OpenAI", icon: "🧠", logo: "/logos/openai.svg", category: "App + API Dev", url: "https://openai.com" },
   { name: "VS Code", icon: "💻", logo: "/logos/vscode.svg", category: "App + API Dev", url: "https://code.visualstudio.com" },
   { name: "Codesandbox", icon: "📦", logo: "/logos/codesandbox.svg", category: "App + API Dev", url: "https://codesandbox.io" },
   { name: "Gitlab", icon: "🦊", logo: "/logos/gitlab.svg", category: "App + API Hosting", url: "https://gitlab.com" },
@@ -33,7 +31,6 @@ export const TECH_TOOLS: TechTool[] = [
   { name: "Brave", icon: "🦁", logo: "/logos/brave.svg", category: "Workflow Management", url: "https://brave.com" },
   { name: "Bitwarden", icon: "🔐", logo: "/logos/bitwarden.svg", category: "Workflow Management", url: "https://bitwarden.com" },
   { name: "Plane", icon: "✈️", logo: "/logos/plane.png", category: "Workflow Management", url: "https://plane.so" },
-  { name: "Ai Table", icon: "📊", logo: "/logos/aitable.png", category: "Workflow Management", url: "https://aitable.ai" },
   { name: "Rocket Chat", icon: "🚀", logo: "/logos/rocketchat.svg", category: "Workflow Management", url: "https://rocket.chat" },
   { name: "Nextcloud", icon: "☁️", logo: "/logos/nextcloud.svg", category: "Asset Management", url: "https://nextcloud.com" },
   { name: "Metabase", icon: "📈", logo: "/logos/metabase.svg", category: "Asset Management", url: "https://metabase.com" },
