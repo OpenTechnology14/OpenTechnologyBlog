@@ -14,14 +14,31 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Send } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 export default function ContactForm() {
   const [email, setEmail] = useState("");
   const [comment, setComment] = useState("");
   const [category, setCategory] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+
+    const { error } = await supabase.from("contact_submissions").insert({
+      email,
+      message: comment,
+      category,
+    });
+
+    setLoading(false);
+
+    if (error) {
+      toast.error("Something went wrong. Please try again.");
+      return;
+    }
+
     toast.success("Message sent! Thanks for reaching out.");
     setEmail("");
     setComment("");
@@ -61,9 +78,13 @@ export default function ContactForm() {
             ))}
           </SelectContent>
         </Select>
-        <Button type="submit" className="w-full gradient-brand text-primary-foreground">
+        <Button
+          type="submit"
+          disabled={loading}
+          className="w-full gradient-brand text-primary-foreground"
+        >
           <Send className="mr-2 h-4 w-4" />
-          Send Message
+          {loading ? "Sending…" : "Send Message"}
         </Button>
       </form>
     </section>
