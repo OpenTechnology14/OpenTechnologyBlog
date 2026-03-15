@@ -19,7 +19,7 @@ export interface TechTool {
 
 export const TECH_TOOLS: TechTool[] = [
   { name: "Penpot",      icon: "🎨", logo: "/logos/penpot.svg",      category: "App + API Dev",       url: "https://penpot.app",                description: "Open-source design & prototyping tool",              darkInvert: true },
-  { name: "Claude",      icon: "🤖", logo: "/logos/claude.svg",      category: "App + API Dev",       url: "https://claude.ai",                 description: "Anthropic's AI assistant for coding & analysis" },
+  { name: "Claude",      icon: "🤖", logo: "/logos/claude.svg",      category: "App + API Dev",       url: "https://claude.ai",                 description: "Anthropic's AI assistant for coding & analysis",             darkInvert: true },
   { name: "VS Code",     icon: "💻", logo: "/logos/vscode.svg",      category: "App + API Dev",       url: "https://code.visualstudio.com",     description: "Extensible code editor by Microsoft" },
   { name: "Codesandbox", icon: "📦", logo: "/logos/codesandbox.svg", category: "App + API Dev",       url: "https://codesandbox.io",            description: "Browser-based code sandbox & collaboration",         darkInvert: true },
   { name: "Gitlab",      icon: "🦊", logo: "/logos/gitlab.svg",      category: "App + API Hosting",   url: "https://gitlab.com",                description: "Git repository hosting with CI/CD pipelines" },
@@ -28,7 +28,7 @@ export const TECH_TOOLS: TechTool[] = [
   { name: "Vercel",      icon: "▲",  logo: "/logos/vercel.svg",      category: "App + API Hosting",   url: "https://vercel.com",                description: "Frontend cloud platform for Next.js deployments",    darkInvert: true },
   { name: "Pika Pods",   icon: "🫛",                                  category: "App + API Hosting",   url: "https://pikapods.com",              description: "Managed app hosting with one-click containers" },
   { name: "Google",      icon: "🔵", logo: "/logos/google.svg",      category: "App + API Hosting",   url: "https://cloud.google.com",          description: "Cloud infrastructure & developer services" },
-  { name: "AWS",         icon: "☁️", logo: "/logos/aws.svg",         category: "App + API Hosting",   url: "https://aws.amazon.com",            description: "Amazon Web Services cloud platform" },
+  { name: "AWS",         icon: "☁️", logo: "/logos/aws.svg",         category: "App + API Hosting",   url: "https://aws.amazon.com",            description: "Amazon Web Services cloud platform",                         darkInvert: true },
   { name: "Microsoft",   icon: "🪟", logo: "/logos/microsoft.svg",   category: "App + API Hosting",   url: "https://azure.microsoft.com",       description: "Azure cloud & developer ecosystem" },
   { name: "Brave",       icon: "🦁", logo: "/logos/brave.svg",       category: "Workflow Management", url: "https://brave.com",                 description: "Privacy-first browser with built-in ad blocking" },
   { name: "Bitwarden",   icon: "🔐", logo: "/logos/bitwarden.svg",   category: "Workflow Management", url: "https://bitwarden.com",             description: "Open-source password manager" },
