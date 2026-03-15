@@ -41,13 +41,34 @@ export default function TechBullets() {
                       >
                         <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-border bg-card shadow-card transition-all group-hover:shadow-card-hover group-hover:scale-110 group-hover:-translate-y-0.5">
                           {tool.logo ? (
-                            <Image
-                              src={tool.logo}
-                              alt={tool.name}
-                              width={28}
-                              height={28}
-                              className={`object-contain${tool.darkInvert ? " dark:invert dark:brightness-100" : ""}`}
-                            />
+                            tool.darkInvert ? (
+                              <>
+                                {/* Light mode: original */}
+                                <Image
+                                  src={tool.logo}
+                                  alt={tool.name}
+                                  width={28}
+                                  height={28}
+                                  className="object-contain block dark:hidden"
+                                />
+                                {/* Dark mode: white version */}
+                                <Image
+                                  src={tool.logo}
+                                  alt={tool.name}
+                                  width={28}
+                                  height={28}
+                                  className="object-contain hidden dark:block brightness-0 invert"
+                                />
+                              </>
+                            ) : (
+                              <Image
+                                src={tool.logo}
+                                alt={tool.name}
+                                width={28}
+                                height={28}
+                                className="object-contain"
+                              />
+                            )
                           ) : (
                             <span className="text-xl">{tool.icon}</span>
                           )}

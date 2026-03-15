@@ -36,7 +36,7 @@ export const TECH_TOOLS: TechTool[] = [
   { name: "Rocket Chat", icon: "🚀", logo: "/logos/rocketchat.svg",  category: "Workflow Management", url: "https://rocket.chat",               description: "Self-hosted team messaging platform" },
   { name: "Nextcloud",   icon: "☁️", logo: "/logos/nextcloud.svg",   category: "Asset Management",    url: "https://nextcloud.com",             description: "Self-hosted file sync & collaboration suite" },
   { name: "Metabase",    icon: "📈", logo: "/logos/metabase.svg",    category: "Asset Management",    url: "https://metabase.com",              description: "Open-source business analytics & dashboards" },
-  { name: "Wireguard",   icon: "🔒", logo: "/logos/wireguard.svg",   category: "Asset Management",    url: "https://wireguard.com",             description: "Fast, modern VPN protocol" },
+  { name: "Wireguard",   icon: "🔒", logo: "/logos/wireguard.svg",   category: "Asset Management",    url: "https://wireguard.com",             description: "Fast, modern VPN protocol",                          darkInvert: true },
   { name: "Fleet",       icon: "🖥️", logo: "/logos/fleet.png",       category: "Asset Management",    url: "https://fleetdm.com",               description: "Open-source device management & endpoint visibility" },
 ];
 

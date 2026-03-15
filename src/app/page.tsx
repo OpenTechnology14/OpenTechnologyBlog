@@ -47,12 +47,6 @@ export default function Home() {
                   <path d="M3 8h10M9 4l4 4-4 4" />
                 </svg>
               </Link>
-              <a
-                href="#tools"
-                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-all hover:bg-muted active:scale-[0.98]"
-              >
-                Browse tools
-              </a>
             </div>
           </PageWrap>
         </div>
