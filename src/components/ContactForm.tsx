@@ -26,6 +26,12 @@ export default function ContactForm() {
     e.preventDefault();
     setLoading(true);
 
+    if (!supabase) {
+      setLoading(false);
+      toast.error("Contact form is not configured.");
+      return;
+    }
+
     const { error } = await supabase.from("contact_submissions").insert({
       email,
       message: comment,
