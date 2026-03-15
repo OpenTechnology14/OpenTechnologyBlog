@@ -20,7 +20,13 @@ export default function Home() {
 
             <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-[480px] mb-7">
               Exploring the open-source ecosystem — tools, frameworks, and infrastructure
-              for building modern applications without vendor lock-in.
+              for building modern applications without vendor lock-in. App hosting is the
+              only layer where going private or paid makes sense for business — and you&apos;ll
+              still save money.{" "}
+              <Link href="/blog" className="underline underline-offset-2 hover:text-foreground transition-colors">
+                Learn more here
+              </Link>
+              .
             </p>
 
             <div className="flex items-center gap-3 flex-wrap justify-center">
