@@ -191,13 +191,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             Back to blog
           </Link>
 
-          <Badge
-            variant="outline"
-            className={`mb-4 text-xs ${categoryColors[post.category]}`}
-          >
-            {post.category}
-          </Badge>
-
           <h1 className="text-3xl font-bold tracking-tight text-foreground mb-3">
             {post.title}
           </h1>
@@ -215,9 +208,15 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               <Clock className="h-4 w-4" />
               {post.readTime}
             </span>
+            <Badge
+              variant="outline"
+              className={`text-xs ${categoryColors[post.category]}`}
+            >
+              {post.category}
+            </Badge>
           </div>
 
-          <article className="prose prose-neutral dark:prose-invert max-w-none">
+          <article className="prose prose-neutral dark:prose-invert max-w-none overflow-x-hidden w-full">
             {parts.map((part, i) => (
               <React.Fragment key={i}>
                 {part.content && (

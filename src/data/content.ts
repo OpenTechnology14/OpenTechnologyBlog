@@ -13,29 +13,31 @@ export interface TechTool {
   logo?: string;
   category: Category;
   url?: string;
+  description?: string;
+  darkInvert?: boolean;
 }
 
 export const TECH_TOOLS: TechTool[] = [
-  { name: "Penpot", icon: "🎨", logo: "/logos/penpot.svg", category: "App + API Dev", url: "https://penpot.app" },
-  { name: "Claude", icon: "🤖", logo: "/logos/claude.svg", category: "App + API Dev", url: "https://claude.ai" },
-  { name: "VS Code", icon: "💻", logo: "/logos/vscode.svg", category: "App + API Dev", url: "https://code.visualstudio.com" },
-  { name: "Codesandbox", icon: "📦", logo: "/logos/codesandbox.svg", category: "App + API Dev", url: "https://codesandbox.io" },
-  { name: "Gitlab", icon: "🦊", logo: "/logos/gitlab.svg", category: "App + API Hosting", url: "https://gitlab.com" },
-  { name: "GitHub", icon: "🐙", logo: "/logos/github.svg", category: "App + API Hosting", url: "https://github.com" },
-  { name: "Supabase", icon: "⚡", logo: "/logos/supabase.svg", category: "App + API Hosting", url: "https://supabase.com" },
-  { name: "Vercel", icon: "▲", logo: "/logos/vercel.svg", category: "App + API Hosting", url: "https://vercel.com" },
-  { name: "Pika Pods", icon: "🫛", category: "App + API Hosting", url: "https://pikapods.com" },
-  { name: "Google", icon: "🔵", logo: "/logos/google.svg", category: "App + API Hosting", url: "https://cloud.google.com" },
-  { name: "AWS", icon: "☁️", logo: "/logos/aws.svg", category: "App + API Hosting", url: "https://aws.amazon.com" },
-  { name: "Microsoft", icon: "🪟", logo: "/logos/microsoft.svg", category: "App + API Hosting", url: "https://azure.microsoft.com" },
-  { name: "Brave", icon: "🦁", logo: "/logos/brave.svg", category: "Workflow Management", url: "https://brave.com" },
-  { name: "Bitwarden", icon: "🔐", logo: "/logos/bitwarden.svg", category: "Workflow Management", url: "https://bitwarden.com" },
-  { name: "Plane", icon: "✈️", logo: "/logos/plane.png", category: "Workflow Management", url: "https://plane.so" },
-  { name: "Rocket Chat", icon: "🚀", logo: "/logos/rocketchat.svg", category: "Workflow Management", url: "https://rocket.chat" },
-  { name: "Nextcloud", icon: "☁️", logo: "/logos/nextcloud.svg", category: "Asset Management", url: "https://nextcloud.com" },
-  { name: "Metabase", icon: "📈", logo: "/logos/metabase.svg", category: "Asset Management", url: "https://metabase.com" },
-  { name: "Wireguard", icon: "🔒", logo: "/logos/wireguard.svg", category: "Asset Management", url: "https://wireguard.com" },
-  { name: "Fleet", icon: "🖥️", logo: "/logos/fleet.png", category: "Asset Management", url: "https://fleetdm.com" },
+  { name: "Penpot",      icon: "🎨", logo: "/logos/penpot.svg",      category: "App + API Dev",       url: "https://penpot.app",                description: "Open-source design & prototyping tool",              darkInvert: true },
+  { name: "Claude",      icon: "🤖", logo: "/logos/claude.svg",      category: "App + API Dev",       url: "https://claude.ai",                 description: "Anthropic's AI assistant for coding & analysis" },
+  { name: "VS Code",     icon: "💻", logo: "/logos/vscode.svg",      category: "App + API Dev",       url: "https://code.visualstudio.com",     description: "Extensible code editor by Microsoft" },
+  { name: "Codesandbox", icon: "📦", logo: "/logos/codesandbox.svg", category: "App + API Dev",       url: "https://codesandbox.io",            description: "Browser-based code sandbox & collaboration",         darkInvert: true },
+  { name: "Gitlab",      icon: "🦊", logo: "/logos/gitlab.svg",      category: "App + API Hosting",   url: "https://gitlab.com",                description: "Git repository hosting with CI/CD pipelines" },
+  { name: "GitHub",      icon: "🐙", logo: "/logos/github.svg",      category: "App + API Hosting",   url: "https://github.com",                description: "Version control & open-source collaboration",        darkInvert: true },
+  { name: "Supabase",    icon: "⚡", logo: "/logos/supabase.svg",    category: "App + API Hosting",   url: "https://supabase.com",              description: "Open-source Firebase alternative with PostgreSQL" },
+  { name: "Vercel",      icon: "▲",  logo: "/logos/vercel.svg",      category: "App + API Hosting",   url: "https://vercel.com",                description: "Frontend cloud platform for Next.js deployments",    darkInvert: true },
+  { name: "Pika Pods",   icon: "🫛",                                  category: "App + API Hosting",   url: "https://pikapods.com",              description: "Managed app hosting with one-click containers" },
+  { name: "Google",      icon: "🔵", logo: "/logos/google.svg",      category: "App + API Hosting",   url: "https://cloud.google.com",          description: "Cloud infrastructure & developer services" },
+  { name: "AWS",         icon: "☁️", logo: "/logos/aws.svg",         category: "App + API Hosting",   url: "https://aws.amazon.com",            description: "Amazon Web Services cloud platform" },
+  { name: "Microsoft",   icon: "🪟", logo: "/logos/microsoft.svg",   category: "App + API Hosting",   url: "https://azure.microsoft.com",       description: "Azure cloud & developer ecosystem" },
+  { name: "Brave",       icon: "🦁", logo: "/logos/brave.svg",       category: "Workflow Management", url: "https://brave.com",                 description: "Privacy-first browser with built-in ad blocking" },
+  { name: "Bitwarden",   icon: "🔐", logo: "/logos/bitwarden.svg",   category: "Workflow Management", url: "https://bitwarden.com",             description: "Open-source password manager" },
+  { name: "Plane",       icon: "✈️", logo: "/logos/plane.png",       category: "Workflow Management", url: "https://plane.so",                  description: "Open-source project management & issue tracking" },
+  { name: "Rocket Chat", icon: "🚀", logo: "/logos/rocketchat.svg",  category: "Workflow Management", url: "https://rocket.chat",               description: "Self-hosted team messaging platform" },
+  { name: "Nextcloud",   icon: "☁️", logo: "/logos/nextcloud.svg",   category: "Asset Management",    url: "https://nextcloud.com",             description: "Self-hosted file sync & collaboration suite" },
+  { name: "Metabase",    icon: "📈", logo: "/logos/metabase.svg",    category: "Asset Management",    url: "https://metabase.com",              description: "Open-source business analytics & dashboards" },
+  { name: "Wireguard",   icon: "🔒", logo: "/logos/wireguard.svg",   category: "Asset Management",    url: "https://wireguard.com",             description: "Fast, modern VPN protocol" },
+  { name: "Fleet",       icon: "🖥️", logo: "/logos/fleet.png",       category: "Asset Management",    url: "https://fleetdm.com",               description: "Open-source device management & endpoint visibility" },
 ];
 
 export interface BlogPost {

@@ -31,29 +31,37 @@ export default function TechBullets() {
                   {cat}
                 </h3>
               </div>
-              <div className="flex flex-wrap justify-center gap-3">
+              <div className="flex flex-wrap justify-center gap-4">
                 {tools.map((tool) => (
                   <Tooltip key={tool.name}>
                     <TooltipTrigger asChild>
                       <Link
                         href={`/blog?category=${encodeURIComponent(cat)}`}
-                        className="flex h-12 w-12 items-center justify-center rounded-lg border border-border bg-card shadow-card transition-all hover:shadow-card-hover hover:scale-110 hover:-translate-y-0.5"
+                        className="flex flex-col items-center gap-1.5 w-16 group"
                       >
-                        {tool.logo ? (
-                          <Image
-                            src={tool.logo}
-                            alt={tool.name}
-                            width={28}
-                            height={28}
-                            className="object-contain"
-                          />
-                        ) : (
-                          <span className="text-xl">{tool.icon}</span>
-                        )}
+                        <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-border bg-card shadow-card transition-all group-hover:shadow-card-hover group-hover:scale-110 group-hover:-translate-y-0.5">
+                          {tool.logo ? (
+                            <Image
+                              src={tool.logo}
+                              alt={tool.name}
+                              width={28}
+                              height={28}
+                              className={`object-contain${tool.darkInvert ? " dark:invert dark:brightness-100" : ""}`}
+                            />
+                          ) : (
+                            <span className="text-xl">{tool.icon}</span>
+                          )}
+                        </div>
+                        <span className="text-[10px] text-center text-muted-foreground leading-tight line-clamp-2 w-full">
+                          {tool.name}
+                        </span>
                       </Link>
                     </TooltipTrigger>
                     <TooltipContent>
                       <p className="font-medium">{tool.name}</p>
+                      {tool.description && (
+                        <p className="text-xs text-muted-foreground mt-0.5">{tool.description}</p>
+                      )}
                     </TooltipContent>
                   </Tooltip>
                 ))}

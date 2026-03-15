@@ -134,6 +134,42 @@
   box-shadow: var(--shadow-card-hover);
 }
 
+/* Force prose to use theme text colors in both light and dark mode */
+@layer base {
+  .prose {
+    --tw-prose-body: hsl(var(--foreground));
+    --tw-prose-headings: hsl(var(--foreground));
+    --tw-prose-bold: hsl(var(--foreground));
+    --tw-prose-counters: hsl(var(--foreground));
+    --tw-prose-bullets: hsl(var(--muted-foreground));
+    --tw-prose-quotes: hsl(var(--muted-foreground));
+    --tw-prose-quote-borders: hsl(var(--border));
+    --tw-prose-captions: hsl(var(--muted-foreground));
+    --tw-prose-code: hsl(var(--foreground));
+    --tw-prose-pre-code: hsl(var(--foreground));
+    --tw-prose-pre-bg: hsl(var(--muted));
+    --tw-prose-th-borders: hsl(var(--border));
+    --tw-prose-td-borders: hsl(var(--border));
+    --tw-prose-links: hsl(var(--primary));
+    color: hsl(var(--foreground));
+  }
+
+  /* Mobile: prevent code blocks and pre from overflowing */
+  .prose pre {
+    overflow-x: auto;
+    max-width: 100%;
+  }
+
+  .prose code {
+    word-break: break-word;
+  }
+
+  .prose img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
 @utility page-wrap {
   width: 100%;
   max-width: 64rem;
