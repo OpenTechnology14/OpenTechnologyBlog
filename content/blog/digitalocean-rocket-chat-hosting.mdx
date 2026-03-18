@@ -10,8 +10,6 @@ readTime: "14 min"
 
 For growing businesses, SaaS subscriptions can quietly become one of the largest technology budget line items. A team paying for Slack, Dropbox, and a commercial VPN can easily spend hundreds or thousands of dollars per user per year — before storage overages or enterprise add-ons. There is a better way.
 
-DigitalOcean's 1-Click Apps marketplace makes it straightforward to deploy production-ready open source tools in minutes. This guide covers hosting WireGuard (VPN), Rocket.Chat (team messaging), and Nextcloud (file sharing) on DigitalOcean — including the critical configuration steps that turn a 1-Click install into a secure, monitored, production deployment.
-
 ---
 
 ## Deploying the Applications
@@ -42,52 +40,109 @@ The 1-Click App installs Nextcloud with Apache and PHP pre-configured. Key post-
 
 Apply these settings to every deployment before going live. They are ordered by priority.
 
-<AiPrompt label="Firewall Rules" type="hardening">
-DigitalOcean Droplets have all ports open by default. Creating a Cloud Firewall
-is the single most important hardening step.
+### Firewall Rules
 
-  - Allow inbound only on ports 80, 443, and your SSH port
-  - For WireGuard, also allow UDP 51820
-  - Change the default SSH port from 22
-  - Disable password authentication — SSH keys only
-  - Assign the firewall to your Droplet immediately after launch
-</AiPrompt>
+DigitalOcean Droplets have all ports open by default. Creating a Cloud Firewall is the single most important hardening step — do this immediately after launch.
 
-<AiPrompt label="Backups and SSL" type="reliability">
-  - Enable automated weekly Droplet backups in Droplet settings (~20% of cost) — off by default
-  - Run: certbot --nginx (or --apache) to obtain a Let's Encrypt certificate
-  - Verify auto-renewal: certbot renew --dry-run
-  - Confirm port 80 permanently redirects to HTTPS
-  - Check renewal timer: systemctl status certbot.timer
-</AiPrompt>
+```bash
+# 1. Create a Cloud Firewall in the DigitalOcean control panel:
+#    Networking → Firewalls → Create Firewall
+#    Inbound rules: TCP 80, TCP 443, TCP <your-ssh-port>, UDP 51820 (WireGuard only)
 
-<AiPrompt label="Monitoring and Uptime" type="observability">
-  - Install DigitalOcean metrics agent:
-    curl -sSL https://repos.insights.digitalocean.com/install.sh | sudo bash
-  - Set alert thresholds: CPU > 80%, Memory > 85%, Disk > 80%
-  - Route notifications to email or a Slack webhook
-  - Enable DigitalOcean Uptime Checks (free) for HTTP/HTTPS monitoring
-  - Add UptimeRobot for multi-region checks and a public status page
-  - Disk alerts are critical — Rocket.Chat and Nextcloud fill volumes fast
-</AiPrompt>
+# 2. Harden SSH on the Droplet
+sudo nano /etc/ssh/sshd_config
+# Set:  Port 2222          (or any non-default port)
+# Set:  PasswordAuthentication no
+# Set:  PubkeyAuthentication yes
 
-<AiPrompt label="Networking and Database" type="infrastructure">
-  Reserved IP    — Assign a floating IP so DNS and firewall rules survive a resize or rebuild
-  VPC            — Place Droplets in the same VPC; keep internal traffic off the public internet
-  Managed DB     — Move MongoDB / MySQL / PostgreSQL to Managed Databases ($15/mo base)
-                   Includes automated backups, failover, and managed patching
-  Spaces Storage — Use DigitalOcean Spaces for all Nextcloud file storage, not local disk
-                   Migrating from local disk to object storage later is complex — start here
-</AiPrompt>
+sudo systemctl restart ssh
 
-<AiPrompt label="Centralized Logging" type="observability">
-Ship logs off the Droplet to a managed service (Papertrail, Logtail, or Datadog)
-so they survive a rebuild and are searchable across servers.
+# 3. Assign the firewall to your Droplet in the control panel
+```
 
-  - Configure logrotate to cap log file sizes on the Droplet
-  - For Rocket.Chat, capture MongoDB logs too
-  - Database errors are often the first sign of a deeper problem
-</AiPrompt>
+### Backups and SSL
+
+Enable weekly Droplet backups (off by default) and secure every app with a Let's Encrypt certificate.
+
+```bash
+# Enable backups: DigitalOcean control panel → Droplet → Backups → Enable
+# Cost: ~20% of the Droplet monthly price
+
+# Install Certbot (Ubuntu + Nginx)
+sudo apt install certbot python3-certbot-nginx -y
+sudo certbot --nginx -d yourdomain.com
+
+# Verify auto-renewal
+sudo certbot renew --dry-run
+
+# Check the renewal timer is active
+sudo systemctl status certbot.timer
+```
+
+### Monitoring and Uptime
+
+Install the metrics agent, configure alerts, and add uptime checks before users rely on the service.
+
+```bash
+# Install the DigitalOcean metrics agent
+curl -sSL https://repos.insights.digitalocean.com/install.sh | sudo bash
+
+# Set alert policies in the control panel:
+#   Droplet → Monitoring → Create Alert Policy
+#   Thresholds: CPU > 80%, Memory > 85%, Disk > 80%
+#   Notify via: email or Slack webhook
+
+# Enable Uptime Checks (free):
+#   Monitoring → Uptime → Create Check → HTTP/HTTPS
+# Add UptimeRobot (uptimerobot.com) for multi-region checks + status page
+```
+
+### Networking and Database
+
+Move databases off the application Droplet and isolate traffic before going to production.
+
+```bash
+# Reserved IP — survives Droplet resizes and rebuilds
+#   Networking → Reserved IPs → Create → Assign to Droplet
+
+# VPC — keeps internal traffic off the public internet
+#   Networking → VPCs → Create VPC
+#   Move all Droplets for this project into the same VPC
+
+# Managed Database (Rocket.Chat — MongoDB)
+#   Databases → Create → MongoDB → Select plan ($15/mo base)
+#   Update Rocket.Chat: set MONGO_URL env var to the managed DB connection string
+
+# Managed Database (Nextcloud — MySQL or PostgreSQL)
+#   Update config.php with the new managed DB host, user, and password
+
+# Spaces for Nextcloud file storage (start here — migrating later is complex)
+#   Spaces → Create Space → copy endpoint URL and access keys
+#   Nextcloud admin panel → External Storage → Add S3-compatible storage
+```
+
+### Centralized Logging
+
+Ship logs to a managed service so they survive a Droplet rebuild and are searchable across servers.
+
+```bash
+# Example: forward logs to Papertrail via rsyslog
+sudo apt install rsyslog -y
+
+# Add to /etc/rsyslog.conf
+echo "*.* @logs.papertrailapp.com:XXXXX" | sudo tee -a /etc/rsyslog.conf
+sudo systemctl restart rsyslog
+
+# Cap local log file sizes with logrotate
+sudo nano /etc/logrotate.d/apps
+# weekly
+# rotate 4
+# compress
+# missingok
+
+# Monitor Rocket.Chat MongoDB logs (database errors surface here first)
+sudo tail -f /var/log/mongodb/mongod.log
+```
 
 ---
 
