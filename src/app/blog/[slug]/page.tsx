@@ -19,6 +19,7 @@ import AlertingConfig from "@/components/mdx/AlertingConfig";
 import Callout from "@/components/mdx/Callout";
 import AiPrompt from "@/components/mdx/AiPrompt";
 import ToolFlow from "@/components/mdx/ToolFlow";
+import StackAtAGlance from "@/components/mdx/StackAtAGlance";
 import ContactForm from "@/components/ContactForm";
 import React from "react";
 
@@ -86,6 +87,7 @@ const mdxComponents = {
   Callout,
   AiPrompt,
   ToolFlow,
+  StackAtAGlance,
 };
 
 const categoryColors: Record<Category, string> = {
