@@ -16,6 +16,9 @@ import PikaPodsApps from "@/components/mdx/PikaPodsApps";
 import PikaPodsSavings from "@/components/mdx/PikaPodsSavings";
 import LogRetention from "@/components/mdx/LogRetention";
 import AlertingConfig from "@/components/mdx/AlertingConfig";
+import Callout from "@/components/mdx/Callout";
+import AiPrompt from "@/components/mdx/AiPrompt";
+import ToolFlow from "@/components/mdx/ToolFlow";
 import ContactForm from "@/components/ContactForm";
 import React from "react";
 
@@ -80,6 +83,9 @@ const mdxComponents = {
   tr: MdxTr,
   th: MdxTh,
   td: MdxTd,
+  Callout,
+  AiPrompt,
+  ToolFlow,
 };
 
 const categoryColors: Record<Category, string> = {

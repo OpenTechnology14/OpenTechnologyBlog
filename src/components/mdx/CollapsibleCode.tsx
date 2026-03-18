@@ -3,14 +3,36 @@ export default function CollapsibleCode({
   ...props
 }: React.HTMLAttributes<HTMLPreElement>) {
   return (
-    <details className="not-prose my-5 rounded-xl border border-border overflow-hidden text-sm group">
-      <summary className="flex items-center gap-1.5 px-4 py-2 bg-muted border-b border-border cursor-pointer text-muted-foreground hover:text-foreground transition-colors font-mono text-xs list-none select-none">
-        <span className="group-open:hidden">▶ show code</span>
-        <span className="hidden group-open:inline">▼ hide code</span>
+    <details
+      className="not-prose my-5 rounded-xl overflow-hidden group"
+      style={{ background: '#0f0f1a', border: '1px solid rgba(255,255,255,0.06)' }}
+    >
+      <summary
+        className="flex items-center gap-2 px-4 py-2.5 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden transition-colors"
+        style={{ background: '#1c1c2e', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+      >
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+          <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#ff5f57' }} />
+          <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#febc2e' }} />
+          <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#28c840' }} />
+        </div>
+        <span
+          className="group-open:hidden font-mono text-xs tracking-wide"
+          style={{ color: 'rgba(255,255,255,0.35)' }}
+        >
+          ▶ show code
+        </span>
+        <span
+          className="hidden group-open:inline font-mono text-xs tracking-wide"
+          style={{ color: 'rgba(255,255,255,0.35)' }}
+        >
+          ▼ hide code
+        </span>
       </summary>
       <pre
         {...props}
-        className="overflow-x-auto p-4 bg-card font-mono text-xs leading-relaxed m-0 rounded-none"
+        className="overflow-x-auto m-0 rounded-none font-mono text-xs leading-relaxed"
+        style={{ padding: '18px 22px', color: '#7ee8a2', background: '#0f0f1a' }}
       >
         {children}
       </pre>

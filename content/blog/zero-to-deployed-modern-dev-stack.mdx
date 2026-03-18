@@ -1,0 +1,513 @@
+---
+title: "Zero to Deployed: The Modern Dev Stack That Just Works"
+excerpt: "A practical guide to setting up Terminal, VS Code, GitHub, Claude Code, Vercel, and Supabase — from a simple blog with CMS to a full table management app."
+category: "App + API Dev"
+date: "2026-03-17"
+readTime: "12 min"
+---
+
+<ToolFlow />
+
+The modern indie dev stack is genuinely remarkable. In 2026, a single developer can go from blank directory to a production app with authentication, a database, content management, and CI/CD — all for free, in a few hours. This guide walks you through each tool with real AI prompts you can drop in immediately.
+
+---
+
+## ✦ Penpot: Design Before You Build
+
+Before writing a single line of code, sketch your UI in Penpot — the open-source, browser-based Figma alternative that's completely free. Getting your layouts and component structure figured out first saves hours of refactoring later.
+
+<Callout type="purple" title="🔗 Need a Head Start?">
+Explore the Next.js template gallery at **vercel.com/templates** — filter by use case (blog, ecommerce, SaaS, portfolio) to find production-ready starting points. Many include Supabase, Auth.js, or Tailwind already wired up.
+</Callout>
+
+<AiPrompt label="Wireframe to Code" type="design → code">
+[Attach exported Penpot design PNG or paste CSS values]
+
+I've designed the blog post card in Penpot.
+Generate a React component BlogCard.tsx:
+
+Design specs from Penpot:
+  - Card: 380px wide, 16px border-radius, subtle shadow
+  - Cover image: 16:9 ratio, top of card
+  - Tag pill: top-left overlay on image
+  - Title: 20px, font-weight 600, 2-line clamp
+  - Excerpt: 14px, muted, 3-line clamp
+  - Author: avatar (24px circle) + name + date
+  - Hover: scale(1.02) with shadow increase
+
+Props: title, excerpt, coverImage, slug, author, publishedAt, tags
+Use Tailwind CSS. Export as a reusable component.
+</AiPrompt>
+
+<AiPrompt label="Design System to Tailwind Config" type="design system">
+Convert my Penpot design system tokens to Tailwind config:
+
+Colors:
+  brand-primary: #e84c1e   brand-secondary: #2d6ef5
+  neutral-50: #f9f7f4      neutral-900: #0d0d0d
+  success: #00b87a         warning: #f4a261
+
+Typography:
+  display: Space Grotesk, sans-serif
+  body: Space Grotesk, sans-serif
+  mono: JetBrains Mono, monospace
+  sizes: 12/14/16/18/20/24/32/40/56/72px
+
+Spacing: 4/8/12/16/24/32/48/64/96/128px
+
+Generate tailwind.config.ts extending the default theme
+plus text-balance and line-clamp custom utilities.
+</AiPrompt>
+
+---
+
+## 01 — Setting Up Your Terminal
+
+Everything starts with a good terminal setup. Getting your shell, Node.js, and Git in place takes about 10 minutes — and sets you up for everything that follows.
+
+```bash
+# macOS — Install Homebrew, then essentials
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install node git gh
+npm install -g pnpm
+
+# Windows — Install via Chocolatey
+choco install nodejs git gh vscode -y
+npm install -g pnpm
+
+# Verify installs
+node --version && git --version && gh --version
+```
+
+<Callout type="tip" title="💡 Windows Pro Tip">
+On Windows, use **Windows Terminal** + **WSL2** (Ubuntu) for the best experience. Install it via `wsl --install` in PowerShell, then use Ubuntu as your default shell. Everything in this guide works identically from there.
+</Callout>
+
+<AiPrompt label="Terminal Setup" type="setup">
+I'm setting up a Mac for web development from scratch.
+Walk me through installing:
+1. Homebrew, Node.js (LTS), pnpm, and Git
+2. Oh My Zsh with the git and node plugins
+3. A .zshrc with useful aliases for my dev workflow
+
+Include aliases for:
+   - Starting Next.js dev server
+   - Quick git add/commit/push in one command
+   - Opening VS Code from terminal
+
+Explain each step as if I'm new to terminal.
+</AiPrompt>
+
+---
+
+## 02 — VS Code: Your Command Center
+
+VS Code is more than a text editor — with the right extensions and settings, it becomes an IDE that understands your entire codebase. The key is configuring it once, right.
+
+```bash
+code --install-extension dbaeumer.vscode-eslint
+code --install-extension esbenp.prettier-vscode
+code --install-extension bradlc.vscode-tailwindcss
+code --install-extension anthropics.claude-code
+code --install-extension rangav.vscode-thunder-client
+code --install-extension eamodio.gitlens
+```
+
+**Essential extensions:**
+
+- **Claude Code or GitHub Copilot** — inline AI completions as you type, context-aware suggestions, and whole-function generation without leaving the editor.
+- **Prettier + ESLint** — keep code clean automatically. Prettier formats on save, ESLint catches bugs before they reach your teammates.
+- **Thunder Client** — test your API routes without leaving the editor. A lightweight Postman alternative built right in.
+- **GitLens** — understand every line's history at a glance. Hover any line to see who wrote it, when, and why.
+
+<AiPrompt label="VS Code Workspace Config" type="config">
+Generate a complete VS Code workspace configuration
+for a Next.js 14 project using TypeScript, Tailwind, ESLint, Prettier.
+Create .vscode/settings.json with:
+  - Format on save (Prettier as default formatter)
+  - TypeScript strict mode enabled
+  - Tailwind CSS IntelliSense configured
+  - File nesting for related files
+
+Also create .vscode/extensions.json with recommended extensions.
+</AiPrompt>
+
+<AiPrompt label="Project Scaffold" type="scaffold">
+Create a new Next.js 14 app called "my-blog" with:
+- App Router, TypeScript, Tailwind CSS
+- Supabase client in /lib/supabase.ts
+- Environment variable validation with Zod in /lib/env.ts
+- Folder structure:
+    /app/(public)/         ← public pages
+    /app/(admin)/          ← protected CMS pages
+    /components/ui/        ← reusable components
+    /lib/                  ← utilities and clients
+    /types/                ← TypeScript types
+
+Show every command to get to a running dev server.
+</AiPrompt>
+
+---
+
+## 03 — GitHub: Version Control & CI/CD
+
+GitHub is where your code lives, where teammates collaborate, and where deployments are triggered. Getting your repository configured properly from day one saves headaches later.
+
+```bash
+# Authenticate, create repo, and push
+gh auth login
+git init && git add . && git commit -m "init"
+gh repo create my-blog --public --source=. --push
+
+# Clone an existing repo to a new machine
+git clone https://github.com/yourname/my-blog.git
+cd my-blog && pnpm install
+
+# Force a redeploy on Vercel without a code change
+git commit --allow-empty -m "redeploy"
+git push
+```
+
+<Callout type="note" title="📌 Note">
+Link your GitHub repo to Vercel and it will auto-deploy every push to `main`, plus create preview deployments for every pull request. The `git commit --allow-empty` trick is handy for triggering a fresh deploy when env vars change but your code hasn't.
+</Callout>
+
+<AiPrompt label="Branch Strategy & Git Hooks" type="git">
+Set up a professional GitHub workflow for my Next.js project:
+
+1. Branch protection rules for "main":
+   - Require PR before merging
+   - Require status checks to pass (lint + type-check)
+   - No force pushes
+
+2. .github/workflows/ci.yml that:
+   - Runs on every PR
+   - Checks TypeScript with tsc --noEmit
+   - Runs ESLint and Prettier check
+   - Shows pass/fail on the PR
+
+3. Pre-commit hook with Husky + lint-staged
+   that auto-formats changed files on commit
+
+Output all config files and the shell commands to set it up.
+</AiPrompt>
+
+---
+
+## 04 — Claude Code: Your AI Pair Programmer
+
+Claude Code is a terminal-native AI agent that reads your entire codebase, writes files, runs commands, and iterates until the feature works. It's the multiplier that makes one developer feel like a team.
+
+```bash
+npm install -g @anthropic-ai/claude-code
+cd my-blog && claude
+```
+
+<AiPrompt label="Build the Blog" type="build: blog">
+Build a complete blog application with these features:
+
+PUBLIC SIDE:
+  /               → List of published posts (with pagination)
+  /blog/[slug]    → Individual post with Markdown rendering
+  /contact        → Contact form that saves to Supabase
+
+ADMIN SIDE (protected, /admin):
+  /admin               → Dashboard with post stats
+  /admin/posts         → List all posts (draft + published)
+  /admin/posts/new     → Create new post (rich text editor)
+  /admin/posts/[id]    → Edit existing post
+  /admin/messages      → View contact form submissions
+
+Tech: Next.js 14 App Router, TypeScript, Tailwind,
+Supabase for DB + Auth. Create all files needed.
+Show me the Supabase schema SQL to run first.
+</AiPrompt>
+
+<AiPrompt label="Build the Table Management App" type="build: table app">
+Build a restaurant table management system:
+
+FLOOR VIEW:
+  - Visual grid of tables (number + capacity)
+  - Color coded: Available (green), Occupied (red),
+    Reserved (yellow), Needs cleaning (grey)
+  - Click table to update status or assign a party
+  - Real-time updates using Supabase Realtime
+
+RESERVATIONS:
+  - List view of upcoming reservations
+  - Form: guest name, party size, time, notes
+  - Auto-assigns to best available table by party size
+
+DATA MODEL:
+  tables(id, number, capacity, section, status)
+  reservations(id, table_id, guest_name, party_size,
+               reserved_at, notes, status)
+  status_log(id, table_id, old_status, new_status, changed_at)
+
+Use Supabase Realtime so multiple staff tablets
+update simultaneously without page refresh.
+</AiPrompt>
+
+<AiPrompt label="Add Authentication" type="auth">
+Add Supabase Auth to protect the /admin routes:
+
+1. /app/(admin)/layout.tsx that:
+   - Checks for valid Supabase session
+   - Redirects to /login if not authenticated
+   - Shows admin nav with logout button
+
+2. /app/login/page.tsx with:
+   - Email + password form
+   - Magic link option
+   - Redirect to /admin on success
+
+3. Supabase Row Level Security policies:
+   - posts: anyone can SELECT where published=true
+   - posts: only authenticated users can INSERT/UPDATE/DELETE
+   - messages: only authenticated users can SELECT
+   - tables/reservations: only authenticated users
+
+Output the SQL for all RLS policies and
+Next.js middleware.ts for route protection.
+</AiPrompt>
+
+<AiPrompt label="Feature Ideas, Security & Accessibility Review" type="improve">
+Review my Next.js blog codebase and suggest improvements:
+
+1. FEATURE IDEAS — What's missing that users would expect?
+   - Newsletter subscription / email capture
+   - Reading time estimate on posts
+   - Related posts by tag
+   - RSS feed at /feed.xml
+   - Social share buttons
+   - Full-text search across posts
+   - Dark mode toggle
+   - Comment system (or embed Giscus)
+
+2. SECURITY — Audit for common vulnerabilities:
+   - Check all Supabase RLS policies are correct
+   - Look for any exposed API keys or secrets
+   - Verify CSRF protection on forms
+   - Check Content Security Policy headers
+   - Validate all user inputs (Zod schemas on API routes)
+
+3. ACCESSIBILITY — Make it usable for everyone:
+   - Check all images have meaningful alt text
+   - Verify keyboard navigation works throughout
+   - Ensure color contrast meets WCAG AA (4.5:1)
+   - Add skip-to-content link
+   - Check all form inputs have associated labels
+
+For each issue found, show the fix inline.
+Prioritize by impact: critical → important → nice-to-have.
+</AiPrompt>
+
+---
+
+## 05 — Supabase: Your Backend in a Box
+
+Supabase gives you Postgres, authentication, file storage, and real-time subscriptions — all with auto-generated TypeScript types and a generous free tier.
+
+```bash
+brew install supabase/tap/supabase
+pnpm add @supabase/supabase-js @supabase/ssr
+supabase gen types typescript --project-id YOUR_ID > types/database.ts
+```
+
+**Auth Setup Checklist:**
+
+- **Email auth is enabled** — confirm under Providers → Email.
+- **Site URL is set** — go to Authentication → URL Configuration and set your production domain.
+- **Redirect URLs are configured** — add both `http://localhost:3000/**` and your Vercel URL to the Redirect URLs list. Without this, magic links will be blocked.
+- **API keys are in Vercel** — copy `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` from Project Settings → API, then add to Vercel Environment Variables.
+
+<Callout type="warn" title="⚠️ Common Gotcha">
+If magic links or OAuth logins redirect to an error page, it's almost always a missing redirect URL. Make sure both `http://localhost:3000/**` and your live Vercel domain are in the Redirect URLs list — the wildcard `/**` suffix is required.
+</Callout>
+
+<AiPrompt label="Database Schema for Blog" type="sql">
+Write the complete Supabase SQL schema for a blog CMS:
+
+Tables needed:
+  profiles(id, email, full_name, avatar_url)
+  posts(id, title, slug, content, excerpt, cover_image,
+        status, author_id, published_at, created_at, updated_at)
+  tags(id, name, slug)
+  post_tags(post_id, tag_id)
+  messages(id, name, email, subject, body, read, created_at)
+
+Include:
+  - Updated_at trigger (auto-updates on row change)
+  - Slug uniqueness index
+  - Full-text search index on posts (title + content)
+  - Row Level Security policies for each table
+  - Seed data: 3 sample posts, 5 tags
+
+Format as a single .sql file to paste into
+Supabase SQL Editor and run all at once.
+</AiPrompt>
+
+<AiPrompt label="Contact Form + Submissions Table" type="forms + db">
+Build a contact form that saves submissions to Supabase:
+
+1. Supabase SQL — create the submissions table:
+  CREATE TABLE submissions (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    name text NOT NULL,
+    email text NOT NULL,
+    message text NOT NULL,
+    read boolean DEFAULT false,
+    created_at timestamptz DEFAULT now()
+  );
+  ALTER TABLE submissions ENABLE ROW LEVEL SECURITY;
+  CREATE POLICY "Anyone can submit"
+    ON submissions FOR INSERT TO anon WITH CHECK (true);
+  CREATE POLICY "Admins can read"
+    ON submissions FOR SELECT TO authenticated USING (true);
+
+2. Next.js API route /app/api/contact/route.ts:
+  - Validates body with Zod (name, email, message required)
+  - Rate-limits by IP (max 3 submissions per hour)
+  - Inserts to Supabase submissions table
+  - Returns 200 on success, 422 on validation error
+
+3. React form component ContactForm.tsx:
+  - Controlled inputs with React Hook Form
+  - Shows inline validation errors
+  - Displays success/error state after submit
+
+Output all three files with full code.
+</AiPrompt>
+
+<AiPrompt label="Item / Product Database Example" type="item db">
+Create a general-purpose items/products database in Supabase
+that can be reused for menus, catalogues, inventory, etc:
+
+SQL Schema:
+  categories(id, name, slug, description, sort_order)
+  items(
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    category_id uuid REFERENCES categories(id),
+    name text NOT NULL,
+    slug text UNIQUE NOT NULL,
+    description text,
+    price numeric(10,2),
+    image_url text,
+    tags text[],
+    metadata jsonb,
+    available boolean DEFAULT true,
+    sort_order int DEFAULT 0,
+    created_at timestamptz DEFAULT now(),
+    updated_at timestamptz DEFAULT now()
+  );
+
+Also generate:
+  - RLS: public can SELECT available items
+  - RLS: only authenticated users can INSERT/UPDATE/DELETE
+  - Updated_at trigger and indexes
+
+Next.js data fetching:
+  - /app/menu/page.tsx — grouped by category, SSG
+  - /app/api/items/route.ts — filtered by tag or category
+  - lib/items.ts — reusable query helpers
+
+Seed with 3 categories and 8 sample items.
+</AiPrompt>
+
+---
+
+## 06 — Vercel: Deploy in 30 Seconds
+
+Vercel is the home of Next.js and the fastest way to get your app live. Connect your GitHub repo once, and every push to `main` automatically deploys.
+
+```bash
+npm install -g vercel && vercel
+# Or connect GitHub at vercel.com/new — 3 clicks
+```
+
+After deploying, go back to Supabase → Authentication → URL Configuration and add your live Vercel URL to the Redirect URLs list.
+
+<Callout type="note" title="🔑 Connect Your Supabase Keys">
+After deploying, go to your Vercel project → **Settings → Environment Variables** and add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` for all environments. Then trigger a redeploy: `git commit --allow-empty -m "add env vars" && git push`
+</Callout>
+
+<AiPrompt label="Vercel Configuration" type="deploy">
+Create a production-ready vercel.json for my Next.js blog:
+
+Requirements:
+  - Cache static assets aggressively (1 year)
+  - Cache API routes 60s with stale-while-revalidate
+  - Redirect www.mydomain.com → mydomain.com
+  - Security headers: CSP, X-Frame-Options, HSTS
+  - Rewrites for /sitemap.xml and /robots.txt
+  - Function region: us-east-1
+
+Also generate:
+  - /app/sitemap.ts that builds from Supabase posts
+  - /app/robots.ts
+  - /app/api/revalidate/route.ts for on-demand ISR
+    (Supabase webhook triggers on post publish)
+</AiPrompt>
+
+<Callout type="tip" title="💡 Free Tier Reality Check">
+Vercel Hobby: unlimited personal projects, 100GB bandwidth/month. Supabase free: 2 projects, 500MB database, 1GB storage. **This entire stack is free for side projects.**
+</Callout>
+
+---
+
+## ✦ CodeSandbox: Code From Anywhere
+
+CodeSandbox lets you open any GitHub repo in a full cloud development environment — no local setup required. Perfect for quick edits on the go, onboarding contributors, or testing a branch on a machine that doesn't have your dev environment.
+
+Just prefix any GitHub URL with `codesandbox.io/p/github/` and your repo opens in a VS Code-like editor with a running dev server, terminal access, and Vercel preview integration built in.
+
+```bash
+# Open any GitHub repo in CodeSandbox instantly:
+# https://codesandbox.io/p/github/yourname/my-blog
+
+# Or install the browser extension to add an
+# "Open in CodeSandbox" button on every GitHub repo page
+
+# Devboxes persist your environment — install deps once,
+# resume your session later exactly where you left off
+```
+
+<Callout type="tip" title="💡 Best Use Cases">
+Use CodeSandbox when you're away from your main machine, reviewing a PR on a tablet, or want to prototype a component without polluting your local branch. Your `.env.local` vars can be stored as encrypted secrets in CodeSandbox so your Supabase connection just works in the cloud too.
+</Callout>
+
+<AiPrompt label="CodeSandbox Devbox Config" type="cloud dev">
+Create a .codesandbox/tasks.json configuration for my Next.js project
+so it starts correctly every time I open it in CodeSandbox:
+
+Requirements:
+  - Auto-run pnpm install on first open
+  - Start the Next.js dev server on port 3000
+  - Show the preview in the right panel automatically
+  - Set Node.js version to 20 LTS
+
+Also show me:
+  - How to add Supabase env vars as CodeSandbox secrets
+  - How to share a live preview URL with a teammate
+  - The .devcontainer/devcontainer.json equivalent for
+    opening the same environment in GitHub Codespaces
+
+Output all config files ready to commit.
+</AiPrompt>
+
+---
+
+## The Stack at a Glance
+
+| Tool | Role | Free Tier |
+|---|---|---|
+| **Terminal** | Local dev environment | ✓ Always free |
+| **VS Code** | Editor + AI integration | ✓ Always free |
+| **GitHub** | Source control + CI | ✓ Unlimited public repos |
+| **Claude Code** | AI pair programmer | ✓ Free tier available |
+| **Supabase** | DB + Auth + Storage | ✓ 2 projects, 500MB |
+| **Vercel** | Hosting + CDN | ✓ 100GB bandwidth/mo |
+| **Penpot** | UI design tool | ✓ Always free |
+| **CodeSandbox** | Cloud dev environment | ✓ Free personal use |
+
+The tools exist. The AI is ready. The templates are waiting. All that's left is starting — one step at a time.
