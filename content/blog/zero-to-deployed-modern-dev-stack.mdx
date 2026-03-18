@@ -203,103 +203,113 @@ npm install -g @anthropic-ai/claude-code
 cd my-blog && claude
 ```
 
-<AiPrompt label="Build the Blog" type="build: blog">
-Build a complete blog application with these features:
-
-PUBLIC SIDE:
-  /               → List of published posts (with pagination)
-  /blog/[slug]    → Individual post with Markdown rendering
-  /contact        → Contact form that saves to Supabase
-
-ADMIN SIDE (protected, /admin):
-  /admin               → Dashboard with post stats
-  /admin/posts         → List all posts (draft + published)
-  /admin/posts/new     → Create new post (rich text editor)
-  /admin/posts/[id]    → Edit existing post
-  /admin/messages      → View contact form submissions
-
-Tech: Next.js 14 App Router, TypeScript, Tailwind,
-Supabase for DB + Auth. Create all files needed.
-Show me the Supabase schema SQL to run first.
-</AiPrompt>
-
-<AiPrompt label="Build the Table Management App" type="build: table app">
-Build a restaurant table management system:
-
-FLOOR VIEW:
-  - Visual grid of tables (number + capacity)
-  - Color coded: Available (green), Occupied (red),
-    Reserved (yellow), Needs cleaning (grey)
-  - Click table to update status or assign a party
-  - Real-time updates using Supabase Realtime
-
-RESERVATIONS:
-  - List view of upcoming reservations
-  - Form: guest name, party size, time, notes
-  - Auto-assigns to best available table by party size
-
-DATA MODEL:
-  tables(id, number, capacity, section, status)
-  reservations(id, table_id, guest_name, party_size,
-               reserved_at, notes, status)
-  status_log(id, table_id, old_status, new_status, changed_at)
-
-Use Supabase Realtime so multiple staff tablets
-update simultaneously without page refresh.
-</AiPrompt>
-
 <AiPrompt label="Add Authentication" type="auth">
 Add Supabase Auth to protect the /admin routes:
 
-1. /app/(admin)/layout.tsx that:
-   - Checks for valid Supabase session
-   - Redirects to /login if not authenticated
-   - Shows admin nav with logout button
+/app/(admin)/layout.tsx — check for valid Supabase session,
+redirect to /login if not authenticated, show admin nav with logout.
 
-2. /app/login/page.tsx with:
-   - Email + password form
-   - Magic link option
-   - Redirect to /admin on success
+/app/login/page.tsx — email + password form, magic link option,
+redirect to /admin on success.
 
-3. Supabase Row Level Security policies:
-   - posts: anyone can SELECT where published=true
-   - posts: only authenticated users can INSERT/UPDATE/DELETE
-   - messages: only authenticated users can SELECT
-   - tables/reservations: only authenticated users
+Supabase Row Level Security policies:
+  posts: anyone can SELECT where published=true
+  posts: only authenticated users can INSERT/UPDATE/DELETE
+  messages: only authenticated users can SELECT
 
-Output the SQL for all RLS policies and
-Next.js middleware.ts for route protection.
+Output the SQL for all RLS policies and Next.js middleware.ts
+for route protection.
 </AiPrompt>
 
-<AiPrompt label="Feature Ideas, Security & Accessibility Review" type="improve">
-Review my Next.js blog codebase and suggest improvements:
+<AiPrompt label="Generate README" type="docs">
+Read the entire codebase and generate a thorough README.md.
 
-1. FEATURE IDEAS — What's missing that users would expect?
-   - Newsletter subscription / email capture
-   - Reading time estimate on posts
-   - Related posts by tag
-   - RSS feed at /feed.xml
-   - Social share buttons
-   - Full-text search across posts
-   - Dark mode toggle
-   - Comment system (or embed Giscus)
+Include:
+  - Project overview (1–2 sentences)
+  - Tech stack table (framework, language, styling, db, auth, hosting)
+  - Local development steps (clone, install, env vars, run dev, first-run setup)
+  - Environment variable reference table (name, required, description)
+  - Folder structure tree with one-line descriptions
+  - Deployment guide (Vercel + Supabase, step by step)
+  - How to add new blog posts
+  - License section (MIT)
 
-2. SECURITY — Audit for common vulnerabilities:
-   - Check all Supabase RLS policies are correct
-   - Look for any exposed API keys or secrets
-   - Verify CSRF protection on forms
-   - Check Content Security Policy headers
-   - Validate all user inputs (Zod schemas on API routes)
+Use clean GitHub-flavoured Markdown. Keep steps numbered and concise.
+Output only the README.md content — no commentary.
+</AiPrompt>
 
-3. ACCESSIBILITY — Make it usable for everyone:
-   - Check all images have meaningful alt text
-   - Verify keyboard navigation works throughout
-   - Ensure color contrast meets WCAG AA (4.5:1)
-   - Add skip-to-content link
-   - Check all form inputs have associated labels
+<AiPrompt label="Codebase Cleanup" type="refactor">
+Audit this codebase for quality and consistency, then fix every issue found.
 
-For each issue found, show the fix inline.
-Prioritize by impact: critical → important → nice-to-have.
+Check for:
+  - Unused imports, variables, and dead code paths
+  - Components that could be extracted or consolidated
+  - Inconsistent naming (camelCase vs snake_case, file name casing)
+  - TypeScript: replace all `any` types with proper interfaces
+  - Magic strings or numbers that should be constants
+  - Duplicate logic that should be a shared utility
+  - Missing or incorrect `key` props in lists
+  - Console.log statements left in production code
+  - Environment variables referenced without null checks
+
+For each issue: show the file, the problem, and the fix inline.
+Apply all fixes. Do not change behaviour — refactor only.
+</AiPrompt>
+
+<AiPrompt label="Feature Ideas" type="improve: features">
+Review my Next.js blog and suggest the highest-impact missing features.
+
+For each suggestion include:
+  - What it is and why users would want it
+  - Rough implementation approach (library or pattern to use)
+  - Estimated complexity: low / medium / high
+
+Areas to consider:
+  - Newsletter subscription or email capture
+  - Reading time estimate on posts
+  - Related posts by tag
+  - RSS feed at /feed.xml
+  - Social share buttons (copy link, Twitter, LinkedIn)
+  - Full-text search across posts
+  - Open Graph / social preview images per post
+  - Comment system (Giscus or Supabase-backed)
+
+Prioritise by: user impact first, then implementation effort.
+</AiPrompt>
+
+<AiPrompt label="Security Review" type="improve: security">
+Audit this Next.js + Supabase codebase for security vulnerabilities.
+
+Check for:
+  - Supabase RLS policies — are all tables locked down correctly?
+  - Exposed secrets — any API keys hardcoded or in client-side code?
+  - CSRF protection — are mutating API routes protected?
+  - Content Security Policy headers — are they present and correct?
+  - Input validation — are all API route inputs validated with Zod?
+  - SQL injection — any raw query construction?
+  - Auth bypass — can a non-admin reach /admin routes?
+  - Rate limiting — are auth endpoints protected against brute force?
+
+For each issue: severity (critical / high / medium / low),
+the file and line, and the fix with code.
+</AiPrompt>
+
+<AiPrompt label="Accessibility Review" type="improve: a11y">
+Audit this Next.js codebase for accessibility issues and fix them all.
+
+Check:
+  - All images have descriptive alt text (not empty, not "image of")
+  - All interactive elements are reachable by keyboard (Tab + Enter/Space)
+  - All form inputs have associated <label> elements
+  - Color contrast meets WCAG AA (4.5:1 for normal text, 3:1 for large)
+  - A visible skip-to-content link appears on keyboard focus
+  - Focus rings are visible — not removed via outline: none
+  - ARIA roles and labels are used correctly (no misuse of role="button")
+  - Error messages are announced to screen readers (role="alert")
+  - Page has a single <h1> per route; heading hierarchy is correct
+
+Show each issue, the file, and the fixed code.
+Apply all fixes in place — do not leave anything as "TODO".
 </AiPrompt>
 
 ---
