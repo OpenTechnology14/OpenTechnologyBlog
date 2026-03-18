@@ -14,25 +14,40 @@ For growing businesses, SaaS subscriptions can quietly become one of the largest
 
 ## Deploying the Applications
 
-DigitalOcean's 1-Click App marketplace pre-configures dependencies and baseline settings for popular open source apps. Launching a Droplet takes only a few minutes. However, 1-Click is a starting point, not a finished deployment.
+DigitalOcean's 1-Click App marketplace pre-configures dependencies and baseline settings. Launching a Droplet takes only a few minutes — 1-Click is a starting point, not a finished deployment.
 
-### WireGuard — Modern VPN for Remote Teams
+### 🔒 WireGuard — Modern VPN for Remote Teams
 
-WireGuard is a lean, high-performance VPN protocol that has largely replaced OpenVPN for small and mid-size deployments. Its codebase is a fraction of the size of legacy VPN software — smaller attack surface, faster audits.
+- Lean, high-performance VPN — far smaller codebase than OpenVPN, smaller attack surface
+- **$6/month** Basic Droplet is sufficient for small teams
+- Post-install: generate client config files, allow UDP 51820 in Cloud Firewall, enable IP forwarding
+- Onboard a new remote worker in under 10 minutes once configured
 
-Deploy on a $6/month Basic Droplet for small teams. After launch: generate client config files for each team member, allow UDP on port 51820 in the Cloud Firewall, and enable IP forwarding in the Linux kernel. Most teams onboard a remote worker in under ten minutes once the server is configured.
+<Callout type="note" title="1-Click Deploy">
+[WireGuard on DigitalOcean Marketplace →](https://marketplace.digitalocean.com/apps/wireguard)
+</Callout>
 
-### Rocket.Chat — Self-Hosted Team Messaging
+### 🚀 Rocket.Chat — Self-Hosted Team Messaging
 
-Rocket.Chat is a feature-complete alternative to Slack and Microsoft Teams. It supports channels, direct messages, video conferencing via Jitsi, file sharing, bots, and a REST API. For teams under 50 users, a $24/month Droplet (4GB RAM) is typically sufficient.
+- Feature-complete alternative to Slack and Microsoft Teams
+- Channels, DMs, video conferencing (Jitsi), file sharing, bots, and a full REST API
+- **$24/month** Droplet (4GB RAM) handles teams under 50 users
+- Post-install: configure SMTP, set up HTTPS with Let's Encrypt, restrict open registration
+- For larger teams: move MongoDB to a DigitalOcean Managed Database
 
-After launch: configure SMTP for email notifications, set up HTTPS with Let's Encrypt, and restrict open registration in the Admin Panel security settings. For larger teams, move MongoDB to a DigitalOcean Managed Database to separate concerns and improve reliability.
+<Callout type="note" title="1-Click Deploy">
+[Rocket.Chat on DigitalOcean Marketplace →](https://marketplace.digitalocean.com/apps/rocket-chat)
+</Callout>
 
-### Nextcloud — File Sync, Sharing, and Collaboration
+### ☁️ Nextcloud — File Sync, Sharing, and Collaboration
 
-Nextcloud is the most widely deployed self-hosted file platform. Beyond file storage, it offers document collaboration (Collabora or OnlyOffice), calendar and contacts syncing, video calls, and a rich app ecosystem.
+- Most widely deployed self-hosted file platform
+- Document collaboration (Collabora or OnlyOffice), calendar, contacts, video calls, and a rich app ecosystem
+- Post-install: point storage to DigitalOcean Spaces, add domain to `config.php`, enable HTTPS, switch background jobs from AJAX to cron
 
-The 1-Click App installs Nextcloud with Apache and PHP pre-configured. Key post-install steps: point user data storage to DigitalOcean Spaces (S3-compatible object store) rather than local disk, add your domain to `config.php` as a trusted domain, enable HTTPS, and switch the background job runner from AJAX to cron for better performance.
+<Callout type="note" title="1-Click Deploy">
+[Nextcloud on DigitalOcean Marketplace →](https://marketplace.digitalocean.com/apps/nextcloud)
+</Callout>
 
 ---
 
