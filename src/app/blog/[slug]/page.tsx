@@ -163,7 +163,7 @@ const SLUG_VISUALS: Record<string, VisualInjection[]> = {
     { heading: "## Security Comparison", component: <SecurityMatrix />, skipSection: true },
   ],
   "digitalocean-rocket-chat-hosting": [
-    { heading: "### Dramatic Cost Savings vs. SaaS Alternatives", component: <CostSavings />, skipSection: true },
+    { heading: "### Dramatic Cost Savings vs. SaaS Alternatives", component: <CostSavings /> },
   ],
   "pikapods-nextcloud-hosting": [
     { heading: "| App | Starting Price |", component: <PikaPodsApps />, skipSection: true },
