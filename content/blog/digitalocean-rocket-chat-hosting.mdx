@@ -42,37 +42,52 @@ The 1-Click App installs Nextcloud with Apache and PHP pre-configured. Key post-
 
 Apply these settings to every deployment before going live. They are ordered by priority.
 
-### Firewall Rules
+<AiPrompt label="Firewall Rules" type="hardening">
+DigitalOcean Droplets have all ports open by default. Creating a Cloud Firewall
+is the single most important hardening step.
 
-DigitalOcean Droplets have all ports open by default. Creating a Cloud Firewall is the single most important hardening step.
+  - Allow inbound only on ports 80, 443, and your SSH port
+  - For WireGuard, also allow UDP 51820
+  - Change the default SSH port from 22
+  - Disable password authentication — SSH keys only
+  - Assign the firewall to your Droplet immediately after launch
+</AiPrompt>
 
-- Allow inbound only on ports 80, 443, and your SSH port. For WireGuard, add UDP 51820.
-- Change the default SSH port from 22 and disable password authentication — SSH keys only.
-- Assign the firewall to your Droplet immediately after launch.
+<AiPrompt label="Backups and SSL" type="reliability">
+  - Enable automated weekly Droplet backups in Droplet settings (~20% of cost) — off by default
+  - Run: certbot --nginx (or --apache) to obtain a Let's Encrypt certificate
+  - Verify auto-renewal: certbot renew --dry-run
+  - Confirm port 80 permanently redirects to HTTPS
+  - Check renewal timer: systemctl status certbot.timer
+</AiPrompt>
 
-### Backups and SSL
+<AiPrompt label="Monitoring and Uptime" type="observability">
+  - Install DigitalOcean metrics agent:
+    curl -sSL https://repos.insights.digitalocean.com/install.sh | sudo bash
+  - Set alert thresholds: CPU > 80%, Memory > 85%, Disk > 80%
+  - Route notifications to email or a Slack webhook
+  - Enable DigitalOcean Uptime Checks (free) for HTTP/HTTPS monitoring
+  - Add UptimeRobot for multi-region checks and a public status page
+  - Disk alerts are critical — Rocket.Chat and Nextcloud fill volumes fast
+</AiPrompt>
 
-- Enable automated weekly Droplet backups (~20% of Droplet cost) in Droplet settings — it's off by default.
-- Run `certbot --nginx` (or `--apache`) to obtain a Let's Encrypt certificate, then verify auto-renewal: `certbot renew --dry-run`.
-- Confirm HTTP on port 80 permanently redirects to HTTPS. Check the renewal timer: `systemctl status certbot.timer`.
+<AiPrompt label="Networking and Database" type="infrastructure">
+  Reserved IP    — Assign a floating IP so DNS and firewall rules survive a resize or rebuild
+  VPC            — Place Droplets in the same VPC; keep internal traffic off the public internet
+  Managed DB     — Move MongoDB / MySQL / PostgreSQL to Managed Databases ($15/mo base)
+                   Includes automated backups, failover, and managed patching
+  Spaces Storage — Use DigitalOcean Spaces for all Nextcloud file storage, not local disk
+                   Migrating from local disk to object storage later is complex — start here
+</AiPrompt>
 
-### Monitoring and Uptime
+<AiPrompt label="Centralized Logging" type="observability">
+Ship logs off the Droplet to a managed service (Papertrail, Logtail, or Datadog)
+so they survive a rebuild and are searchable across servers.
 
-- Install the DigitalOcean metrics agent: `curl -sSL https://repos.insights.digitalocean.com/install.sh | sudo bash`
-- Set alert thresholds: CPU > 80%, Memory > 85%, Disk > 80%. Route notifications to email or a Slack webhook.
-- Enable DigitalOcean Uptime Checks (free) for HTTP/HTTPS monitoring. Add UptimeRobot for multi-region checks and a status page.
-- Disk usage alerts are especially critical for Rocket.Chat and Nextcloud — user content can fill a volume faster than expected.
-
-### Networking and Database
-
-- **Reserved IP:** Assign a floating IP to each Droplet so DNS and firewall rules survive a resize or rebuild.
-- **VPC:** Place Droplets in the same Virtual Private Cloud so internal traffic stays off the public internet.
-- **Managed databases:** Move Rocket.Chat's MongoDB and Nextcloud's MySQL/PostgreSQL to DigitalOcean Managed Databases ($15/month base). You get automated backups, failover, and managed patching — running a database on the same Droplet as your app is not recommended for production.
-- **Spaces for storage:** Use DigitalOcean Spaces for all Nextcloud file storage rather than local disk. Migrating from local disk to object storage later is significantly more complex — start with Spaces.
-
-### Centralized Logging
-
-Ship logs off the Droplet to a managed service (Papertrail, Logtail, or Datadog) so they survive a rebuild and are searchable across servers. Configure `logrotate` to cap log file sizes. For Rocket.Chat, capture MongoDB logs too — database errors are often the first sign of a deeper problem.
+  - Configure logrotate to cap log file sizes on the Droplet
+  - For Rocket.Chat, capture MongoDB logs too
+  - Database errors are often the first sign of a deeper problem
+</AiPrompt>
 
 ---
 
@@ -82,4 +97,4 @@ Ship logs off the Droplet to a managed service (Papertrail, Logtail, or Datadog)
 
 That's a savings of roughly **$7,000–$8,700 per year** for a 25-person team — savings that scale favorably as headcount grows, since SaaS pricing is per-seat while infrastructure costs grow much more slowly.
 
-Self-hosting keeps your data on infrastructure you control, in the region you choose — critical for GDPR compliance and data residency requirements. SaaS models scale in cost with headcount; self-hosted infrastructure doesn't. A company with 100 users on Slack Pro pays over $8,700/year. The same 100 users on a self-hosted Rocket.Chat instance add zero marginal cost. Rocket.Chat and Nextcloud are also deeply customizable — full REST APIs, hundreds of app integrations, and open data formats mean you're never locked in to a vendor's roadmap or pricing changes. DigitalOcean makes this approachable: predictable pricing with no surprise egress fees, a simpler control panel than AWS or Azure, and complementary managed services (Databases, Spaces, Load Balancers) that integrate cleanly with Droplets. A properly configured self-hosted stack for 25 users costs under $100/month where the SaaS equivalent costs $700/month or more — and that gap widens as the team grows.
+Self-hosting keeps your data on infrastructure you control, in the region you choose — critical for GDPR compliance and data residency requirements. SaaS models scale in cost with headcount; self-hosted infrastructure doesn't. A company with 100 users on Slack Pro pays over $8,700/year. The same 100 users on a self-hosted Rocket.Chat instance add zero marginal cost. DigitalOcean makes this approachable: predictable pricing with no surprise egress fees, a simpler control panel than AWS or Azure, and complementary managed services (Databases, Spaces, Load Balancers) that integrate cleanly with Droplets. A properly configured self-hosted stack for 25 users costs under $100/month where the SaaS equivalent costs $700/month or more — and that gap widens as the team grows.
