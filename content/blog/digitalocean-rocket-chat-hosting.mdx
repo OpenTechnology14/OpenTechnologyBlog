@@ -82,28 +82,4 @@ Ship logs off the Droplet to a managed service (Papertrail, Logtail, or Datadog)
 
 That's a savings of roughly **$7,000–$8,700 per year** for a 25-person team — savings that scale favorably as headcount grows, since SaaS pricing is per-seat while infrastructure costs grow much more slowly.
 
-### Data Sovereignty and No Per-Seat Pricing
-
-When your team uses Slack, Dropbox, or a commercial VPN, your communications and files pass through third-party servers. Self-hosting keeps data on infrastructure you control, in the region you choose — which matters for GDPR compliance and data residency requirements.
-
-SaaS models are also designed to grow with your headcount. With self-hosted infrastructure, adding a new team member costs nothing beyond marginal server load. A company with 100 occasional users on Slack Pro pays over $8,700/year. The same 100 users on a self-hosted Rocket.Chat instance add zero marginal cost.
-
-### Customization, Integration, and No Vendor Lock-In
-
-Rocket.Chat supports custom branding and a full REST API for integrating with existing workflows. Nextcloud can be extended with hundreds of apps covering calendars, project management, note-taking, and more — and its WebDAV/CardDAV/CalDAV support means native integration with every major OS.
-
-You control the version you run. You upgrade on your schedule. If a new version breaks something, stay on the current version while it's resolved. If a better alternative emerges, your data is in open formats on infrastructure you own.
-
-### DigitalOcean as an Ideal Host
-
-DigitalOcean's pricing is predictable with no surprise egress fees. The control panel is significantly simpler than AWS or Azure — accessible to small IT teams or technically capable founders. Managed Databases, Spaces, Load Balancers, and Firewalls are all available as complementary services that integrate cleanly with Droplets.
-
-Open source software is also transparent by definition. The source code for WireGuard, Rocket.Chat, and Nextcloud is publicly auditable. Vulnerabilities are publicly disclosed and patched quickly — often faster than in closed-source products where the vendor controls the disclosure timeline.
-
----
-
-## Conclusion
-
-Hosting WireGuard, Rocket.Chat, and Nextcloud on DigitalOcean is not a project for the most technically advanced teams only — it is a practical, well-documented approach that any business with basic Linux familiarity can implement. The 1-Click marketplace removes much of the initial complexity, and the configuration steps above ensure your deployment is production-ready rather than a developer preview.
-
-A properly configured self-hosted stack for 25 users costs under $100/month where the SaaS equivalent costs $700/month or more. Beyond cost, businesses gain data sovereignty, unlimited users, deep customization, and freedom from vendor lock-in.
+Self-hosting keeps your data on infrastructure you control, in the region you choose — critical for GDPR compliance and data residency requirements. SaaS models scale in cost with headcount; self-hosted infrastructure doesn't. A company with 100 users on Slack Pro pays over $8,700/year. The same 100 users on a self-hosted Rocket.Chat instance add zero marginal cost. Rocket.Chat and Nextcloud are also deeply customizable — full REST APIs, hundreds of app integrations, and open data formats mean you're never locked in to a vendor's roadmap or pricing changes. DigitalOcean makes this approachable: predictable pricing with no surprise egress fees, a simpler control panel than AWS or Azure, and complementary managed services (Databases, Spaces, Load Balancers) that integrate cleanly with Droplets. A properly configured self-hosted stack for 25 users costs under $100/month where the SaaS equivalent costs $700/month or more — and that gap widens as the team grows.
