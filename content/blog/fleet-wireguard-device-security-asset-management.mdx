@@ -1,18 +1,24 @@
 ---
 title: "Fleet + OpenEDR + Wazuh: A Unified Stack for SOC 2, HIPAA & PCI DSS Compliance"
-excerpt: "A technical deep-dive into combining Fleet, OpenEDR, and Wazuh into a cohesive compliance stack that produces audit-ready evidence for SOC 2, HIPAA, and PCI DSS."
+excerpt: "A technical deep-dive into combining Fleet, OpenEDR, Wazuh, Keycloak, and Fail2ban into a cohesive compliance stack that produces audit-ready evidence for SOC 2, HIPAA, and PCI DSS."
 category: "Asset Management"
 date: "2026-02-28"
-readTime: "15 min"
+readTime: "22 min"
 ---
 
 *Security Engineering · Technical Deep-Dive*
 
-Security compliance frameworks exist to answer one uncomfortable question: Can you prove your systems are secure? Not claim it — prove it with logs, alerts, and audit trails that hold up under third-party scrutiny. This document walks through a practical architecture combining Fleet (osquery management), OpenEDR (endpoint detection and response), and Wazuh (SIEM + compliance monitoring) into a cohesive stack that produces the evidence SOC 2, HIPAA, and PCI DSS auditors require.
+Security compliance frameworks exist to answer one uncomfortable question: Can you prove your systems are secure? Not claim it — prove it with logs, alerts, and audit trails that hold up under third-party scrutiny. This document walks through a practical architecture combining Fleet (osquery management), OpenEDR (endpoint detection and response), Wazuh (SIEM + compliance monitoring), Keycloak (identity and access management), and Fail2ban (automated brute force response) into a cohesive stack covering every layer — identity, endpoint, detection, and active response — for business devices and servers.
 
 ---
 
-## Why These Three Tools?
+## Why These Tools?
+
+### Keycloak — Identity Layer (Layer 0)
+
+Before any endpoint is queried or log is ingested, identity is the first control plane. Keycloak is an open-source Identity and Access Management (IAM) solution that centralizes authentication across all business devices and servers via SSO, SAML, and OIDC. It enforces MFA, manages fine-grained role-based access, and produces a complete audit log of every login, token issuance, and admin action.
+
+For compliance, Keycloak directly satisfies SOC 2 CC6.1 (logical access controls), HIPAA §164.312(a)(2) (unique user identification and MFA), and PCI DSS Requirement 8 (strong authentication for all users). Its admin event logs are ingested by Wazuh, enabling cross-correlation: a user seen authenticating in Keycloak but absent from Fleet device inventory is a ghost account alert.
 
 ### Fleet — Query & Inventory Layer
 
@@ -26,11 +32,76 @@ OpenEDR provides continuous behavioral monitoring — watching for suspicious pr
 
 Wazuh is the integration layer. It ingests logs from virtually any source, applies correlation rules to detect threats and policy violations, and ships with out-of-the-box compliance decoders for SOC 2, HIPAA, PCI DSS, NIST 800-53, and GDPR. Its compliance dashboards map every event to specific control requirements, producing audit-ready reporting without weeks of manual work.
 
+### Fail2ban — Active Response Layer
+
+Fail2ban monitors log files for repeated authentication failures and automatically bans offending IPs via firewall rules. Paired with Wazuh, it closes the loop between detection and response: Wazuh detects brute force patterns and triggers Fail2ban to block the source; Fail2ban's actions are logged back into Wazuh, creating an immutable audit trail of every automated block — exactly the kind of evidence PCI DSS Requirement 10 and SOC 2 CC7 require.
+
 ---
 
 ## Integration Setup
 
-### Step 1: Configure Fleet Log Output
+### Step 1: Deploy and Configure Keycloak
+
+Install Keycloak and configure it as the SSO provider for all internal services. Enable event logging to capture every authentication and admin event:
+
+```json
+// Keycloak realm settings — enable full event logging
+{
+  "eventsEnabled": true,
+  "eventsExpiration": 7776000,
+  "adminEventsEnabled": true,
+  "adminEventsDetailsEnabled": true,
+  "enabledEventTypes": [
+    "LOGIN", "LOGIN_ERROR", "LOGOUT",
+    "REGISTER", "REGISTER_ERROR",
+    "UPDATE_PASSWORD", "UPDATE_PASSWORD_ERROR",
+    "CLIENT_LOGIN", "CLIENT_LOGIN_ERROR"
+  ]
+}
+```
+
+Forward Keycloak events to Wazuh by configuring the Wazuh agent on the Keycloak host to read its log output:
+
+```xml
+<!-- ossec.conf — on Keycloak host -->
+<ossec_config>
+  <localfile>
+    <log_format>json</log_format>
+    <location>/opt/keycloak/data/log/keycloak.log</location>
+    <label key="source">keycloak</label>
+  </localfile>
+</ossec_config>
+```
+
+Add a Wazuh rule to alert on Keycloak login failures and admin privilege changes:
+
+```xml
+<!-- keycloak_rules.xml -->
+<group name="keycloak,authentication,">
+  <rule id="92001" level="8">
+    <decoded_as>json</decoded_as>
+    <field name="source">keycloak</field>
+    <field name="type">LOGIN_ERROR</field>
+    <description>Keycloak: Authentication failure</description>
+    <group>pci_dss_10.2.4,hipaa_164.312.b,soc2_cc6.1,</group>
+  </rule>
+  <rule id="92002" level="12" frequency="5" timeframe="60">
+    <if_matched_sid>92001</if_matched_sid>
+    <description>Keycloak: Brute force attack — 5+ failures in 60 seconds</description>
+    <group>pci_dss_10.6.1,hipaa_164.312.b,</group>
+  </rule>
+  <rule id="92003" level="10">
+    <decoded_as>json</decoded_as>
+    <field name="source">keycloak</field>
+    <field name="operationType">CREATE|UPDATE|DELETE</field>
+    <field name="resourceType">USER|ROLE_MAPPING|CLIENT_ROLE_MAPPING</field>
+    <description>Keycloak: Admin privilege change detected</description>
+    <group>pci_dss_8.5,soc2_cc6.1,</group>
+  </rule>
+</group>
+```
+
+### Step 2: Configure Fleet Log Output
 
 Set Fleet to write osquery results as JSON to a log file that can be picked up by Filebeat:
 
@@ -47,7 +118,7 @@ logging:
       status_log_file: /var/log/fleet/osquery_status.log
 ```
 
-### Step 2: Forward Fleet Logs to Wazuh via Filebeat
+### Step 3: Forward Fleet Logs to Wazuh via Filebeat
 
 ```yaml
 # filebeat.yml
@@ -65,7 +136,7 @@ output.logstash:
   ssl.certificate_authorities: ["/etc/filebeat/wazuh-ca.pem"]
 ```
 
-### Step 3: Ingest OpenEDR Telemetry via Wazuh Agent
+### Step 4: Ingest OpenEDR Telemetry via Wazuh Agent
 
 Deploy the Wazuh agent alongside OpenEDR on each endpoint. Configure the agent to read OpenEDR's JSON telemetry directly:
 
@@ -85,7 +156,7 @@ Deploy the Wazuh agent alongside OpenEDR on each endpoint. Configure the agent t
 </ossec_config>
 ```
 
-### Step 4: Add Wazuh Rules for OpenEDR Events
+### Step 5: Add Wazuh Rules for OpenEDR Events
 
 Map OpenEDR's MITRE ATT&CK categories to compliance control groups so Wazuh tags events automatically:
 
@@ -172,19 +243,121 @@ Route Wazuh alerts by severity to ensure the right team is notified at the right
 
 ---
 
+## Automated Threat Response — Fail2ban + Wazuh
+
+Detection without response leaves brute force attacks running indefinitely. Fail2ban closes this gap by automatically banning offending IPs at the firewall level. The Wazuh integration runs in two complementary directions.
+
+### Direction 1: Wazuh Triggers Fail2ban (Active Response)
+
+Wazuh detects brute force patterns across SSH, RDP, web applications, and Keycloak login failures, then calls Fail2ban to ban the source IP. Configure Wazuh's active response module:
+
+```xml
+<!-- ossec.conf — on Wazuh Manager -->
+<ossec_config>
+  <active-response>
+    <command>fail2ban</command>
+    <location>local</location>
+    <rules_id>5763,5764,92002</rules_id>  <!-- SSH brute force + Keycloak brute force -->
+    <timeout>3600</timeout>
+  </active-response>
+</ossec_config>
+```
+
+Create the Fail2ban command script that Wazuh invokes:
+
+```bash
+#!/bin/bash
+# /var/ossec/active-response/bin/fail2ban.sh
+ACTION=$1
+USER=$2
+IP=$3
+
+if [ "$ACTION" = "add" ]; then
+  fail2ban-client set wazuh-response banip "$IP"
+elif [ "$ACTION" = "delete" ]; then
+  fail2ban-client set wazuh-response unbanip "$IP"
+fi
+```
+
+Add the corresponding Fail2ban jail:
+
+```ini
+# /etc/fail2ban/jail.d/wazuh-response.conf
+[wazuh-response]
+enabled = true
+banaction = iptables-multiport
+port = all
+filter =
+logpath = /var/log/wazuh-response.log
+maxretry = 1
+bantime = 3600
+```
+
+### Direction 2: Fail2ban Logs Feed into Wazuh (Audit Trail)
+
+Every Fail2ban ban and unban becomes a Wazuh event — creating an immutable record of automated responses for PCI DSS Req. 10.2 and SOC 2 CC7:
+
+```xml
+<!-- ossec.conf — Fail2ban log ingestion -->
+<ossec_config>
+  <localfile>
+    <log_format>syslog</log_format>
+    <location>/var/log/fail2ban.log</location>
+    <label key="source">fail2ban</label>
+  </localfile>
+</ossec_config>
+```
+
+Wazuh ships built-in Fail2ban decoders. Add a custom rule to surface ban events at compliance-relevant severity:
+
+```xml
+<!-- fail2ban_rules.xml -->
+<group name="fail2ban,">
+  <rule id="93001" level="8">
+    <decoded_as>fail2ban</decoded_as>
+    <match>Ban</match>
+    <description>Fail2ban: IP banned after repeated failures</description>
+    <group>pci_dss_10.2.4,pci_dss_10.6.1,soc2_cc7.2,</group>
+  </rule>
+  <rule id="93002" level="6">
+    <decoded_as>fail2ban</decoded_as>
+    <match>Unban</match>
+    <description>Fail2ban: IP ban expired and lifted</description>
+    <group>pci_dss_10.2.4,</group>
+  </rule>
+</group>
+```
+
+The result is a closed loop: Wazuh detects → Fail2ban blocks → Fail2ban logs the action → Wazuh records it as a compliance event with full timestamp and IP.
+
+---
+
+## Email & Domain Security — MXToolbox
+
+While the core stack covers device and server security, email is a primary attack vector and a compliance concern in its own right. MXToolbox provides passive monitoring of your email domain health — verifying that your SPF, DKIM, and DMARC records are correctly configured and alerting when your sending IPs appear on blacklists.
+
+For PCI DSS Requirement 12 (security policy) and HIPAA breach notification requirements, a misconfigured DMARC record or blacklisted IP means phishing emails can spoof your domain or breach notifications fail to reach regulators and patients. MXToolbox's continuous blacklist monitoring catches these conditions before they become incidents.
+
+Practical configuration: enable MXToolbox Monitor for your primary sending domain and any server IP ranges that send outbound email. Route alerts to the same Slack `#security` channel used for Wazuh high-severity alerts so domain health issues are visible alongside endpoint and identity events.
+
+---
+
 ## Answering Auditor Questions
 
 **"Show me your access control monitoring."**
-Export the Wazuh SOC 2 CC6 dashboard. Fleet query history shows every host's user account state across the entire audit period.
+Export the Wazuh SOC 2 CC6 dashboard. Fleet query history shows every host's user account state across the entire audit period. Keycloak admin event logs show every privilege grant and revocation.
 
 **"Show me your incident detection capability."**
-OpenEDR's MITRE ATT&CK coverage map combined with Wazuh rule statistics demonstrates active detection across the full attack surface.
+OpenEDR's MITRE ATT&CK coverage map combined with Wazuh rule statistics demonstrates active detection across the full attack surface. Fail2ban ban logs show automated response to active brute force attempts.
 
 **"Were there any security incidents during the audit period?"**
 Wazuh's alert history provides a complete, timestamped, immutable record. Incidents present means your detection-and-response process worked as designed.
 
 **"How do you detect unauthorized software changes?"**
 Fleet's software inventory queries and Wazuh File Integrity Monitoring (FIM) provide a continuous record of what was installed, when, and on which host.
+
+**"How do you enforce MFA and manage user access?"**
+Keycloak enforces MFA at the identity layer for all internal services. Its audit logs, ingested by Wazuh, provide a timestamped record of every authentication event and admin change.
 
 ---
 
@@ -193,12 +366,15 @@ Fleet's software inventory queries and Wazuh File Integrity Monitoring (FIM) pro
 Deploy in this order to reach a working compliance baseline as quickly as possible:
 
 1. Deploy Wazuh Manager + Indexer + Dashboard *(min. 4-core, 8GB RAM for production)*
-2. Install Wazuh agents on all in-scope endpoints
-3. Stand up Fleet server and enroll endpoints with the osquery agent
-4. Configure Fleet → Filebeat → Wazuh log pipeline
-5. Enable Wazuh compliance modules: PCI DSS, HIPAA, NIST 800-53
-6. Schedule Fleet compliance queries (disk encryption, user accounts, software inventory)
-7. Configure alert routing to PagerDuty and Slack
-8. Set ILM retention policies matching your longest compliance requirement
+2. Deploy Keycloak and configure it as SSO provider for all internal services — enable MFA and full event logging
+3. Install Wazuh agents on all in-scope endpoints and the Keycloak host
+4. Stand up Fleet server and enroll endpoints with the osquery agent
+5. Configure Fleet → Filebeat → Wazuh log pipeline
+6. Enable Wazuh compliance modules: PCI DSS, HIPAA, NIST 800-53
+7. Schedule Fleet compliance queries (disk encryption, user accounts, software inventory)
+8. Install and configure Fail2ban on all internet-facing servers; wire Wazuh active response
+9. Configure alert routing to PagerDuty and Slack
+10. Enable MXToolbox Monitor for all sending domains and server IP ranges
+11. Set ILM retention policies matching your longest compliance requirement
 
 This architecture scales from a 50-endpoint startup pursuing SOC 2 Type I to a 10,000-endpoint enterprise maintaining PCI DSS certification. The open-source foundation keeps licensing costs near zero, and the modular design allows adding commercial EDR feeds, cloud security logs, or network monitoring without replacing the core pipeline.
