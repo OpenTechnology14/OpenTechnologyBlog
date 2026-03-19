@@ -1,5 +1,5 @@
 ---
-title: "Self-Hosted and Smart: Running WireGuard, Rocket.Chat, and Nextcloud on DigitalOcean"
+title: "Self-Hosted and Smart: Running Rocket.Chat and Nextcloud on DigitalOcean"
 excerpt: "A practical guide to secure, cost-effective open source infrastructure for growing businesses — covering deployment, hardening, and the business case for self-hosting."
 category: "App + API Hosting"
 date: "2026-03-01"
@@ -8,24 +8,13 @@ readTime: "14 min"
 
 *A Practical Guide to Secure, Cost-Effective Open Source Infrastructure*
 
-For growing businesses, SaaS subscriptions can quietly become one of the largest technology budget line items. A team paying for Slack, Dropbox, and a commercial VPN can easily spend hundreds or thousands of dollars per user per year — before storage overages or enterprise add-ons. There is a better way.
+For growing businesses, SaaS subscriptions can quietly become one of the largest technology budget line items. A team paying for Slack and Dropbox can easily spend hundreds or thousands of dollars per user per year — before storage overages or enterprise add-ons. There is a better way.
 
 ---
 
 ## Deploying the Applications
 
 DigitalOcean's 1-Click App marketplace pre-configures dependencies and baseline settings. Launching a Droplet takes only a few minutes — 1-Click is a starting point, not a finished deployment.
-
-### 🔒 WireGuard — Modern VPN for Remote Teams
-
-- Lean, high-performance VPN — far smaller codebase than OpenVPN, smaller attack surface
-- **$6/month** Basic Droplet is sufficient for small teams
-- Post-install: generate client config files, allow UDP 51820 in Cloud Firewall, enable IP forwarding
-- Onboard a new remote worker in under 10 minutes once configured
-
-<Callout type="note" title="1-Click Deploy">
-[WireGuard on DigitalOcean Marketplace →](https://marketplace.digitalocean.com/apps/wireguard)
-</Callout>
 
 ### 🚀 Rocket.Chat — Self-Hosted Team Messaging
 
@@ -62,7 +51,7 @@ DigitalOcean Droplets have all ports open by default. Creating a Cloud Firewall 
 ```bash
 # 1. Create a Cloud Firewall in the DigitalOcean control panel:
 #    Networking → Firewalls → Create Firewall
-#    Inbound rules: TCP 80, TCP 443, TCP <your-ssh-port>, UDP 51820 (WireGuard only)
+#    Inbound rules: TCP 80, TCP 443, TCP <your-ssh-port>
 
 # 2. Harden SSH on the Droplet
 sudo nano /etc/ssh/sshd_config
