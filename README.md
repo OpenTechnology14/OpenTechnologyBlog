@@ -842,3 +842,159 @@ Ideas for extending the project — none are implemented yet.
 - **Full-text search** — add a search bar using Pagefind (static, no server needed) or Algolia DocSearch
 - **Dark mode persistence** — save the user's theme preference to `localStorage` so it survives page reloads
 - **Contact form backend** — wire `ContactForm` to actually send email via Resend or Nodemailer instead of just toasting
+
+---
+
+## Data Management — Templated Automations & Dashboards
+
+> Linked to the [Data Management Item List Template Proposals](#data-management-item-list-templates) below.
+
+This section covers the four automation and dashboard pillars for the Data Management template category. Each pillar maps directly to a line item in the template proposals list.
+
+---
+
+### 1. Doc Generation + Visualization
+
+Automatically generate and publish documentation alongside visual data lineage diagrams whenever a build or deploy runs.
+
+| Automation | Tool / Trigger | Output |
+|---|---|---|
+| Schema docs auto-build | CI pipeline (GitHub Actions) | HTML/Markdown schema reference |
+| Lineage graph render | dbt + `dbt docs generate` | Interactive DAG in browser |
+| ER diagram export | `schemaspy` or `tbls` on build | SVG/PNG committed to `docs/` |
+| Dashboard embed | Metabase / Evidence.dev iframe | Linked from blog post or admin panel |
+
+**Starter workflow** (`/.github/workflows/docs.yml`):
+```yaml
+name: Generate Data Docs
+on:
+  push:
+    branches: [main]
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dbt
+        run: pip install dbt-core dbt-postgres
+      - name: Generate docs
+        run: dbt docs generate --profiles-dir .
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./target
+```
+
+---
+
+### 2. DBT Docs
+
+Keep dbt documentation in sync with your data models automatically.
+
+| Item | Description |
+|---|---|
+| **Auto-publish on merge** | GitHub Action runs `dbt docs generate` + deploys `target/` to GitHub Pages or Vercel on every merge to `main` |
+| **Source freshness checks** | `dbt source freshness` runs on a schedule; failures post to Slack / Discord webhook |
+| **Model test gate** | `dbt test` must pass before docs are published (CI gate) |
+| **Catalog JSON artifact** | `catalog.json` committed to repo for version-controlled schema history |
+
+**Recommended project layout**:
+```
+dbt_project/
+├── models/
+│   ├── staging/        # Raw source cleaning
+│   ├── intermediate/   # Business logic joins
+│   └── marts/          # Final reporting tables
+├── tests/
+├── docs/               # Custom overview docs (.md)
+└── dbt_project.yml
+```
+
+> Add `Data Management > DBT Docs` as a blog category and link posts here using the existing MDX blog pipeline.
+
+---
+
+### 3. Modular Data Model
+
+Template for building a composable, layer-based data model that can be extended without breaking downstream consumers.
+
+| Layer | Purpose | Example models |
+|---|---|---|
+| **Staging** | 1-to-1 with raw sources; light renaming only | `stg_orders`, `stg_users` |
+| **Intermediate** | Cross-source joins; no metrics yet | `int_orders_with_customers` |
+| **Marts** | Business-facing aggregates; used by dashboards | `fct_revenue`, `dim_customers` |
+| **Metrics** | Semantic layer definitions (dbt Metrics / MetricFlow) | `metric: monthly_revenue` |
+
+**Automation hooks**:
+- Tag models by layer (`+tags: [staging]`) so CI only re-runs affected layers on PR
+- Use `dbt ls --select tag:marts` to scope dashboard refresh jobs to final models only
+- Schema contracts (`contract: {enforced: true}`) prevent breaking column changes from merging
+
+---
+
+### 4. Automate at Buildups
+
+Trigger data pipeline actions at key build or deployment milestones.
+
+| Event | Automation | How |
+|---|---|---|
+| `git push` to `main` | Run `dbt build` (compile + test + run) | GitHub Actions |
+| PR opened | Run `dbt test` on changed models only | `dbt ls --select state:modified` |
+| New deploy to Vercel | Invalidate dashboard cache | Vercel deploy hook → Metabase API |
+| Scheduled (nightly) | Full refresh of incremental models | GitHub Actions `schedule: cron` |
+| Source schema change | Alert + auto-open GitHub Issue | `dbt source freshness` + `gh issue create` |
+
+**Example nightly cron** (`/.github/workflows/nightly_build.yml`):
+```yaml
+name: Nightly dbt Build
+on:
+  schedule:
+    - cron: '0 3 * * *'   # 03:00 UTC daily
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install dbt-core dbt-postgres
+      - run: dbt build --full-refresh --target prod
+        env:
+          DBT_PROFILES_DIR: .
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+```
+
+---
+
+## Data Management Item List Templates
+
+> Template proposals for admin panel item lists and blog categories under the **Data Management** domain.
+
+| # | Template Name | Description | Linked Automation |
+|---|---|---|---|
+| 1 | **Doc Generation + Visualization** | Auto-publish schema docs and lineage graphs on each build | [§ Doc Generation + Visualization](#1-doc-generation--visualization) |
+| 2 | **DBT Docs** | Sync dbt catalog and test results to a hosted docs site | [§ DBT Docs](#2-dbt-docs) |
+| 3 | **Modular Data Model** | Staging → Intermediate → Marts layer template | [§ Modular Data Model](#3-modular-data-model) |
+| 4 | **Automate at Buildups** | CI/CD hooks for dbt build, test, refresh, and alerting | [§ Automate at Buildups](#4-automate-at-buildups) |
+
+### Adding a Data Management template to the admin panel
+
+1. Sign in as admin → **Admin Settings → Tech Tools → Add Tool**.
+2. Set **Category** to `Data Management`.
+3. Use the template name from the table above as the **Tool Name**.
+4. Add a **URL** pointing to the relevant section anchor above (e.g. `#1-doc-generation--visualization`) or to an external tool.
+5. Save — the tool appears in the icon grid under the Data Management category heading.
+
+### Adding Data Management blog posts
+
+Use category `Data Management` in your MDX frontmatter or admin panel post form:
+
+```mdx
+---
+title: "Building a Modular dbt Data Model"
+excerpt: "A layer-by-layer walkthrough of staging, intermediate, and mart models."
+category: "Data Management"
+date: "2026-03-19"
+readTime: "8 min"
+---
+```
+
