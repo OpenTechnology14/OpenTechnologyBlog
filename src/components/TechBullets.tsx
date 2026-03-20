@@ -31,7 +31,7 @@ export default function TechBullets() {
                   {cat}
                 </h3>
               </div>
-              <div className="flex flex-wrap justify-center gap-4">
+              <div className="hidden sm:flex flex-wrap justify-center gap-4">
                 {tools.map((tool) => (
                   <Tooltip key={tool.name}>
                     <TooltipTrigger asChild>
