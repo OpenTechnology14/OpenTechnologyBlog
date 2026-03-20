@@ -11,11 +11,11 @@ import {
 } from "@/components/ui/tooltip";
 
 const categoryColors: Record<Category, string> = {
-  "App + API Dev": "text-primary",
-  "Open Source App + API Hosting": "text-accent",
-  "Corporate App + API Hosting": "text-emerald-600 dark:text-emerald-400",
+  "Dev Tools": "text-primary",
+  "Self-Hosted Apps": "text-accent",
+  "Managed Cloud Apps": "text-emerald-600 dark:text-emerald-400",
   "Workflow Management": "text-ring",
-  "Asset Management": "text-destructive",
+  "Device & Data": "text-destructive",
 };
 
 export default function TechBullets() {

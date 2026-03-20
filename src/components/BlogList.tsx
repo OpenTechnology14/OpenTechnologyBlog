@@ -24,19 +24,19 @@ interface PostMeta {
 }
 
 const CATEGORIES_LIST = [
-  "App + API Dev",
-  "Open Source App + API Hosting",
-  "Corporate App + API Hosting",
+  "Dev Tools",
+  "Self-Hosted Apps",
+  "Managed Cloud Apps",
   "Workflow Management",
-  "Asset Management",
+  "Device & Data",
 ] as const;
 
 const categoryColors: Record<Category, string> = {
-  "App + API Dev": "bg-primary/10 text-primary border-primary/20",
-  "Open Source App + API Hosting": "bg-accent/10 text-accent border-accent/20",
-  "Corporate App + API Hosting": "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400",
+  "Dev Tools": "bg-primary/10 text-primary border-primary/20",
+  "Self-Hosted Apps": "bg-accent/10 text-accent border-accent/20",
+  "Managed Cloud Apps": "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400",
   "Workflow Management": "bg-ring/10 text-ring border-ring/20",
-  "Asset Management": "bg-destructive/10 text-destructive border-destructive/20",
+  "Device & Data": "bg-destructive/10 text-destructive border-destructive/20",
 };
 
 export default function BlogList({ posts }: { posts: PostMeta[] }) {
