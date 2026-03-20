@@ -85,9 +85,9 @@ export default function ToolFlow() {
         ))}
       </div>
 
-      {/* Flow diagram */}
+      {/* Flow diagram — hidden on mobile */}
       <div
-        className="flex items-center overflow-x-auto py-2 px-1 rounded-xl"
+        className="hidden sm:flex items-center overflow-x-auto py-2 px-1 rounded-xl"
         style={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))" }}
       >
         <div className="flex items-center w-full px-4 py-3">
