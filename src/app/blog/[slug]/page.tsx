@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageWrap from "@/components/PageWrap";
@@ -92,7 +93,8 @@ const mdxComponents = {
 
 const categoryColors: Record<Category, string> = {
   "App + API Dev": "bg-primary/10 text-primary border-primary/20",
-  "App + API Hosting": "bg-accent/10 text-accent border-accent/20",
+  "Open Source App + API Hosting": "bg-accent/10 text-accent border-accent/20",
+  "Corporate App + API Hosting": "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400",
   "Workflow Management": "bg-ring/10 text-ring border-ring/20",
   "Asset Management": "bg-destructive/10 text-destructive border-destructive/20",
 };
@@ -228,7 +230,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             {parts.map((part, i) => (
               <React.Fragment key={i}>
                 {part.content && (
-                  <MDXRemote source={part.content} components={mdxComponents} />
+                  <MDXRemote source={part.content} components={mdxComponents} options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }} />
                 )}
                 {part.after}
               </React.Fragment>

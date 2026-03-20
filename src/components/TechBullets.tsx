@@ -12,7 +12,8 @@ import {
 
 const categoryColors: Record<Category, string> = {
   "App + API Dev": "text-primary",
-  "App + API Hosting": "text-accent",
+  "Open Source App + API Hosting": "text-accent",
+  "Corporate App + API Hosting": "text-emerald-600 dark:text-emerald-400",
   "Workflow Management": "text-ring",
   "Asset Management": "text-destructive",
 };

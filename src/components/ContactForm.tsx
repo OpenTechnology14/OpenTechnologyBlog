@@ -55,7 +55,7 @@ export default function ContactForm() {
     <section className="rounded-xl border border-border bg-card p-6 shadow-card">
       <h2 className="mb-1 text-xl font-bold tracking-tight">Get in Touch</h2>
       <p className="mb-5 text-sm text-muted-foreground">
-        Interested in a topic? Drop a note and select a category.
+        Interested in a topic? Drop a note and select a category. I&apos;m also available for a free consultation meeting — reach out and we&apos;ll set something up.
       </p>
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input

@@ -25,14 +25,16 @@ interface PostMeta {
 
 const CATEGORIES_LIST = [
   "App + API Dev",
-  "App + API Hosting",
+  "Open Source App + API Hosting",
+  "Corporate App + API Hosting",
   "Workflow Management",
   "Asset Management",
 ] as const;
 
 const categoryColors: Record<Category, string> = {
   "App + API Dev": "bg-primary/10 text-primary border-primary/20",
-  "App + API Hosting": "bg-accent/10 text-accent border-accent/20",
+  "Open Source App + API Hosting": "bg-accent/10 text-accent border-accent/20",
+  "Corporate App + API Hosting": "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400",
   "Workflow Management": "bg-ring/10 text-ring border-ring/20",
   "Asset Management": "bg-destructive/10 text-destructive border-destructive/20",
 };
@@ -71,34 +73,6 @@ export default function BlogList({ posts }: { posts: PostMeta[] }) {
             ))}
           </SelectContent>
         </Select>
-      </div>
-
-      <div className="mb-8 flex flex-wrap gap-2">
-        <Badge
-          variant="outline"
-          className={`cursor-pointer px-3 py-1 text-sm transition-colors ${
-            selectedCategory === "all"
-              ? "bg-foreground text-background border-foreground"
-              : "hover:bg-muted"
-          }`}
-          onClick={() => setSelectedCategory("all")}
-        >
-          All
-        </Badge>
-        {CATEGORIES_LIST.map((cat) => (
-          <Badge
-            key={cat}
-            variant="outline"
-            className={`cursor-pointer px-3 py-1 text-sm transition-colors ${
-              selectedCategory === cat
-                ? categoryColors[cat] + " ring-1 ring-current"
-                : "hover:bg-muted"
-            }`}
-            onClick={() => setSelectedCategory(cat)}
-          >
-            {cat}
-          </Badge>
-        ))}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

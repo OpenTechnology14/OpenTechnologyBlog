@@ -26,7 +26,7 @@ export default function Home() {
               <Link href="/blog" className="underline underline-offset-2 hover:text-foreground transition-colors">
                 Learn more here
               </Link>
-              .
+              . I&apos;m available for a free consultation meeting to help you find the right open-source stack for your project.
             </p>
 
             <div className="flex items-center gap-3 flex-wrap justify-center">
