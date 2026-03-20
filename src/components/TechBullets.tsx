@@ -12,7 +12,6 @@ import {
 
 const categoryColors: Record<Category, string> = {
   "Dev Tools": "text-primary",
-  "Self-Hosted Apps": "text-accent",
   "Managed Cloud Apps": "text-emerald-600 dark:text-emerald-400",
   "Workflow Management": "text-ring",
   "Device & Data": "text-destructive",
