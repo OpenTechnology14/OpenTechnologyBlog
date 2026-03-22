@@ -18,10 +18,50 @@ Before writing a single line of code, sketch your UI in Penpot — the open-sour
 Explore the Next.js template gallery at **vercel.com/templates** — filter by use case (blog, ecommerce, SaaS, portfolio) to find production-ready starting points. Many include Supabase, Auth.js, or Tailwind already wired up.
 </Callout>
 
+---
+
+## 01 — GitHub: Version Control & CI/CD
+
+GitHub is where your code lives, where teammates collaborate, and where deployments are triggered. Getting your repository configured properly from day one saves headaches later.
+
+```bash
+# Authenticate, create repo, and push
+gh auth login
+git init && git add . && git commit -m "init"
+gh repo create my-blog --public --source=. --push
+
+# Clone an existing repo to a new machine
+git clone https://github.com/yourname/my-blog.git
+cd my-blog && pnpm install
+
+# Force a redeploy on Vercel without a code change
+git commit --allow-empty -m "redeploy"
+git push
+```
+
+<Callout type="note" title="📌 Note">
+Link your GitHub repo to Vercel and it will auto-deploy every push to `main`, plus create preview deployments for every pull request. The `git commit --allow-empty` trick is handy for triggering a fresh deploy when env vars change but your code hasn't.
+</Callout>
+
+<Callout type="note" title="🦊 GitLab as an Alternative">
+GitLab works everywhere GitHub does — Vercel and Cloudflare Pages both connect to GitLab repositories. Install the GitLab CLI and swap `gh` for `glab`:
+
+```bash
+brew install glab          # macOS
+sudo apt install glab -y   # Ubuntu / WSL2
+
+glab auth login
+glab repo create my-blog --public
+git remote set-url origin https://gitlab.com/yourname/my-blog.git
+git push -u origin main
+```
+
+GitLab's built-in CI/CD (`.gitlab-ci.yml`) is a strong alternative to GitHub Actions for teams already in the GitLab ecosystem.
+</Callout>
 
 ---
 
-## 01 — Terminal & Claude Code
+## 02 — Terminal & Claude Code
 
 Everything starts with a good terminal setup. Getting your shell, Node.js, and Git in place takes about 10 minutes — and sets you up for everything that follows.
 
@@ -159,7 +199,7 @@ Apply all fixes in place — do not leave anything as "TODO".
 
 ---
 
-## 02 — VS Code: Your Command Center
+## ✦ VS Code: Your Editor
 
 VS Code is more than a text editor — with the right extensions and settings, it becomes an IDE that understands your entire codebase. The key is configuring it once, right.
 
@@ -179,61 +219,9 @@ code --install-extension eamodio.gitlens
 - **Thunder Client** — test your API routes without leaving the editor. A lightweight Postman alternative built right in.
 - **GitLens** — understand every line's history at a glance. Hover any line to see who wrote it, when, and why.
 
-<AiPrompt label="VS Code Workspace Config" type="config">
-Generate a complete VS Code workspace configuration
-for a Next.js 14 project using TypeScript, Tailwind, ESLint, Prettier.
-Create .vscode/settings.json with:
-  - Format on save (Prettier as default formatter)
-  - TypeScript strict mode enabled
-  - Tailwind CSS IntelliSense configured
-  - File nesting for related files
-
-Also create .vscode/extensions.json with recommended extensions.
-</AiPrompt>
-
-<AiPrompt label="Project Scaffold" type="scaffold">
-Create a new Next.js 14 app called "my-blog" with:
-- App Router, TypeScript, Tailwind CSS
-- Supabase client in /lib/supabase.ts
-- Environment variable validation with Zod in /lib/env.ts
-- Folder structure:
-    /app/(public)/         ← public pages
-    /app/(admin)/          ← protected CMS pages
-    /components/ui/        ← reusable components
-    /lib/                  ← utilities and clients
-    /types/                ← TypeScript types
-
-Show every command to get to a running dev server.
-</AiPrompt>
-
 ---
 
-## 03 — GitHub: Version Control & CI/CD
-
-GitHub is where your code lives, where teammates collaborate, and where deployments are triggered. Getting your repository configured properly from day one saves headaches later.
-
-```bash
-# Authenticate, create repo, and push
-gh auth login
-git init && git add . && git commit -m "init"
-gh repo create my-blog --public --source=. --push
-
-# Clone an existing repo to a new machine
-git clone https://github.com/yourname/my-blog.git
-cd my-blog && pnpm install
-
-# Force a redeploy on Vercel without a code change
-git commit --allow-empty -m "redeploy"
-git push
-```
-
-<Callout type="note" title="📌 Note">
-Link your GitHub repo to Vercel and it will auto-deploy every push to `main`, plus create preview deployments for every pull request. The `git commit --allow-empty` trick is handy for triggering a fresh deploy when env vars change but your code hasn't.
-</Callout>
-
----
-
-## 04 — Vercel: Deploy in 30 Seconds
+## 03 — Vercel: Deploy in 30 Seconds
 
 Vercel is the home of Next.js and the fastest way to get your app live. Connect your GitHub repo once, and every push to `main` automatically deploys.
 
@@ -305,7 +293,7 @@ Output all config files ready to commit.
 
 ---
 
-## 05 — Supabase: Your Backend in a Box
+## 04 — Supabase: Your Backend in a Box
 
 Supabase gives you Postgres, authentication, file storage, and real-time subscriptions — all with auto-generated TypeScript types and a generous free tier.
 
