@@ -73,13 +73,15 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
 <details>
 <summary>Setup steps</summary>
 
+```
 1. Deploy via Docker or dedicated 2 vCPU / 4 GB host
 2. Create a dedicated realm — never use master for app logins
 3. Create OIDC clients for Wazuh, Shuffle, Fleet, and Rocket.Chat
 4. Enforce TOTP MFA via Required Actions
 5. Set password policy: 12+ chars, special char, digit, history 5
 6. Enable full event logging with 90+ day expiration
-7. Wire Wazuh Dashboard SAML/OIDC via `roles_mapping.yml`
+7. Wire Wazuh Dashboard SAML/OIDC via roles_mapping.yml
+```
 
 </details>
 
@@ -164,47 +166,44 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
 <details>
 <summary>Setup steps</summary>
 
-**Deploy Wazuh Manager + Indexer + Dashboard**
-
+```
+# Deploy Wazuh Manager + Indexer + Dashboard
 1. Provision 4 vCPU, 8 GB RAM, 50+ GB SSD
-2. Set hostname and configure `/etc/hosts` for local FQDN
+2. Set hostname and configure /etc/hosts for local FQDN
 3. Run the Wazuh all-in-one installer script
 4. Confirm all three services are running
 5. Log in and immediately change the default admin password
 6. Lock firewall to ports 1514, 1515, and 443 only
 
-**Install Wazuh Agents on all endpoints + Keycloak host**
-
-1. Linux: `dpkg` install with `WAZUH_MANAGER` env set
-2. macOS: `.pkg` install + `launchctl load`
-3. Windows: `msiexec` silent install
+# Install Wazuh Agents on all endpoints + Keycloak host
+1. Linux: dpkg install with WAZUH_MANAGER env set
+2. macOS: .pkg install + launchctl load
+3. Windows: msiexec silent install
 4. Verify each agent appears in dashboard within 60 seconds
 5. Enable FIM on Keycloak config and log directories
 6. Tag agents by group for policy segmentation
 
-**Enable Wazuh Compliance Modules**
-
+# Enable Wazuh Compliance Modules
 1. Enable compliance dashboards in Wazuh → Modules
 2. Verify ruleset includes compliance tags
 3. Download and deploy NIST/CIS SCA policy files to agent groups
 4. Run initial SCA scan and review compliance %
 5. Document failing controls as tracked exceptions
 
-**Configure Alert Routing**
-
-1. Email: configure SMTP in `ossec.conf`, set alert level ≥ 10
+# Configure Alert Routing
+1. Email: configure SMTP in ossec.conf, set alert level >= 10
 2. Phone/SMS: bridge via PagerDuty, OpsGenie, or Shuffle → Twilio
 3. Rocket.Chat: configure incoming webhook in Wazuh or Shuffle
-4. Test all channels with `ossec-logtest`
+4. Test all channels with ossec-logtest
 
-**Set ILM Retention Policies**
-
+# Set ILM Retention Policies
 1. Identify longest requirement (HIPAA = 6 years)
 2. Create ILM policy: hot 7d → warm 30d → cold → delete at limit
-3. Apply to `wazuh-alerts-*` and `wazuh-archives-*` templates
+3. Apply to wazuh-alerts-* and wazuh-archives-* templates
 4. Size storage at ~1 GB/day per 100 agents
 5. Configure S3 or NFS snapshot repo for cold storage
 6. Document policy for audit evidence
+```
 
 </details>
 
@@ -219,30 +218,29 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
 <details>
 <summary>Setup steps</summary>
 
-**Stand up Fleet + osquery**
-
+```
+# Stand up Fleet + osquery
 1. Deploy Fleet with MySQL + Redis backend (or Docker preview)
 2. Configure TLS with Let's Encrypt or internal CA
 3. Generate and distribute enroll secret via MDM
 4. Confirm all hosts appear in Fleet UI within 5 minutes
 5. Set agent update channel to stable with auto-update enabled
 
-**Configure Fleet → Filebeat → Wazuh pipeline**
-
+# Configure Fleet → Filebeat → Wazuh pipeline
 1. Install Filebeat on the Fleet host (not the Wazuh server)
 2. Point Filebeat input at Fleet's log output directory
 3. Enable and configure the Wazuh Filebeat module
-4. Test output: `filebeat test output`
+4. Test output: filebeat test output
 5. Verify Fleet events appear in Wazuh Discover
 
-**Schedule Fleet Compliance Queries**
-
-1. `SELECT * FROM disk_encryption;` — every 24h
-2. `SELECT username, uid, shell FROM users WHERE uid >= 1000;` — every 12h
-3. `SELECT name, version, source FROM software;` — every 24h
-4. `SELECT * FROM authorized_keys;` — every 6h on servers
+# Schedule Fleet Compliance Queries
+1. SELECT * FROM disk_encryption; — every 24h
+2. SELECT username, uid, shell FROM users WHERE uid >= 1000; — every 12h
+3. SELECT name, version, source FROM software; — every 24h
+4. SELECT * FROM authorized_keys; — every 6h on servers
 5. Create pass/fail Fleet Policies for FileVault/BitLocker status
 6. Route query results through Fleet log pipeline → Filebeat → Wazuh
+```
 
 </details>
 
@@ -341,13 +339,15 @@ Deploy the Wazuh agent alongside OpenEDR on each endpoint. Configure the agent t
 <details>
 <summary>Setup steps</summary>
 
+```
 1. Install on all internet-facing servers
-2. Copy `jail.conf` → `jail.local`; enable `sshd` and `nginx-http-auth` jails
-3. Set `bantime = 1h`, `findtime = 10m`, `maxretry = 5`
+2. Copy jail.conf → jail.local; enable sshd and nginx-http-auth jails
+3. Set bantime = 1h, findtime = 10m, maxretry = 5
 4. Configure JSON log output for Wazuh ingestion
-5. Add Wazuh FIM watch on `/etc/fail2ban/`
-6. Add `active-response` block in `ossec.conf` on rule 30105
+5. Add Wazuh FIM watch on /etc/fail2ban/
+6. Add active-response block in ossec.conf on rule 30105
 7. Test: 5 bad SSH attempts → confirm ban + Wazuh alert fires
+```
 
 </details>
 
@@ -444,10 +444,12 @@ The result is a closed loop: Wazuh detects → Fail2ban blocks → Fail2ban logs
 <details>
 <summary>Setup steps</summary>
 
+```
 1. Add blacklist monitors for all outbound mail server IPs
 2. Add DNS monitors for SPF, DKIM, DMARC health on all sending domains
 3. Add MX record monitors to detect tampering
 4. Route MXToolbox webhooks into Shuffle → Wazuh for centralized logging
+```
 
 </details>
 
@@ -460,16 +462,18 @@ Deploy Falco on each Linux endpoint for eBPF-based runtime behavioral detection.
 <details>
 <summary>Setup steps</summary>
 
-1. Add the Falco apt repo and install: `apt install -y falco`
-2. Select eBPF driver at install — do not use kernel module on production hosts
-3. Install driver: `falcoctl driver install --type ebpf`
-4. Enable service: `systemctl enable --now falco`
-5. Set `json_output: true` in `/etc/falco/falco.yaml`
-6. Configure file output to `/var/log/falco/falco.json`
-7. Add custom rules to `falco_rules.local.yaml` (mass file writes, shells from web processes)
-8. Add Wazuh `<localfile>` block to tail `/var/log/falco/falco.json`
-9. Restart Wazuh agent and confirm Falco events appear in Wazuh Discover
-10. Add custom Falco decoder and rules in `local_rules.xml` on the Wazuh manager
+```
+1.  Add the Falco apt repo and install: apt install -y falco
+2.  Select eBPF driver at install — do not use kernel module on production hosts
+3.  Install driver: falcoctl driver install --type ebpf
+4.  Enable service: systemctl enable --now falco
+5.  Set json_output: true in /etc/falco/falco.yaml
+6.  Configure file output to /var/log/falco/falco.json
+7.  Add custom rules to falco_rules.local.yaml (mass file writes, shells from web processes)
+8.  Add Wazuh <localfile> block to tail /var/log/falco/falco.json
+9.  Restart Wazuh agent and confirm Falco events appear in Wazuh Discover
+10. Add custom Falco decoder and rules in local_rules.xml on the Wazuh manager
+```
 
 </details>
 
@@ -482,20 +486,22 @@ Deploy Shuffle SOAR to automate triage, enrichment, and response across the full
 <details>
 <summary>Setup steps</summary>
 
-1. Provision dedicated host: 2 vCPU / 4 GB RAM / 20 GB disk
-2. Install Docker + Compose: `curl -fsSL https://get.docker.com | sh`
-3. Clone Shuffle repo, set `OUTER_HOSTNAME` in `docker-compose.yml`, run `docker compose up -d`
-4. Restrict login to Keycloak OIDC immediately after first launch
-5. Install the Wazuh and HTTP apps from the Shuffle app library
-6. Configure Wazuh app with manager URL and a least-privilege API user
-7. Create a Webhook trigger in Shuffle and copy the hook URL
-8. Add the Shuffle `<integration>` block to Wazuh `ossec.conf` with the webhook URL
-9. Restart Wazuh manager and confirm test alerts arrive in Shuffle → Executions
-10. Build triage playbook: parse alert level → if ≥ 12, call Wazuh active response → notify Rocket.Chat
+```
+1.  Provision dedicated host: 2 vCPU / 4 GB RAM / 20 GB disk
+2.  Install Docker + Compose: curl -fsSL https://get.docker.com | sh
+3.  Clone Shuffle repo, set OUTER_HOSTNAME in docker-compose.yml, run docker compose up -d
+4.  Restrict login to Keycloak OIDC immediately after first launch
+5.  Install the Wazuh and HTTP apps from the Shuffle app library
+6.  Configure Wazuh app with manager URL and a least-privilege API user
+7.  Create a Webhook trigger in Shuffle and copy the hook URL
+8.  Add the Shuffle <integration> block to Wazuh ossec.conf with the webhook URL
+9.  Restart Wazuh manager and confirm test alerts arrive in Shuffle → Executions
+10. Build triage playbook: parse alert level → if >= 12, call Wazuh active response → notify Rocket.Chat
 11. Build Falco playbook: filter on falco rule group → enrich via Fleet/osquery → alert with host + process context
 12. Build FIM rollback playbook: filter on rule 550/554 → SSH to agent → trigger restic/VSS restore → notify
-13. Test each playbook end-to-end with `ossec-logtest` synthetic alerts
+13. Test each playbook end-to-end with ossec-logtest synthetic alerts
 14. Set execution history retention to 30 days in Shuffle Settings
+```
 
 </details>
 
