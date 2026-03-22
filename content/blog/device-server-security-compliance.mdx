@@ -44,7 +44,7 @@ Practical configuration: enable MXToolbox Monitor for your primary sending domai
 
 ## Integration Setup
 
-### Step 1: Deploy and Configure Keycloak
+### Keycloak
 
 Install Keycloak and configure it as the SSO provider for all internal services. Enable event logging to capture every authentication and admin event:
 
@@ -105,9 +105,9 @@ Add a Wazuh rule to alert on Keycloak login failures and admin privilege changes
 </group>
 ```
 
-### Step 2: Configure Fleet Log Output
+### Fleet
 
-Set Fleet to write osquery results as JSON to a log file that can be picked up by Filebeat:
+Set Fleet to write osquery results as JSON to a log file that can be picked up by Filebeat, then forward to Wazuh:
 
 ```yaml
 # fleet.yml — result log configuration
@@ -121,8 +121,6 @@ logging:
     config:
       status_log_file: /var/log/fleet/osquery_status.log
 ```
-
-### Step 3: Forward Fleet Logs to Wazuh via Filebeat
 
 ```yaml
 # filebeat.yml
@@ -140,9 +138,9 @@ output.logstash:
   ssl.certificate_authorities: ["/etc/filebeat/wazuh-ca.pem"]
 ```
 
-### Step 4: Ingest OpenEDR Telemetry via Wazuh Agent
+### OpenEDR
 
-Deploy the Wazuh agent alongside OpenEDR on each endpoint. Configure the agent to read OpenEDR's JSON telemetry directly:
+Deploy the Wazuh agent alongside OpenEDR on each endpoint. Configure the agent to read OpenEDR's JSON telemetry directly, then map MITRE ATT&CK categories to compliance control groups:
 
 ```xml
 <!-- ossec.conf — on each endpoint -->
@@ -160,10 +158,6 @@ Deploy the Wazuh agent alongside OpenEDR on each endpoint. Configure the agent t
 </ossec_config>
 ```
 
-### Step 5: Add Wazuh Rules for OpenEDR Events
-
-Map OpenEDR's MITRE ATT&CK categories to compliance control groups so Wazuh tags events automatically:
-
 ```xml
 <!-- openedr_rules.xml -->
 <group name="openedr,mitre,">
@@ -178,28 +172,11 @@ Map OpenEDR's MITRE ATT&CK categories to compliance control groups so Wazuh tags
 </group>
 ```
 
----
-
-## Alerting Configuration
-
-Route Wazuh alerts by severity to ensure the right team is notified at the right time:
-
-| Severity | Destination | Trigger Conditions |
-|---|---|---|
-| Level 12+ (critical) | PagerDuty / OpsGenie | Active threats, credential access, policy breach |
-| Level 8–11 (high) | Slack #security | New admin accounts, failed login bursts, config drift |
-| Weekly digest | Email | Compliance pass/fail rates and alert trends |
-| Pre-audit export | PDF | Wazuh compliance dashboards export directly for SOC 2 / PCI evidence packages |
-
----
-
-## Automated Threat Response — Fail2ban + Wazuh
+### Fail2ban
 
 Detection without response leaves brute force attacks running indefinitely. Fail2ban closes this gap by automatically banning offending IPs at the firewall level. The Wazuh integration runs in two complementary directions.
 
-### Direction 1: Wazuh Triggers Fail2ban (Active Response)
-
-Wazuh detects brute force patterns across SSH, RDP, web applications, and Keycloak login failures, then calls Fail2ban to ban the source IP. Configure Wazuh's active response module:
+**Wazuh triggers Fail2ban (active response):** Wazuh detects brute force patterns across SSH, RDP, web applications, and Keycloak login failures, then calls Fail2ban to ban the source IP:
 
 ```xml
 <!-- ossec.conf — on Wazuh Manager -->
@@ -212,8 +189,6 @@ Wazuh detects brute force patterns across SSH, RDP, web applications, and Keyclo
   </active-response>
 </ossec_config>
 ```
-
-Create the Fail2ban command script that Wazuh invokes:
 
 ```bash
 #!/bin/bash
@@ -229,8 +204,6 @@ elif [ "$ACTION" = "delete" ]; then
 fi
 ```
 
-Add the corresponding Fail2ban jail:
-
 ```ini
 # /etc/fail2ban/jail.d/wazuh-response.conf
 [wazuh-response]
@@ -243,9 +216,7 @@ maxretry = 1
 bantime = 3600
 ```
 
-### Direction 2: Fail2ban Logs Feed into Wazuh (Audit Trail)
-
-Every Fail2ban ban and unban becomes a Wazuh event — creating an immutable record of automated responses for PCI DSS Req. 10.2 and SOC 2 CC7:
+**Fail2ban logs feed into Wazuh (audit trail):** Every ban and unban becomes a Wazuh event — creating an immutable record of automated responses for PCI DSS Req. 10.2 and SOC 2 CC7:
 
 ```xml
 <!-- ossec.conf — Fail2ban log ingestion -->
@@ -257,8 +228,6 @@ Every Fail2ban ban and unban becomes a Wazuh event — creating an immutable rec
   </localfile>
 </ossec_config>
 ```
-
-Wazuh ships built-in Fail2ban decoders. Add a custom rule to surface ban events at compliance-relevant severity:
 
 ```xml
 <!-- fail2ban_rules.xml -->
@@ -279,6 +248,19 @@ Wazuh ships built-in Fail2ban decoders. Add a custom rule to surface ban events 
 ```
 
 The result is a closed loop: Wazuh detects → Fail2ban blocks → Fail2ban logs the action → Wazuh records it as a compliance event with full timestamp and IP.
+
+---
+
+## Alerting Configuration
+
+Route Wazuh alerts by severity to ensure the right team is notified at the right time:
+
+| Severity | Destination | Trigger Conditions |
+|---|---|---|
+| Level 12+ (critical) | PagerDuty / OpsGenie | Active threats, credential access, policy breach |
+| Level 8–11 (high) | Slack #security | New admin accounts, failed login bursts, config drift |
+| Weekly digest | Email | Compliance pass/fail rates and alert trends |
+| Pre-audit export | PDF | Wazuh compliance dashboards export directly for SOC 2 / PCI evidence packages |
 
 ---
 
