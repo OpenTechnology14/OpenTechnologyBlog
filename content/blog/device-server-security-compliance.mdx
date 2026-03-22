@@ -12,59 +12,12 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
 
 ---
 
-## Why These Tools?
+## The App Stack
 
-- **Keycloak — Identity Layer (Layer 0)**
-  - Identity is the first control plane — all queries and log ingestion flow through authenticated sessions
-  - Centralizes authentication across all devices and servers via SSO, SAML, and OIDC
-  - Enforces MFA and fine-grained role-based access control
-  - Produces a complete audit log of every login, token issuance, and admin action
+### Keycloak — Identity Layer (Layer 0)
 
-- **Fleet — Query & Inventory Layer**
-  - Manages osquery across all endpoints — servers, workstations, and cloud instances
-  - Query your infrastructure like a database rather than pushing data reactively
-  - Scheduled queries run continuously and ship results to a central log store
-  - Gives auditors a queryable record of system state over time, not a point-in-time snapshot
-
-- **OpenEDR — Behavioral Detection Layer**
-  - Continuous behavioral monitoring for process trees, credential access patterns, lateral movement, and file system anomalies
-  - Telemetry modeled on the MITRE ATT&CK framework
-  - Captures the full endpoint story: which process spawned what child, what file was accessed, what network connection was established
-
-- **Wazuh — SIEM & Compliance Engine**
-  - Ingests logs from virtually any source and applies correlation rules to detect threats and policy violations
-  - Ships with out-of-the-box compliance decoders for SOC 2, HIPAA, PCI DSS, NIST 800-53, and GDPR
-  - Compliance dashboards map every event to specific control requirements — audit-ready without weeks of manual work
-
-- **Fail2ban — Active Response Layer**
-  - Monitors log files for repeated authentication failures and automatically bans offending IPs via firewall rules
-  - Wazuh detects brute force patterns and triggers Fail2ban to block the source IP
-  - Every ban and unban is logged back into Wazuh as a timestamped compliance event
-  - Produces the immutable automated-response audit trail required by PCI DSS Req. 10 and SOC 2 CC7
-
-- **MXToolbox — Email & Domain Security**
-  - Passive monitoring of email domain health — verifies SPF, DKIM, and DMARC records continuously
-  - Alerts when sending IPs appear on blacklists before they become incidents
-  - A misconfigured DMARC or blacklisted IP can enable domain spoofing or cause breach notification failures
-  - Route alerts to the same Rocket.Chat `#security` channel as Wazuh for unified visibility
-
-- **Falco — Runtime Behavioral Detection Layer**
-  - eBPF-based syscall interception — detects threats at the kernel level without agents modifying endpoint code
-  - Maps anomalies directly to MITRE ATT&CK techniques: shells from web processes, mass file writes, privilege escalations
-  - Outputs structured JSON events that feed directly into Wazuh for correlation and compliance tagging
-  - Fills the gap OpenEDR leaves on Linux servers and containers where Windows EDR agents don't apply
-
-- **Shuffle — SOAR & Automation Layer**
-  - Connects Wazuh, Fleet, Keycloak, Fail2ban, and Rocket.Chat into automated response workflows
-  - Triage playbooks parse alert severity, enrich with Fleet host context, and trigger Wazuh active response — no manual intervention required
-  - FIM rollback playbook detects file changes (Wazuh rule 550/554) and triggers restic or VSS restore automatically
-  - Every automated action is logged as a timestamped workflow execution — providing the response audit trail auditors require
-
----
-
-## Integration Setup
-
-### Keycloak
+- Centralizes authentication across all devices and servers via SSO, SAML, and OIDC
+- Produces a complete audit log of every login, token issuance, and admin action
 
 1. Deploy Keycloak and configure it as the SSO provider for all internal services — [Keycloak Getting Started](https://www.keycloak.org/getting-started/getting-started-docker)
 2. Enable MFA and full event logging in realm settings
@@ -139,7 +92,10 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
 
 ---
 
-### Wazuh
+### Wazuh — SIEM & Compliance Engine
+
+- Ingests logs from virtually any source and applies correlation rules to detect threats and policy violations
+- Compliance dashboards map every event to specific control requirements — audit-ready without weeks of manual work
 
 1. Deploy Wazuh Manager + Indexer + Dashboard *(min. 4-core, 8GB RAM for production)* — [Wazuh Installation Guide](https://documentation.wazuh.com/current/installation-guide/index.html)
 2. Install Wazuh agents on all in-scope endpoints — [Wazuh Agent Deployment](https://documentation.wazuh.com/current/installation-guide/wazuh-agent/index.html)
@@ -189,7 +145,10 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
 
 ---
 
-### Fleet
+### Fleet — Query & Inventory Layer
+
+- Manages osquery across all endpoints — servers, workstations, and cloud instances
+- Gives auditors a queryable record of system state over time, not a point-in-time snapshot
 
 1. Stand up Fleet server and enroll endpoints with the osquery agent — [Fleet Deployment Guide](https://fleetdm.com/docs/deploy/deploy-fleet)
 2. Configure Fleet → Filebeat → Wazuh log pipeline — [Filebeat Setup](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-installation-configuration.html)
@@ -253,7 +212,10 @@ output.logstash:
 
 ---
 
-### OpenEDR
+### OpenEDR — Behavioral Detection Layer
+
+- Continuous behavioral monitoring for process trees, credential access patterns, lateral movement, and file system anomalies
+- Telemetry modeled on the MITRE ATT&CK framework
 
 Deploy the Wazuh agent alongside OpenEDR on each endpoint. Configure the agent to read OpenEDR's JSON telemetry directly, then map MITRE ATT&CK categories to compliance control groups.
 
@@ -291,7 +253,10 @@ Deploy the Wazuh agent alongside OpenEDR on each endpoint. Configure the agent t
 
 ---
 
-### Fail2ban
+### Fail2ban — Active Response Layer
+
+- Monitors log files for repeated authentication failures and automatically bans offending IPs via firewall rules
+- Produces the immutable automated-response audit trail required by PCI DSS Req. 10 and SOC 2 CC7
 
 1. Install and configure Fail2ban on all internet-facing servers — [Fail2ban Manual](https://www.fail2ban.org/wiki/index.php/MANUAL_0_8)
 2. Wire Wazuh active response to trigger Fail2ban on brute force detection
@@ -384,7 +349,10 @@ The result is a closed loop: Wazuh detects → Fail2ban blocks → Fail2ban logs
 
 ---
 
-### MXToolbox
+### MXToolbox — Email & Domain Security
+
+- Passive monitoring of email domain health — verifies SPF, DKIM, and DMARC records continuously
+- A misconfigured DMARC or blacklisted IP can enable domain spoofing or cause breach notification failures
 
 1. Enable MXToolbox Monitor for all sending domains and server IP ranges — [MXToolbox Monitors](https://mxtoolbox.com/monitors/)
 2. Route alerts to the same Rocket.Chat `#security` channel as Wazuh for unified visibility
@@ -399,7 +367,10 @@ The result is a closed loop: Wazuh detects → Fail2ban blocks → Fail2ban logs
 
 ---
 
-### Falco
+### Falco — Runtime Behavioral Detection Layer
+
+- eBPF-based syscall interception — detects threats at the kernel level without agents modifying endpoint code
+- Fills the gap OpenEDR leaves on Linux servers and containers where Windows EDR agents don't apply
 
 Deploy Falco on each Linux endpoint for eBPF-based runtime behavioral detection. Falco intercepts system calls and maps anomalies — shells spawned from web processes, mass file writes, privilege escalations — to MITRE ATT&CK techniques, feeding structured JSON events directly into Wazuh.
 
@@ -419,7 +390,10 @@ Deploy Falco on each Linux endpoint for eBPF-based runtime behavioral detection.
 
 ---
 
-### Shuffle
+### Shuffle — SOAR & Automation Layer
+
+- Connects Wazuh, Fleet, Keycloak, Fail2ban, and Rocket.Chat into automated response workflows
+- Every automated action is logged as a timestamped workflow execution — providing the response audit trail auditors require
 
 Deploy Shuffle SOAR to automate triage, enrichment, and response across the full stack. Wazuh alerts trigger Shuffle workflows that query Fleet for host context, call Wazuh active response to block IPs, and notify Rocket.Chat with enriched incident details.
 
