@@ -81,10 +81,8 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
 7. Wire Wazuh Dashboard SAML/OIDC via roles_mapping.yml
 ```
 
-<details>
-<summary>Enable full event logging (realm settings)</summary>
-
 ```json
+// Enable full event logging (realm settings)
 // Keycloak realm settings — enable full event logging
 {
   "eventsEnabled": true,
@@ -100,12 +98,8 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
 }
 ```
 
-</details>
-
-<details>
-<summary>Wazuh agent — read Keycloak log output</summary>
-
 ```xml
+<!-- Wazuh agent — read Keycloak log output -->
 <!-- ossec.conf — on Keycloak host -->
 <ossec_config>
   <localfile>
@@ -116,12 +110,8 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
 </ossec_config>
 ```
 
-</details>
-
-<details>
-<summary>Wazuh rules — login failures and admin privilege changes</summary>
-
 ```xml
+<!-- Wazuh rules — login failures and admin privilege changes -->
 <!-- keycloak_rules.xml -->
 <group name="keycloak,authentication,">
   <rule id="92001" level="8">
@@ -146,8 +136,6 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
   </rule>
 </group>
 ```
-
-</details>
 
 ---
 
@@ -232,10 +220,8 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
 6. Route query results through Fleet log pipeline → Filebeat → Wazuh
 ```
 
-<details>
-<summary>Fleet result log configuration</summary>
-
 ```yaml
+# Fleet result log configuration
 # fleet.yml — result log configuration
 logging:
   result:
@@ -248,12 +234,8 @@ logging:
       status_log_file: /var/log/fleet/osquery_status.log
 ```
 
-</details>
-
-<details>
-<summary>Filebeat — forward Fleet logs to Wazuh</summary>
-
 ```yaml
+# Filebeat — forward Fleet logs to Wazuh
 # filebeat.yml
 filebeat.inputs:
   - type: log
@@ -269,18 +251,14 @@ output.logstash:
   ssl.certificate_authorities: ["/etc/filebeat/wazuh-ca.pem"]
 ```
 
-</details>
-
 ---
 
 ### OpenEDR
 
 Deploy the Wazuh agent alongside OpenEDR on each endpoint. Configure the agent to read OpenEDR's JSON telemetry directly, then map MITRE ATT&CK categories to compliance control groups.
 
-<details>
-<summary>Wazuh agent — read OpenEDR telemetry and Windows Security Event Log</summary>
-
 ```xml
+<!-- Wazuh agent — read OpenEDR telemetry and Windows Security Event Log -->
 <!-- ossec.conf — on each endpoint -->
 <ossec_config>
   <localfile>
@@ -296,12 +274,8 @@ Deploy the Wazuh agent alongside OpenEDR on each endpoint. Configure the agent t
 </ossec_config>
 ```
 
-</details>
-
-<details>
-<summary>Wazuh rules — MITRE ATT&CK credential access detection</summary>
-
 ```xml
+<!-- Wazuh rules — MITRE ATT&CK credential access detection -->
 <!-- openedr_rules.xml -->
 <group name="openedr,mitre,">
   <rule id="91001" level="12">
@@ -314,8 +288,6 @@ Deploy the Wazuh agent alongside OpenEDR on each endpoint. Configure the agent t
   </rule>
 </group>
 ```
-
-</details>
 
 ---
 
@@ -337,10 +309,8 @@ Deploy the Wazuh agent alongside OpenEDR on each endpoint. Configure the agent t
 
 **Wazuh triggers Fail2ban (active response):** Wazuh detects brute force patterns across SSH, RDP, web applications, and Keycloak login failures, then calls Fail2ban to ban the source IP:
 
-<details>
-<summary>Wazuh active response configuration</summary>
-
 ```xml
+<!-- Wazuh active response configuration -->
 <!-- ossec.conf — on Wazuh Manager -->
 <ossec_config>
   <active-response>
@@ -378,14 +348,10 @@ maxretry = 1
 bantime = 3600
 ```
 
-</details>
-
 **Fail2ban logs feed into Wazuh (audit trail):** Every ban and unban becomes a Wazuh event — creating an immutable record of automated responses for PCI DSS Req. 10.2 and SOC 2 CC7:
 
-<details>
-<summary>Fail2ban log ingestion and audit rules</summary>
-
 ```xml
+<!-- Fail2ban log ingestion and audit rules -->
 <!-- ossec.conf — Fail2ban log ingestion -->
 <ossec_config>
   <localfile>
@@ -413,8 +379,6 @@ bantime = 3600
   </rule>
 </group>
 ```
-
-</details>
 
 The result is a closed loop: Wazuh detects → Fail2ban blocks → Fail2ban logs the action → Wazuh records it as a compliance event with full timestamp and IP.
 
