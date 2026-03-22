@@ -1,19 +1,16 @@
 const saasItems = [
   { tool: "Slack Pro", detail: "$7.25/user/month × 25", monthly: "$181" },
   { tool: "Dropbox Business", detail: "$15/user/month × 25", monthly: "$375" },
-  { tool: "Commercial VPN", detail: "$5–10/user/month × 25", monthly: "$125–250" },
 ];
-const saasTotal = { monthly: "$681–$806", yearly: "$8,172–$9,672" };
+const saasTotal = { monthly: "$556", yearly: "$6,672" };
 
 const selfHostedItems = [
   { tool: "Rocket.Chat Droplet", detail: "4 GB RAM", monthly: "$24" },
   { tool: "Nextcloud Droplet + Spaces", detail: "2 GB RAM + object storage", monthly: "$18–30" },
-  { tool: "WireGuard Droplet", detail: "1 GB RAM", monthly: "$6" },
-  { tool: "Managed Databases (2)", detail: "MongoDB + PostgreSQL", monthly: "$30" },
 ];
-const selfHostedTotal = { monthly: "~$78–90", yearly: "$936–$1,080" };
+const selfHostedTotal = { monthly: "~$42–54", yearly: "$504–$648" };
 
-const savings = { yearly: "$7,000–$8,700", label: "saved per year for 25 people" };
+const savings = { yearly: "~$6,000", label: "saved per year for 25 people" };
 
 export default function CostSavings() {
   return (

@@ -19,10 +19,6 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
 - Centralizes authentication across all devices and servers via SSO, SAML, and OIDC
 - Produces a complete audit log of every login, token issuance, and admin action
 
-1. Deploy Keycloak and configure it as the SSO provider for all internal services — [Keycloak Getting Started](https://www.keycloak.org/getting-started/getting-started-docker)
-2. Enable MFA and full event logging in realm settings
-3. Install the Wazuh agent on the Keycloak host — [Wazuh Agent Deployment](https://documentation.wazuh.com/current/installation-guide/wazuh-agent/index.html)
-
 ```
 # Setup Steps
 1. Deploy via Docker or dedicated 2 vCPU / 4 GB host
@@ -97,12 +93,6 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
 - Ingests logs from virtually any source and applies correlation rules to detect threats and policy violations
 - Compliance dashboards map every event to specific control requirements — audit-ready without weeks of manual work
 
-1. Deploy Wazuh Manager + Indexer + Dashboard *(min. 4-core, 8GB RAM for production)* — [Wazuh Installation Guide](https://documentation.wazuh.com/current/installation-guide/index.html)
-2. Install Wazuh agents on all in-scope endpoints — [Wazuh Agent Deployment](https://documentation.wazuh.com/current/installation-guide/wazuh-agent/index.html)
-3. Enable compliance modules: PCI DSS, HIPAA, NIST 800-53 — [Wazuh Compliance Docs](https://documentation.wazuh.com/current/compliance/index.html)
-4. Configure alert routing to email, phone, and Rocket.Chat — [Wazuh Notification Config](https://documentation.wazuh.com/current/user-manual/manager/manual-email-report/index.html)
-5. Set ILM retention policies matching your longest compliance requirement — [Wazuh Index Management](https://documentation.wazuh.com/current/user-manual/wazuh-indexer/wazuh-indexer-tuning.html)
-
 ```
 # Setup Steps
 # Deploy Wazuh Manager + Indexer + Dashboard
@@ -149,10 +139,6 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
 
 - Manages osquery across all endpoints — servers, workstations, and cloud instances
 - Gives auditors a queryable record of system state over time, not a point-in-time snapshot
-
-1. Stand up Fleet server and enroll endpoints with the osquery agent — [Fleet Deployment Guide](https://fleetdm.com/docs/deploy/deploy-fleet)
-2. Configure Fleet → Filebeat → Wazuh log pipeline — [Filebeat Setup](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-installation-configuration.html)
-3. Schedule Fleet compliance queries (disk encryption, user accounts, software inventory) — [Fleet Query Library](https://fleetdm.com/docs/using-fleet/queries)
 
 ```
 # Setup Steps
@@ -258,9 +244,6 @@ Deploy the Wazuh agent alongside OpenEDR on each endpoint. Configure the agent t
 - Monitors log files for repeated authentication failures and automatically bans offending IPs via firewall rules
 - Produces the immutable automated-response audit trail required by PCI DSS Req. 10 and SOC 2 CC7
 
-1. Install and configure Fail2ban on all internet-facing servers — [Fail2ban Manual](https://www.fail2ban.org/wiki/index.php/MANUAL_0_8)
-2. Wire Wazuh active response to trigger Fail2ban on brute force detection
-
 ```
 # Setup Steps
 1. Install on all internet-facing servers
@@ -353,9 +336,6 @@ The result is a closed loop: Wazuh detects → Fail2ban blocks → Fail2ban logs
 
 - Passive monitoring of email domain health — verifies SPF, DKIM, and DMARC records continuously
 - A misconfigured DMARC or blacklisted IP can enable domain spoofing or cause breach notification failures
-
-1. Enable MXToolbox Monitor for all sending domains and server IP ranges — [MXToolbox Monitors](https://mxtoolbox.com/monitors/)
-2. Route alerts to the same Rocket.Chat `#security` channel as Wazuh for unified visibility
 
 ```
 # Setup Steps
