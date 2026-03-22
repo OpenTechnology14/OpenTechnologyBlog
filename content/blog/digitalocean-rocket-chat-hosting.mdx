@@ -46,7 +46,7 @@ DigitalOcean's 1-Click App marketplace pre-configures dependencies and baseline 
 
 That's a savings of roughly **$7,000–$8,700 per year** for a 25-person team — savings that scale favorably as headcount grows, since SaaS pricing is per-seat while infrastructure costs grow much more slowly.
 
-Self-hosting keeps your data on infrastructure you control, in the region you choose — critical for GDPR compliance and data residency requirements. SaaS models scale in cost with headcount; self-hosted infrastructure doesn't. A company with 100 users on Slack Pro pays over $8,700/year. The same 100 users on a self-hosted Rocket.Chat instance add zero marginal cost. DigitalOcean makes this approachable: predictable pricing with no surprise egress fees, a simpler control panel than AWS or Azure, and complementary managed services (Databases, Spaces, Load Balancers) that integrate cleanly with Droplets. A properly configured self-hosted stack for 25 users costs under $100/month where the SaaS equivalent costs $700/month or more — and that gap widens as the team grows.
+Self-hosting keeps your data on infrastructure you control, in the region you choose — critical for GDPR compliance and data residency requirements. SaaS models scale in cost with headcount; self-hosted infrastructure doesn't.
 
 ---
 
@@ -104,7 +104,7 @@ curl -sSL https://repos.insights.digitalocean.com/install.sh | sudo bash
 # Set alert policies in the control panel:
 #   Droplet → Monitoring → Create Alert Policy
 #   Thresholds: CPU > 80%, Memory > 85%, Disk > 80%
-#   Notify via: email or Slack webhook
+#   Notify via: email or Rocket.Chat webhook
 
 # Enable Uptime Checks (free):
 #   Monitoring → Uptime → Create Check → HTTP/HTTPS

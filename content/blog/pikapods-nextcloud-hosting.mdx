@@ -55,6 +55,17 @@ Ghost is the platform of choice for newsletters, blogs, and content-driven busin
 
 > Crucially, Ghost on PikaPods costs the same $2–3/month whether you have 500 or 50,000 subscribers. Ghost Pro pricing scales with your membership count — PikaPods pricing scales with server resources, which grow far more slowly.
 
+### Keycloak — Identity & Access Management
+
+Keycloak is an open-source identity provider that centralises authentication across your entire app stack — handling SSO, OAuth2, OIDC, and SAML so every app your team runs uses one login. Running it on PikaPods gives you enterprise-grade IAM without the enterprise price tag.
+
+**Key setup steps**
+
+- **Custom domain.** Point a subdomain (e.g. `auth.yourdomain.com`) to your Keycloak pod for clean SSO redirect URLs.
+- **Create a realm.** Set up a dedicated realm for your organisation and configure your identity providers and client applications.
+- **Connect your apps.** Register WordPress, Ghost, and any other apps as clients in Keycloak — each gets its own client ID and secret for secure OAuth2 flows.
+- **Enable MFA.** Turn on TOTP (Google Authenticator / Authy) in the realm authentication settings for all admin accounts.
+
 ---
 
 ### The Numbers Are Compelling

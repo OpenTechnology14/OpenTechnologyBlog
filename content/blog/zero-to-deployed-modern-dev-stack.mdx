@@ -18,48 +18,10 @@ Before writing a single line of code, sketch your UI in Penpot — the open-sour
 Explore the Next.js template gallery at **vercel.com/templates** — filter by use case (blog, ecommerce, SaaS, portfolio) to find production-ready starting points. Many include Supabase, Auth.js, or Tailwind already wired up.
 </Callout>
 
-<AiPrompt label="Wireframe to Code" type="design → code">
-[Attach exported Penpot design PNG or paste CSS values]
-
-I've designed the blog post card in Penpot.
-Generate a React component BlogCard.tsx:
-
-Design specs from Penpot:
-  - Card: 380px wide, 16px border-radius, subtle shadow
-  - Cover image: 16:9 ratio, top of card
-  - Tag pill: top-left overlay on image
-  - Title: 20px, font-weight 600, 2-line clamp
-  - Excerpt: 14px, muted, 3-line clamp
-  - Author: avatar (24px circle) + name + date
-  - Hover: scale(1.02) with shadow increase
-
-Props: title, excerpt, coverImage, slug, author, publishedAt, tags
-Use Tailwind CSS. Export as a reusable component.
-</AiPrompt>
-
-<AiPrompt label="Design System to Tailwind Config" type="design system">
-Convert my Penpot design system tokens to Tailwind config:
-
-Colors:
-  brand-primary: #e84c1e   brand-secondary: #2d6ef5
-  neutral-50: #f9f7f4      neutral-900: #0d0d0d
-  success: #00b87a         warning: #f4a261
-
-Typography:
-  display: Space Grotesk, sans-serif
-  body: Space Grotesk, sans-serif
-  mono: JetBrains Mono, monospace
-  sizes: 12/14/16/18/20/24/32/40/56/72px
-
-Spacing: 4/8/12/16/24/32/48/64/96/128px
-
-Generate tailwind.config.ts extending the default theme
-plus text-balance and line-clamp custom utilities.
-</AiPrompt>
 
 ---
 
-## 01 — Setting Up Your Terminal
+## 01 — Terminal & Claude Code
 
 Everything starts with a good terminal setup. Getting your shell, Node.js, and Git in place takes about 10 minutes — and sets you up for everything that follows.
 
@@ -69,9 +31,11 @@ Everything starts with a good terminal setup. Getting your shell, Node.js, and G
 brew install node git gh
 npm install -g pnpm
 
-# Windows — Install via Chocolatey
-choco install nodejs git gh vscode -y
-npm install -g pnpm
+# Windows — Install WSL2 (run in PowerShell as Administrator)
+wsl --install
+# After restart, open Ubuntu and run:
+sudo apt update && sudo apt install nodejs npm git -y
+npm install -g pnpm gh
 
 # Verify installs
 node --version && git --version && gh --version
@@ -80,119 +44,6 @@ node --version && git --version && gh --version
 <Callout type="tip" title="💡 Windows Pro Tip">
 On Windows, use **Windows Terminal** + **WSL2** (Ubuntu) for the best experience. Install it via `wsl --install` in PowerShell, then use Ubuntu as your default shell. Everything in this guide works identically from there.
 </Callout>
-
-<AiPrompt label="Terminal Setup" type="setup">
-I'm setting up a Mac for web development from scratch.
-Walk me through installing:
-1. Homebrew, Node.js (LTS), pnpm, and Git
-2. Oh My Zsh with the git and node plugins
-3. A .zshrc with useful aliases for my dev workflow
-
-Include aliases for:
-   - Starting Next.js dev server
-   - Quick git add/commit/push in one command
-   - Opening VS Code from terminal
-
-Explain each step as if I'm new to terminal.
-</AiPrompt>
-
----
-
-## 02 — VS Code: Your Command Center
-
-VS Code is more than a text editor — with the right extensions and settings, it becomes an IDE that understands your entire codebase. The key is configuring it once, right.
-
-```bash
-code --install-extension dbaeumer.vscode-eslint
-code --install-extension esbenp.prettier-vscode
-code --install-extension bradlc.vscode-tailwindcss
-code --install-extension anthropics.claude-code
-code --install-extension rangav.vscode-thunder-client
-code --install-extension eamodio.gitlens
-```
-
-**Essential extensions:**
-
-- **Claude Code or GitHub Copilot** — inline AI completions as you type, context-aware suggestions, and whole-function generation without leaving the editor.
-- **Prettier + ESLint** — keep code clean automatically. Prettier formats on save, ESLint catches bugs before they reach your teammates.
-- **Thunder Client** — test your API routes without leaving the editor. A lightweight Postman alternative built right in.
-- **GitLens** — understand every line's history at a glance. Hover any line to see who wrote it, when, and why.
-
-<AiPrompt label="VS Code Workspace Config" type="config">
-Generate a complete VS Code workspace configuration
-for a Next.js 14 project using TypeScript, Tailwind, ESLint, Prettier.
-Create .vscode/settings.json with:
-  - Format on save (Prettier as default formatter)
-  - TypeScript strict mode enabled
-  - Tailwind CSS IntelliSense configured
-  - File nesting for related files
-
-Also create .vscode/extensions.json with recommended extensions.
-</AiPrompt>
-
-<AiPrompt label="Project Scaffold" type="scaffold">
-Create a new Next.js 14 app called "my-blog" with:
-- App Router, TypeScript, Tailwind CSS
-- Supabase client in /lib/supabase.ts
-- Environment variable validation with Zod in /lib/env.ts
-- Folder structure:
-    /app/(public)/         ← public pages
-    /app/(admin)/          ← protected CMS pages
-    /components/ui/        ← reusable components
-    /lib/                  ← utilities and clients
-    /types/                ← TypeScript types
-
-Show every command to get to a running dev server.
-</AiPrompt>
-
----
-
-## 03 — GitHub: Version Control & CI/CD
-
-GitHub is where your code lives, where teammates collaborate, and where deployments are triggered. Getting your repository configured properly from day one saves headaches later.
-
-```bash
-# Authenticate, create repo, and push
-gh auth login
-git init && git add . && git commit -m "init"
-gh repo create my-blog --public --source=. --push
-
-# Clone an existing repo to a new machine
-git clone https://github.com/yourname/my-blog.git
-cd my-blog && pnpm install
-
-# Force a redeploy on Vercel without a code change
-git commit --allow-empty -m "redeploy"
-git push
-```
-
-<Callout type="note" title="📌 Note">
-Link your GitHub repo to Vercel and it will auto-deploy every push to `main`, plus create preview deployments for every pull request. The `git commit --allow-empty` trick is handy for triggering a fresh deploy when env vars change but your code hasn't.
-</Callout>
-
-<AiPrompt label="Branch Strategy & Git Hooks" type="git">
-Set up a professional GitHub workflow for my Next.js project:
-
-1. Branch protection rules for "main":
-   - Require PR before merging
-   - Require status checks to pass (lint + type-check)
-   - No force pushes
-
-2. .github/workflows/ci.yml that:
-   - Runs on every PR
-   - Checks TypeScript with tsc --noEmit
-   - Runs ESLint and Prettier check
-   - Shows pass/fail on the PR
-
-3. Pre-commit hook with Husky + lint-staged
-   that auto-formats changed files on commit
-
-Output all config files and the shell commands to set it up.
-</AiPrompt>
-
----
-
-## 04 — Claude Code: Your AI Pair Programmer
 
 Claude Code is a terminal-native AI agent that reads your entire codebase, writes files, runs commands, and iterates until the feature works. It's the multiplier that makes one developer feel like a team.
 
@@ -312,119 +163,81 @@ Apply all fixes in place — do not leave anything as "TODO".
 
 ---
 
-## 05 — Supabase: Your Backend in a Box
+## 02 — VS Code: Your Command Center
 
-Supabase gives you Postgres, authentication, file storage, and real-time subscriptions — all with auto-generated TypeScript types and a generous free tier.
+VS Code is more than a text editor — with the right extensions and settings, it becomes an IDE that understands your entire codebase. The key is configuring it once, right.
 
 ```bash
-brew install supabase/tap/supabase
-pnpm add @supabase/supabase-js @supabase/ssr
-supabase gen types typescript --project-id YOUR_ID > types/database.ts
+code --install-extension dbaeumer.vscode-eslint
+code --install-extension esbenp.prettier-vscode
+code --install-extension bradlc.vscode-tailwindcss
+code --install-extension anthropics.claude-code
+code --install-extension rangav.vscode-thunder-client
+code --install-extension eamodio.gitlens
 ```
 
-**Auth Setup Checklist:**
+**Essential extensions:**
 
-- **Email auth is enabled** — confirm under Providers → Email.
-- **Site URL is set** — go to Authentication → URL Configuration and set your production domain.
-- **Redirect URLs are configured** — add both `http://localhost:3000/**` and your Vercel URL to the Redirect URLs list. Without this, magic links will be blocked.
-- **API keys are in Vercel** — copy `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` from Project Settings → API, then add to Vercel Environment Variables.
+- **Claude Code or GitHub Copilot** — inline AI completions as you type, context-aware suggestions, and whole-function generation without leaving the editor.
+- **Prettier + ESLint** — keep code clean automatically. Prettier formats on save, ESLint catches bugs before they reach your teammates.
+- **Thunder Client** — test your API routes without leaving the editor. A lightweight Postman alternative built right in.
+- **GitLens** — understand every line's history at a glance. Hover any line to see who wrote it, when, and why.
 
-<Callout type="warn" title="⚠️ Common Gotcha">
-If magic links or OAuth logins redirect to an error page, it's almost always a missing redirect URL. Make sure both `http://localhost:3000/**` and your live Vercel domain are in the Redirect URLs list — the wildcard `/**` suffix is required.
-</Callout>
+<AiPrompt label="VS Code Workspace Config" type="config">
+Generate a complete VS Code workspace configuration
+for a Next.js 14 project using TypeScript, Tailwind, ESLint, Prettier.
+Create .vscode/settings.json with:
+  - Format on save (Prettier as default formatter)
+  - TypeScript strict mode enabled
+  - Tailwind CSS IntelliSense configured
+  - File nesting for related files
 
-<AiPrompt label="Database Schema for Blog" type="sql">
-Write the complete Supabase SQL schema for a blog CMS:
-
-Tables needed:
-  profiles(id, email, full_name, avatar_url)
-  posts(id, title, slug, content, excerpt, cover_image,
-        status, author_id, published_at, created_at, updated_at)
-  tags(id, name, slug)
-  post_tags(post_id, tag_id)
-  messages(id, name, email, subject, body, read, created_at)
-
-Include:
-  - Updated_at trigger (auto-updates on row change)
-  - Slug uniqueness index
-  - Full-text search index on posts (title + content)
-  - Row Level Security policies for each table
-  - Seed data: 3 sample posts, 5 tags
-
-Format as a single .sql file to paste into
-Supabase SQL Editor and run all at once.
+Also create .vscode/extensions.json with recommended extensions.
 </AiPrompt>
 
-<AiPrompt label="Contact Form + Submissions Table" type="forms + db">
-Build a contact form that saves submissions to Supabase:
+<AiPrompt label="Project Scaffold" type="scaffold">
+Create a new Next.js 14 app called "my-blog" with:
+- App Router, TypeScript, Tailwind CSS
+- Supabase client in /lib/supabase.ts
+- Environment variable validation with Zod in /lib/env.ts
+- Folder structure:
+    /app/(public)/         ← public pages
+    /app/(admin)/          ← protected CMS pages
+    /components/ui/        ← reusable components
+    /lib/                  ← utilities and clients
+    /types/                ← TypeScript types
 
-1. Supabase SQL — create the submissions table:
-  CREATE TABLE submissions (
-    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    name text NOT NULL,
-    email text NOT NULL,
-    message text NOT NULL,
-    read boolean DEFAULT false,
-    created_at timestamptz DEFAULT now()
-  );
-  ALTER TABLE submissions ENABLE ROW LEVEL SECURITY;
-  CREATE POLICY "Anyone can submit"
-    ON submissions FOR INSERT TO anon WITH CHECK (true);
-  CREATE POLICY "Admins can read"
-    ON submissions FOR SELECT TO authenticated USING (true);
-
-2. Next.js API route /app/api/contact/route.ts:
-  - Validates body with Zod (name, email, message required)
-  - Rate-limits by IP (max 3 submissions per hour)
-  - Inserts to Supabase submissions table
-  - Returns 200 on success, 422 on validation error
-
-3. React form component ContactForm.tsx:
-  - Controlled inputs with React Hook Form
-  - Shows inline validation errors
-  - Displays success/error state after submit
-
-Output all three files with full code.
-</AiPrompt>
-
-<AiPrompt label="Item / Product Database Example" type="item db">
-Create a general-purpose items/products database in Supabase
-that can be reused for menus, catalogues, inventory, etc:
-
-SQL Schema:
-  categories(id, name, slug, description, sort_order)
-  items(
-    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    category_id uuid REFERENCES categories(id),
-    name text NOT NULL,
-    slug text UNIQUE NOT NULL,
-    description text,
-    price numeric(10,2),
-    image_url text,
-    tags text[],
-    metadata jsonb,
-    available boolean DEFAULT true,
-    sort_order int DEFAULT 0,
-    created_at timestamptz DEFAULT now(),
-    updated_at timestamptz DEFAULT now()
-  );
-
-Also generate:
-  - RLS: public can SELECT available items
-  - RLS: only authenticated users can INSERT/UPDATE/DELETE
-  - Updated_at trigger and indexes
-
-Next.js data fetching:
-  - /app/menu/page.tsx — grouped by category, SSG
-  - /app/api/items/route.ts — filtered by tag or category
-  - lib/items.ts — reusable query helpers
-
-Seed with 3 categories and 8 sample items.
+Show every command to get to a running dev server.
 </AiPrompt>
 
 ---
 
-## 06 — Vercel: Deploy in 30 Seconds
+## 03 — GitHub: Version Control & CI/CD
+
+GitHub is where your code lives, where teammates collaborate, and where deployments are triggered. Getting your repository configured properly from day one saves headaches later.
+
+```bash
+# Authenticate, create repo, and push
+gh auth login
+git init && git add . && git commit -m "init"
+gh repo create my-blog --public --source=. --push
+
+# Clone an existing repo to a new machine
+git clone https://github.com/yourname/my-blog.git
+cd my-blog && pnpm install
+
+# Force a redeploy on Vercel without a code change
+git commit --allow-empty -m "redeploy"
+git push
+```
+
+<Callout type="note" title="📌 Note">
+Link your GitHub repo to Vercel and it will auto-deploy every push to `main`, plus create preview deployments for every pull request. The `git commit --allow-empty` trick is handy for triggering a fresh deploy when env vars change but your code hasn't.
+</Callout>
+
+---
+
+## 04 — Vercel: Deploy in 30 Seconds
 
 Vercel is the home of Next.js and the fastest way to get your app live. Connect your GitHub repo once, and every push to `main` automatically deploys.
 
@@ -438,24 +251,6 @@ After deploying, go back to Supabase → Authentication → URL Configuration an
 <Callout type="note" title="🔑 Connect Your Supabase Keys">
 After deploying, go to your Vercel project → **Settings → Environment Variables** and add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` for all environments. Then trigger a redeploy: `git commit --allow-empty -m "add env vars" && git push`
 </Callout>
-
-<AiPrompt label="Vercel Configuration" type="deploy">
-Create a production-ready vercel.json for my Next.js blog:
-
-Requirements:
-  - Cache static assets aggressively (1 year)
-  - Cache API routes 60s with stale-while-revalidate
-  - Redirect www.mydomain.com → mydomain.com
-  - Security headers: CSP, X-Frame-Options, HSTS
-  - Rewrites for /sitemap.xml and /robots.txt
-  - Function region: us-east-1
-
-Also generate:
-  - /app/sitemap.ts that builds from Supabase posts
-  - /app/robots.ts
-  - /app/api/revalidate/route.ts for on-demand ISR
-    (Supabase webhook triggers on post publish)
-</AiPrompt>
 
 <Callout type="tip" title="💡 Free Tier Reality Check">
 Vercel Hobby: unlimited personal projects, 100GB bandwidth/month. Supabase free: 2 projects, 500MB database, 1GB storage. **This entire stack is free for side projects.**
@@ -510,6 +305,29 @@ Output all config files ready to commit.
 
 <Callout type="tip" title="💡 Cloudflare vs Vercel — When to Choose Which">
 **Vercel** is the path of least resistance for Next.js — zero config, instant preview URLs, and native ISR support. **Cloudflare Pages** wins on pricing (no bandwidth charges, no function invocation limits) and is the better fit if you're already using Cloudflare for DNS, Workers, or R2 storage. Both have generous free tiers for side projects.
+</Callout>
+
+---
+
+## 05 — Supabase: Your Backend in a Box
+
+Supabase gives you Postgres, authentication, file storage, and real-time subscriptions — all with auto-generated TypeScript types and a generous free tier.
+
+```bash
+brew install supabase/tap/supabase
+pnpm add @supabase/supabase-js @supabase/ssr
+supabase gen types typescript --project-id YOUR_ID > types/database.ts
+```
+
+**Auth Setup Checklist:**
+
+- **Email auth is enabled** — confirm under Providers → Email.
+- **Site URL is set** — go to Authentication → URL Configuration and set your production domain.
+- **Redirect URLs are configured** — add both `http://localhost:3000/**` and your Vercel URL to the Redirect URLs list. Without this, magic links will be blocked.
+- **API keys are in Vercel** — copy `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` from Project Settings → API, then add to Vercel Environment Variables.
+
+<Callout type="warn" title="⚠️ Common Gotcha">
+If magic links or OAuth logins redirect to an error page, it's almost always a missing redirect URL. Make sure both `http://localhost:3000/**` and your live Vercel domain are in the Redirect URLs list — the wildcard `/**` suffix is required.
 </Callout>
 
 ---
