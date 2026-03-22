@@ -21,8 +21,6 @@ DigitalOcean's 1-Click App marketplace pre-configures dependencies and baseline 
 - Feature-complete alternative to Slack and Microsoft Teams
 - Channels, DMs, video conferencing (Jitsi), file sharing, bots, and a full REST API
 - **$24/month** Droplet (4GB RAM) handles teams under 50 users
-- Post-install: configure SMTP, set up HTTPS with Let's Encrypt, restrict open registration
-- For larger teams: move MongoDB to a DigitalOcean Managed Database
 
 <Callout type="note" title="1-Click Deploy">
 [Rocket.Chat on DigitalOcean Marketplace →](https://marketplace.digitalocean.com/apps/rocket-chat)
@@ -32,7 +30,6 @@ DigitalOcean's 1-Click App marketplace pre-configures dependencies and baseline 
 
 - Most widely deployed self-hosted file platform
 - Document collaboration (Collabora or OnlyOffice), calendar, contacts, video calls, and a rich app ecosystem
-- Post-install: point storage to DigitalOcean Spaces, add domain to `config.php`, enable HTTPS, switch background jobs from AJAX to cron
 
 <Callout type="note" title="1-Click Deploy">
 [Nextcloud on DigitalOcean Marketplace →](https://marketplace.digitalocean.com/apps/nextcloud)
@@ -132,6 +129,27 @@ curl -sSL https://repos.insights.digitalocean.com/install.sh | sudo bash
 # Spaces for Nextcloud file storage (start here — migrating later is complex)
 #   Spaces → Create Space → copy endpoint URL and access keys
 #   Nextcloud admin panel → External Storage → Add S3-compatible storage
+```
+
+#### App Configuration
+
+- Configure SMTP on both apps so password resets, notifications, and alerts reach users reliably
+- Disable open registration in Rocket.Chat — only invited users should be able to create accounts
+- Switch Nextcloud background jobs from AJAX to system cron for reliable scheduling under load
+
+```bash
+# App Configuration
+# Rocket.Chat — configure SMTP
+# Admin → Settings → Email → SMTP
+# SMTP Host: smtp.yourdomain.com  Port: 587  TLS: enabled
+
+# Rocket.Chat — restrict open registration
+# Admin → Settings → Accounts → Registration → set to "Disabled"
+
+# Nextcloud — switch background jobs to system cron
+# Admin → Basic Settings → Background Jobs → select "Cron"
+sudo crontab -u www-data -e
+# Add: */5 * * * * php -f /var/www/nextcloud/cron.php
 ```
 
 #### Centralized Logging
