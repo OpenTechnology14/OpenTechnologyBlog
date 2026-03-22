@@ -38,25 +38,16 @@ DigitalOcean's 1-Click App marketplace pre-configures dependencies and baseline 
 [Nextcloud on DigitalOcean Marketplace →](https://marketplace.digitalocean.com/apps/nextcloud)
 </Callout>
 
----
-
-## Why Businesses Should Self-Host on DigitalOcean
-
-### Dramatic Cost Savings vs. SaaS Alternatives
-
-That's a savings of roughly **$7,000–$8,700 per year** for a 25-person team — savings that scale favorably as headcount grows, since SaaS pricing is per-seat while infrastructure costs grow much more slowly.
-
-Self-hosting keeps your data on infrastructure you control, in the region you choose — critical for GDPR compliance and data residency requirements. SaaS models scale in cost with headcount; self-hosted infrastructure doesn't.
-
----
-
-## Production Configuration
+### Production Configuration
 
 Apply these settings to every deployment before going live. They are ordered by priority.
 
-### Firewall Rules
+#### Firewall Rules
 
-DigitalOcean Droplets have all ports open by default. Creating a Cloud Firewall is the single most important hardening step — do this immediately after launch.
+- DigitalOcean Droplets have all ports open by default
+- Creating a Cloud Firewall is the single most important hardening step — do this immediately after launch
+
+<details><summary>Firewall Configuration</summary>
 
 ```bash
 # 1. Create a Cloud Firewall in the DigitalOcean control panel:
@@ -74,9 +65,14 @@ sudo systemctl restart ssh
 # 3. Assign the firewall to your Droplet in the control panel
 ```
 
-### Backups and SSL
+</details>
 
-Enable weekly Droplet backups (off by default) and secure every app with a Let's Encrypt certificate.
+#### Backups and SSL
+
+- Enable weekly Droplet backups — off by default, costs ~20% of the Droplet monthly price
+- Secure every app with a Let's Encrypt certificate via Certbot
+
+<details><summary>Backups & SSL Configuration</summary>
 
 ```bash
 # Enable backups: DigitalOcean control panel → Droplet → Backups → Enable
@@ -93,9 +89,15 @@ sudo certbot renew --dry-run
 sudo systemctl status certbot.timer
 ```
 
-### Monitoring and Uptime
+</details>
 
-Install the metrics agent, configure alerts, and add uptime checks before users rely on the service.
+#### Monitoring and Uptime
+
+- Install the DigitalOcean metrics agent to enable CPU, memory, and disk alerts
+- Add uptime checks before users rely on the service — free within the control panel
+- UptimeRobot provides multi-region checks and a public status page
+
+<details><summary>Monitoring Configuration</summary>
 
 ```bash
 # Install the DigitalOcean metrics agent
@@ -111,9 +113,16 @@ curl -sSL https://repos.insights.digitalocean.com/install.sh | sudo bash
 # Add UptimeRobot (uptimerobot.com) for multi-region checks + status page
 ```
 
-### Networking and Database
+</details>
 
-Move databases off the application Droplet and isolate traffic before going to production.
+#### Networking and Database
+
+- Use a Reserved IP so the address survives Droplet resizes and rebuilds
+- Place all Droplets in a VPC to keep internal traffic off the public internet
+- Move Rocket.Chat's MongoDB and Nextcloud's database to Managed Database services before production traffic
+- Configure Nextcloud file storage on DigitalOcean Spaces from the start — migrating later is complex
+
+<details><summary>Networking & Database Configuration</summary>
 
 ```bash
 # Reserved IP — survives Droplet resizes and rebuilds
@@ -135,9 +144,14 @@ Move databases off the application Droplet and isolate traffic before going to p
 #   Nextcloud admin panel → External Storage → Add S3-compatible storage
 ```
 
-### Centralized Logging
+</details>
 
-Ship logs to a managed service so they survive a Droplet rebuild and are searchable across servers.
+#### Centralized Logging
+
+- Ship logs to a managed service so they survive a Droplet rebuild and are searchable across servers
+- Cap local log file sizes with logrotate to prevent disk exhaustion
+
+<details><summary>Logging Configuration</summary>
 
 ```bash
 # Example: forward logs to Papertrail via rsyslog
@@ -157,3 +171,15 @@ sudo nano /etc/logrotate.d/apps
 # Monitor Rocket.Chat MongoDB logs (database errors surface here first)
 sudo tail -f /var/log/mongodb/mongod.log
 ```
+
+</details>
+
+---
+
+## Why Businesses Should Self-Host on DigitalOcean
+
+### Dramatic Cost Savings vs. SaaS Alternatives
+
+That's a savings of roughly **$7,000–$8,700 per year** for a 25-person team — savings that scale favorably as headcount grows, since SaaS pricing is per-seat while infrastructure costs grow much more slowly.
+
+Self-hosting keeps your data on infrastructure you control, in the region you choose — critical for GDPR compliance and data residency requirements. SaaS models scale in cost with headcount; self-hosted infrastructure doesn't.
