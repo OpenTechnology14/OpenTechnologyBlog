@@ -30,10 +30,6 @@ gh auth login
 git init && git add . && git commit -m "init"
 gh repo create my-blog --public --source=. --push
 
-# Clone an existing repo to a new machine
-git clone https://github.com/yourname/my-blog.git
-cd my-blog && pnpm install
-
 # Force a redeploy on Vercel without a code change
 git commit --allow-empty -m "redeploy"
 git push
@@ -79,6 +75,10 @@ npm install -g pnpm gh
 
 # Verify installs
 node --version && git --version && gh --version
+
+# Clone an existing repo to a new machine
+git clone https://github.com/yourname/my-blog.git
+cd my-blog && pnpm install
 ```
 
 Claude Code is a terminal-native AI agent that reads your entire codebase, writes files, runs commands, and iterates until the feature works. It's the multiplier that makes one developer feel like a team.
