@@ -19,6 +19,8 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
 - Centralizes authentication across all devices and servers via SSO, SAML, and OIDC
 - Produces a complete audit log of every login, token issuance, and admin action
 
+For a fully managed Keycloak deployment on PikaPods, see [Hosting Without the Headaches: Run WordPress, Ghost & Keycloak on PikaPods](/blog/pikapods-nextcloud-hosting).
+
 ```
 # Setup Steps
 1. Deploy via Docker or dedicated 2 vCPU / 4 GB host
@@ -30,7 +32,7 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
 7. Wire Wazuh Dashboard SAML/OIDC via roles_mapping.yml
 ```
 
-```json
+```
 // Enable full event logging (realm settings)
 // Keycloak realm settings — enable full event logging
 {
@@ -45,9 +47,7 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
     "CLIENT_LOGIN", "CLIENT_LOGIN_ERROR"
   ]
 }
-```
 
-```xml
 <!-- Wazuh agent — read Keycloak log output -->
 <!-- ossec.conf — on Keycloak host -->
 <ossec_config>
@@ -57,9 +57,7 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
     <label key="source">keycloak</label>
   </localfile>
 </ossec_config>
-```
 
-```xml
 <!-- Wazuh rules — login failures and admin privilege changes -->
 <!-- keycloak_rules.xml -->
 <group name="keycloak,authentication,">
@@ -177,9 +175,7 @@ logging:
     plugin: filesystem
     config:
       status_log_file: /var/log/fleet/osquery_status.log
-```
 
-```yaml
 # Filebeat — forward Fleet logs to Wazuh
 # filebeat.yml
 filebeat.inputs:
@@ -220,9 +216,7 @@ Deploy the Wazuh agent alongside OpenEDR on each endpoint. Configure the agent t
     <location>Security</location>
   </localfile>
 </ossec_config>
-```
 
-```xml
 <!-- Wazuh rules — MITRE ATT&CK credential access detection -->
 <!-- openedr_rules.xml -->
 <group name="openedr,mitre,">
@@ -257,7 +251,7 @@ Deploy the Wazuh agent alongside OpenEDR on each endpoint. Configure the agent t
 
 **Wazuh triggers Fail2ban (active response):** Wazuh detects brute force patterns across SSH, RDP, web applications, and Keycloak login failures, then calls Fail2ban to ban the source IP:
 
-```xml
+```
 <!-- Wazuh active response configuration -->
 <!-- ossec.conf — on Wazuh Manager -->
 <ossec_config>
@@ -268,9 +262,7 @@ Deploy the Wazuh agent alongside OpenEDR on each endpoint. Configure the agent t
     <timeout>3600</timeout>
   </active-response>
 </ossec_config>
-```
 
-```bash
 #!/bin/bash
 # /var/ossec/active-response/bin/fail2ban.sh
 ACTION=$1
@@ -282,9 +274,7 @@ if [ "$ACTION" = "add" ]; then
 elif [ "$ACTION" = "delete" ]; then
   fail2ban-client set wazuh-response unbanip "$IP"
 fi
-```
 
-```ini
 # /etc/fail2ban/jail.d/wazuh-response.conf
 [wazuh-response]
 enabled = true
@@ -308,9 +298,7 @@ bantime = 3600
     <label key="source">fail2ban</label>
   </localfile>
 </ossec_config>
-```
 
-```xml
 <!-- fail2ban_rules.xml -->
 <group name="fail2ban,">
   <rule id="93001" level="8">
