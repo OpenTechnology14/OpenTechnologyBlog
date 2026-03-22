@@ -36,22 +36,30 @@ PikaPods deploys each application in its own isolated container (a "Pod") and ha
 
 WordPress powers over 40% of all websites. WordPress.com's Business plan starts at $25/month and adds restrictions on plugins and themes. A PikaPods WordPress pod starts at ~$3–4/month with full admin access, unlimited plugins, and no artificial feature limits.
 
-**Key setup steps**
+<details><summary>Key Setup Steps</summary>
 
-- **Custom domain.** Point DNS to PikaPods and update the Site URL in WordPress General Settings.
-- **Caching plugin.** W3 Total Cache or WP Super Cache improves performance significantly on smaller pods.
-- **Transactional email.** PikaPods doesn't include outbound email. Connect a free Mailgun or Brevo account for forms and WooCommerce.
-- **Backups.** Use UpdraftPlus to auto-backup your database and files to an S3 bucket or Google Drive.
+```
+1. Custom domain — Point DNS to PikaPods and update the Site URL in WordPress General Settings
+2. Caching plugin — W3 Total Cache or WP Super Cache improves performance on smaller pods
+3. Transactional email — PikaPods doesn't include outbound email; connect Mailgun or Brevo for forms and WooCommerce
+4. Backups — Use UpdraftPlus to auto-backup database and files to S3 or Google Drive
+```
+
+</details>
 
 ### Ghost — Modern Publishing for Newsletters & Blogs
 
 Ghost is the platform of choice for newsletters, blogs, and content-driven businesses — a compelling alternative to Substack and Medium where you own your subscriber list. Ghost Pro's Creator plan runs $25/month ($300/year). Ghost on PikaPods costs ~$2–3/month with no feature restrictions, full theme customization, and your own custom domain.
 
-**Key setup steps**
+<details><summary>Key Setup Steps</summary>
 
-- **Custom domain.** Update Settings > Publication in the Ghost admin panel, then point your DNS.
-- **Mailgun for email.** Ghost requires an external SMTP provider for newsletters. Mailgun's free tier handles low-volume sending.
-- **Members & newsletters.** Enable Ghost's built-in membership system and connect Stripe for paid subscriber tiers.
+```
+1. Custom domain — Update Settings > Publication in the Ghost admin panel, then point your DNS
+2. Mailgun for email — Ghost requires an external SMTP provider for newsletters; Mailgun's free tier handles low-volume sending
+3. Members & newsletters — Enable Ghost's built-in membership system and connect Stripe for paid subscriber tiers
+```
+
+</details>
 
 > Crucially, Ghost on PikaPods costs the same $2–3/month whether you have 500 or 50,000 subscribers. Ghost Pro pricing scales with your membership count — PikaPods pricing scales with server resources, which grow far more slowly.
 
@@ -59,12 +67,16 @@ Ghost is the platform of choice for newsletters, blogs, and content-driven busin
 
 Keycloak is an open-source identity provider that centralises authentication across your entire app stack — handling SSO, OAuth2, OIDC, and SAML so every app your team runs uses one login. Running it on PikaPods gives you enterprise-grade IAM without the enterprise price tag.
 
-**Key setup steps**
+<details><summary>Key Setup Steps</summary>
 
-- **Custom domain.** Point a subdomain (e.g. `auth.yourdomain.com`) to your Keycloak pod for clean SSO redirect URLs.
-- **Create a realm.** Set up a dedicated realm for your organisation and configure your identity providers and client applications.
-- **Connect your apps.** Register WordPress, Ghost, and any other apps as clients in Keycloak — each gets its own client ID and secret for secure OAuth2 flows.
-- **Enable MFA.** Turn on TOTP (Google Authenticator / Authy) in the realm authentication settings for all admin accounts.
+```
+1. Custom domain — Point a subdomain (e.g. auth.yourdomain.com) to your Keycloak pod for clean SSO redirect URLs
+2. Create a realm — Set up a dedicated realm for your organisation; configure identity providers and client applications
+3. Connect your apps — Register WordPress, Ghost, and other apps as clients; each gets its own client ID and secret for OAuth2
+4. Enable MFA — Turn on TOTP (Google Authenticator / Authy) in realm authentication settings for all admin accounts
+```
+
+</details>
 
 ---
 
