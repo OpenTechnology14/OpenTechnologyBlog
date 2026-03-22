@@ -6,8 +6,6 @@ date: "2026-03-17"
 readTime: "7 min"
 ---
 
-<ToolFlow />
-
 A practical guide to setting up Terminal, VS Code, GitHub, Claude Code, Vercel, and Supabase — from a simple blog with CMS to a full table management app. This guide walks you through each tool with real AI prompts you can drop in immediately.
 
 ---
@@ -461,6 +459,57 @@ Also generate:
 
 <Callout type="tip" title="💡 Free Tier Reality Check">
 Vercel Hobby: unlimited personal projects, 100GB bandwidth/month. Supabase free: 2 projects, 500MB database, 1GB storage. **This entire stack is free for side projects.**
+</Callout>
+
+---
+
+## ✦ Cloudflare Pages: The Vercel Alternative
+
+Cloudflare Pages is a compelling alternative to Vercel — especially if you want global edge delivery, zero cold starts, and no bandwidth caps. It connects to GitHub just like Vercel and auto-deploys on every push to `main`. The key difference: your app runs on Cloudflare's edge network in 300+ locations rather than a handful of serverless regions.
+
+```bash
+# Install the adapter for Next.js on Cloudflare
+npm install --save-dev @cloudflare/next-on-pages
+
+# Add the build script to package.json
+# "build:cf": "next build && npx vercel-build"
+
+# Deploy via CLI
+npx wrangler pages deploy .vercel/output/static
+# Or connect GitHub at pages.cloudflare.com — same 3-click flow as Vercel
+```
+
+<Callout type="note" title="📌 Next.js on Cloudflare">
+Cloudflare Pages uses the **Edge Runtime** — not Node.js. This means `fs`, `path`, and some Node-specific APIs aren't available in route handlers. Most Next.js apps work without changes, but check any custom API routes for Node-only imports before switching.
+</Callout>
+
+<AiPrompt label="Cloudflare Pages Config" type="deploy">
+Set up my Next.js app to deploy on Cloudflare Pages:
+
+1. Install and configure @cloudflare/next-on-pages
+2. Create wrangler.toml with:
+   - Project name and compatibility date
+   - KV namespace bindings for caching
+   - Environment variable placeholders
+
+3. Update package.json scripts for:
+   - Local preview with wrangler pages dev
+   - Production build for Cloudflare
+
+4. Create functions/api/contact.ts — a Pages Function
+   that handles contact form POST requests and forwards
+   to Discord webhook or Resend email
+
+5. .github/workflows/deploy.yml that:
+   - Runs on push to main
+   - Builds with next-on-pages
+   - Deploys to Cloudflare Pages via wrangler
+
+Output all config files ready to commit.
+</AiPrompt>
+
+<Callout type="tip" title="💡 Cloudflare vs Vercel — When to Choose Which">
+**Vercel** is the path of least resistance for Next.js — zero config, instant preview URLs, and native ISR support. **Cloudflare Pages** wins on pricing (no bandwidth charges, no function invocation limits) and is the better fit if you're already using Cloudflare for DNS, Workers, or R2 storage. Both have generous free tiers for side projects.
 </Callout>
 
 ---
