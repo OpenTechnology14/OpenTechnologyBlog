@@ -48,6 +48,18 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
   - A misconfigured DMARC or blacklisted IP can enable domain spoofing or cause breach notification failures
   - Route alerts to the same Rocket.Chat `#security` channel as Wazuh for unified visibility
 
+- **Falco — Runtime Behavioral Detection Layer**
+  - eBPF-based syscall interception — detects threats at the kernel level without agents modifying endpoint code
+  - Maps anomalies directly to MITRE ATT&CK techniques: shells from web processes, mass file writes, privilege escalations
+  - Outputs structured JSON events that feed directly into Wazuh for correlation and compliance tagging
+  - Fills the gap OpenEDR leaves on Linux servers and containers where Windows EDR agents don't apply
+
+- **Shuffle — SOAR & Automation Layer**
+  - Connects Wazuh, Fleet, Keycloak, Fail2ban, and Rocket.Chat into automated response workflows
+  - Triage playbooks parse alert severity, enrich with Fleet host context, and trigger Wazuh active response — no manual intervention required
+  - FIM rollback playbook detects file changes (Wazuh rule 550/554) and triggers restic or VSS restore automatically
+  - Every automated action is logged as a timestamped workflow execution — providing the response audit trail auditors require
+
 ---
 
 ## Integration Setup
