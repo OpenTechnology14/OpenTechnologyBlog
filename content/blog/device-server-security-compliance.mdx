@@ -14,17 +14,39 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
 
 ## Why These Tools?
 
-- **Keycloak — Identity Layer (Layer 0):** Before any endpoint is queried or log is ingested, identity is the first control plane. Keycloak centralizes authentication across all business devices and servers via SSO, SAML, and OIDC — enforcing MFA, managing fine-grained role-based access, and producing a complete audit log of every login, token issuance, and admin action.
+- **Keycloak — Identity Layer (Layer 0)**
+  - Identity is the first control plane — all queries and log ingestion flow through authenticated sessions
+  - Centralizes authentication across all devices and servers via SSO, SAML, and OIDC
+  - Enforces MFA and fine-grained role-based access control
+  - Produces a complete audit log of every login, token issuance, and admin action
 
-- **Fleet — Query & Inventory Layer:** Fleet manages osquery across all endpoints — servers, workstations, and cloud instances. Rather than pushing data, it lets you query your infrastructure like a database. Scheduled queries run continuously and ship results to a central log store, giving auditors a queryable record of system state over time rather than a point-in-time snapshot.
+- **Fleet — Query & Inventory Layer**
+  - Manages osquery across all endpoints — servers, workstations, and cloud instances
+  - Query your infrastructure like a database rather than pushing data reactively
+  - Scheduled queries run continuously and ship results to a central log store
+  - Gives auditors a queryable record of system state over time, not a point-in-time snapshot
 
-- **OpenEDR — Behavioral Detection Layer:** OpenEDR provides continuous behavioral monitoring — watching for suspicious process trees, credential access patterns, lateral movement, and file system anomalies. It generates telemetry modeled on the MITRE ATT&CK framework, capturing the full story of what happened on an endpoint: which process spawned what child, what file was accessed, what network connection was established.
+- **OpenEDR — Behavioral Detection Layer**
+  - Continuous behavioral monitoring for process trees, credential access patterns, lateral movement, and file system anomalies
+  - Telemetry modeled on the MITRE ATT&CK framework
+  - Captures the full endpoint story: which process spawned what child, what file was accessed, what network connection was established
 
-- **Wazuh — SIEM & Compliance Engine:** Wazuh is the integration layer. It ingests logs from virtually any source, applies correlation rules to detect threats and policy violations, and ships with out-of-the-box compliance decoders for SOC 2, HIPAA, PCI DSS, NIST 800-53, and GDPR. Its compliance dashboards map every event to specific control requirements, producing audit-ready reporting without weeks of manual work.
+- **Wazuh — SIEM & Compliance Engine**
+  - Ingests logs from virtually any source and applies correlation rules to detect threats and policy violations
+  - Ships with out-of-the-box compliance decoders for SOC 2, HIPAA, PCI DSS, NIST 800-53, and GDPR
+  - Compliance dashboards map every event to specific control requirements — audit-ready without weeks of manual work
 
-- **Fail2ban — Active Response Layer:** Fail2ban monitors log files for repeated authentication failures and automatically bans offending IPs via firewall rules. Paired with Wazuh, it closes the loop between detection and response — Wazuh detects brute force patterns, triggers Fail2ban to block the source, and Fail2ban's actions are logged back into Wazuh, creating an immutable audit trail of every automated block for PCI DSS Requirement 10 and SOC 2 CC7.
+- **Fail2ban — Active Response Layer**
+  - Monitors log files for repeated authentication failures and automatically bans offending IPs via firewall rules
+  - Wazuh detects brute force patterns and triggers Fail2ban to block the source IP
+  - Every ban and unban is logged back into Wazuh as a timestamped compliance event
+  - Produces the immutable automated-response audit trail required by PCI DSS Req. 10 and SOC 2 CC7
 
-- **MXToolbox — Email & Domain Security:** Email is a primary attack vector and a compliance concern in its own right. MXToolbox provides passive monitoring of your email domain health — verifying SPF, DKIM, and DMARC records and alerting when sending IPs appear on blacklists. A misconfigured DMARC record or blacklisted IP can allow phishing emails to spoof your domain or cause breach notifications to fail. Route MXToolbox alerts to the same Rocket.Chat `#security` channel as Wazuh so domain health issues are visible alongside endpoint and identity events.
+- **MXToolbox — Email & Domain Security**
+  - Passive monitoring of email domain health — verifies SPF, DKIM, and DMARC records continuously
+  - Alerts when sending IPs appear on blacklists before they become incidents
+  - A misconfigured DMARC or blacklisted IP can enable domain spoofing or cause breach notification failures
+  - Route alerts to the same Rocket.Chat `#security` channel as Wazuh for unified visibility
 
 ---
 
