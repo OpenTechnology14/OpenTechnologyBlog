@@ -32,14 +32,15 @@ export const TECH_TOOLS: TechTool[] = [
   { name: "Google",          icon: "🔵", logo: "/logos/google.svg",      category: "Managed Cloud Apps",     url: "https://cloud.google.com",          description: "Cloud infrastructure & developer services" },
   { name: "AWS",             icon: "☁️", logo: "/logos/aws.svg",         category: "Managed Cloud Apps",     url: "https://aws.amazon.com",            description: "Amazon Web Services cloud platform",                 darkInvert: true },
   { name: "Microsoft",       icon: "🪟", logo: "/logos/microsoft.svg",   category: "Managed Cloud Apps",     url: "https://azure.microsoft.com",       description: "Azure cloud & developer ecosystem" },
-  { name: "Brave",       icon: "🦁", logo: "/logos/brave.svg",       category: "Workflow Management", url: "https://brave.com",                 description: "Privacy-first browser with built-in ad blocking" },
-  { name: "Bitwarden",   icon: "🔐", logo: "/logos/bitwarden.svg",   category: "Device & Data", url: "https://bitwarden.com",             description: "Open-source password manager" },
-  { name: "Plane",       icon: "✈️", logo: "/logos/plane.png",       category: "Workflow Management", url: "https://plane.so",                  description: "Open-source project management & issue tracking" },
-  { name: "Rocket Chat", icon: "🚀", logo: "/logos/rocketchat.svg",  category: "Workflow Management", url: "https://rocket.chat",               description: "Self-hosted team messaging platform" },
-  { name: "Nextcloud",   icon: "☁️", logo: "/logos/nextcloud.svg",   category: "Device & Data",    url: "https://nextcloud.com",             description: "Self-hosted file sync & collaboration suite" },
-  { name: "Metabase",    icon: "📈", logo: "/logos/metabase.svg",    category: "Device & Data",    url: "https://metabase.com",              description: "Open-source business analytics & dashboards" },
-  { name: "Wireguard",   icon: "🔒", logo: "/logos/wireguard.svg",   category: "Device & Data",    url: "https://wireguard.com",             description: "Fast, modern VPN protocol",                          darkInvert: true },
-  { name: "Fleet",       icon: "🖥️", logo: "/logos/fleet.png",       category: "Device & Data",    url: "https://fleetdm.com",               description: "Open-source device management & endpoint visibility" },
+  { name: "Brave",       icon: "🦁", logo: "/logos/brave.svg",       category: "Workflow Management", url: "https://brave.com",             description: "Privacy-first browser with built-in ad blocking" },
+  { name: "Bitwarden",   icon: "🔐", logo: "/logos/bitwarden.svg",   category: "Device & Data",       url: "https://bitwarden.com",         description: "Open-source password manager" },
+  { name: "Plane",       icon: "✈️", logo: "/logos/plane.png",       category: "Workflow Management", url: "https://plane.so",              description: "Open-source project management & issue tracking" },
+  { name: "Rocket Chat", icon: "🚀", logo: "/logos/rocketchat.svg",  category: "Workflow Management", url: "https://rocket.chat",           description: "Self-hosted team messaging platform" },
+  { name: "AITable",     icon: "📊", logo: "/logos/aitable.png",     category: "Workflow Management", url: "https://aitable.ai",            description: "AI-powered spreadsheet and database platform" },
+  { name: "Nextcloud",   icon: "☁️", logo: "/logos/nextcloud.svg",   category: "Device & Data",       url: "https://nextcloud.com",         description: "Self-hosted file sync & collaboration suite" },
+  { name: "Fleet",       icon: "🖥️", logo: "/logos/fleet.png",       category: "Device & Data",       url: "https://fleetdm.com",           description: "Open-source device management & endpoint visibility" },
+  { name: "Wazuh",       icon: "🛡️", logo: "/logos/wazuh.svg",       category: "Device & Data",       url: "https://wazuh.com",             description: "Open-source security monitoring & SIEM platform" },
+  { name: "Keycloak",    icon: "🔑", logo: "/logos/keycloak.svg",    category: "Device & Data",       url: "https://keycloak.org",          description: "Open-source identity and access management" },
 ];
 
 export interface BlogPost {
