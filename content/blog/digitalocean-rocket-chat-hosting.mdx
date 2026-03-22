@@ -47,7 +47,8 @@ Apply these settings to every deployment before going live. They are ordered by 
 - DigitalOcean Droplets have all ports open by default
 - Creating a Cloud Firewall is the single most important hardening step — do this immediately after launch
 
-<details><summary>Firewall Configuration</summary>
+<details>
+<summary>Firewall Configuration</summary>
 
 ```bash
 # 1. Create a Cloud Firewall in the DigitalOcean control panel:
@@ -72,7 +73,8 @@ sudo systemctl restart ssh
 - Enable weekly Droplet backups — off by default, costs ~20% of the Droplet monthly price
 - Secure every app with a Let's Encrypt certificate via Certbot
 
-<details><summary>Backups & SSL Configuration</summary>
+<details>
+<summary>Backups & SSL Configuration</summary>
 
 ```bash
 # Enable backups: DigitalOcean control panel → Droplet → Backups → Enable
@@ -97,7 +99,8 @@ sudo systemctl status certbot.timer
 - Add uptime checks before users rely on the service — free within the control panel
 - UptimeRobot provides multi-region checks and a public status page
 
-<details><summary>Monitoring Configuration</summary>
+<details>
+<summary>Monitoring Configuration</summary>
 
 ```bash
 # Install the DigitalOcean metrics agent
@@ -122,7 +125,8 @@ curl -sSL https://repos.insights.digitalocean.com/install.sh | sudo bash
 - Move Rocket.Chat's MongoDB and Nextcloud's database to Managed Database services before production traffic
 - Configure Nextcloud file storage on DigitalOcean Spaces from the start — migrating later is complex
 
-<details><summary>Networking & Database Configuration</summary>
+<details>
+<summary>Networking & Database Configuration</summary>
 
 ```bash
 # Reserved IP — survives Droplet resizes and rebuilds
@@ -151,7 +155,8 @@ curl -sSL https://repos.insights.digitalocean.com/install.sh | sudo bash
 - Ship logs to a managed service so they survive a Droplet rebuild and are searchable across servers
 - Cap local log file sizes with logrotate to prevent disk exhaustion
 
-<details><summary>Logging Configuration</summary>
+<details>
+<summary>Logging Configuration</summary>
 
 ```bash
 # Example: forward logs to Papertrail via rsyslog
