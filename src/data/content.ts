@@ -36,7 +36,7 @@ export const TECH_TOOLS: TechTool[] = [
   { name: "Bitwarden",   icon: "🔐", logo: "/logos/bitwarden.svg",   category: "Device & Data",       url: "https://bitwarden.com",         description: "Open-source password manager" },
   { name: "Plane",       icon: "✈️", logo: "/logos/plane.png",       category: "Workflow Management", url: "https://plane.so",              description: "Open-source project management & issue tracking" },
   { name: "Rocket Chat", icon: "🚀", logo: "/logos/rocketchat.svg",  category: "Workflow Management", url: "https://rocket.chat",           description: "Self-hosted team messaging platform" },
-  { name: "AITable",     icon: "📊", logo: "/logos/aitable.png",     category: "Workflow Management", url: "https://aitable.ai",            description: "AI-powered spreadsheet and database platform" },
+  { name: "AITable",     icon: "📊", logo: "/logos/aitable.svg",     category: "Workflow Management", url: "https://aitable.ai",            description: "AI-powered spreadsheet and database platform" },
   { name: "Nextcloud",   icon: "☁️", logo: "/logos/nextcloud.svg",   category: "Device & Data",       url: "https://nextcloud.com",         description: "Self-hosted file sync & collaboration suite" },
   { name: "Fleet",       icon: "🖥️", logo: "/logos/fleet.png",       category: "Device & Data",       url: "https://fleetdm.com",           description: "Open-source device management & endpoint visibility" },
   { name: "Wazuh",       icon: "🛡️", logo: "/logos/wazuh.svg",       category: "Device & Data",       url: "https://wazuh.com",             description: "Open-source security monitoring & SIEM platform" },
