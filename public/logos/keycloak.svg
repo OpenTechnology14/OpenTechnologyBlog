@@ -1,7 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-  <circle cx="9" cy="10" r="4" fill="none" stroke="#FF4500" stroke-width="2"/>
-  <circle cx="9" cy="10" r="1.5" fill="#FF4500"/>
-  <line x1="12.5" y1="13.5" x2="20" y2="21" stroke="#FF4500" stroke-width="2" stroke-linecap="round"/>
-  <line x1="16" y1="18" x2="18" y2="16" stroke="#FF4500" stroke-width="2" stroke-linecap="round"/>
-  <line x1="14" y1="20" x2="16" y2="18" stroke="#FF4500" stroke-width="2" stroke-linecap="round"/>
+  <!-- Shield / background -->
+  <path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6L12 2z" fill="#E05A00"/>
+  <!-- Keyhole circle -->
+  <circle cx="12" cy="9.5" r="2.8" fill="none" stroke="#fff" stroke-width="1.7"/>
+  <!-- Key stem + teeth -->
+  <line x1="12" y1="12.3" x2="12" y2="17" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/>
+  <line x1="12" y1="14.5" x2="14" y2="14.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="12" y1="16.2" x2="13.5" y2="16.2" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
 </svg>

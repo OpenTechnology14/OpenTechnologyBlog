@@ -1,4 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-  <path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6l-9-4z" fill="#1AA3E8"/>
-  <polyline points="7,10.5 9,15 12,9 15,15 17,10.5" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Shield body -->
+  <path d="M12 2L3 6v5.5C3 16.5 7 20.8 12 22c5-1.2 9-5.5 9-10.5V6L12 2z" fill="#1A8AC4"/>
+  <path d="M12 2L3 6v5.5C3 16.5 7 20.8 12 22c5-1.2 9-5.5 9-10.5V6L12 2z" fill="url(#wg)" opacity="0.6"/>
+  <!-- W / EKG line -->
+  <polyline points="5.5,12 7.5,15.5 9.5,9.5 12,15.5 14.5,9.5 16.5,13.5 18.5,11.5"
+    fill="none" stroke="#fff" stroke-width="1.5"
+    stroke-linecap="round" stroke-linejoin="round"/>
+  <defs>
+    <linearGradient id="wg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#58C8F0"/>
+      <stop offset="100%" stop-color="#0E5C8A"/>
+    </linearGradient>
+  </defs>
 </svg>

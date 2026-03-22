@@ -52,6 +52,14 @@ const stack = [
     bonus: false,
   },
   {
+    name: "Cloudflare",
+    logo: "/logos/cloudflare.svg",
+    icon: "🟠",
+    role: "Edge hosting + CDN — Pages for static/SSR, Workers for serverless logic",
+    free: "Unlimited requests",
+    bonus: false,
+  },
+  {
     name: "Penpot",
     logo: "/logos/penpot.svg",
     icon: "🎨",
