@@ -54,7 +54,12 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
 
 ### Keycloak
 
-Install Keycloak and configure it as the SSO provider for all internal services. Enable event logging to capture every authentication and admin event:
+1. Deploy Keycloak and configure it as the SSO provider for all internal services — [Keycloak Getting Started](https://www.keycloak.org/getting-started/getting-started-docker)
+2. Enable MFA and full event logging in realm settings
+3. Install the Wazuh agent on the Keycloak host — [Wazuh Agent Deployment](https://documentation.wazuh.com/current/installation-guide/wazuh-agent/index.html)
+
+<details>
+<summary>Enable full event logging (realm settings)</summary>
 
 ```json
 // Keycloak realm settings — enable full event logging
@@ -72,7 +77,10 @@ Install Keycloak and configure it as the SSO provider for all internal services.
 }
 ```
 
-Forward Keycloak events to Wazuh by configuring the Wazuh agent on the Keycloak host to read its log output:
+</details>
+
+<details>
+<summary>Wazuh agent — read Keycloak log output</summary>
 
 ```xml
 <!-- ossec.conf — on Keycloak host -->
@@ -85,7 +93,10 @@ Forward Keycloak events to Wazuh by configuring the Wazuh agent on the Keycloak 
 </ossec_config>
 ```
 
-Add a Wazuh rule to alert on Keycloak login failures and admin privilege changes:
+</details>
+
+<details>
+<summary>Wazuh rules — login failures and admin privilege changes</summary>
 
 ```xml
 <!-- keycloak_rules.xml -->
@@ -113,9 +124,28 @@ Add a Wazuh rule to alert on Keycloak login failures and admin privilege changes
 </group>
 ```
 
+</details>
+
+---
+
+### Wazuh
+
+1. Deploy Wazuh Manager + Indexer + Dashboard *(min. 4-core, 8GB RAM for production)* — [Wazuh Installation Guide](https://documentation.wazuh.com/current/installation-guide/index.html)
+2. Install Wazuh agents on all in-scope endpoints — [Wazuh Agent Deployment](https://documentation.wazuh.com/current/installation-guide/wazuh-agent/index.html)
+3. Enable compliance modules: PCI DSS, HIPAA, NIST 800-53 — [Wazuh Compliance Docs](https://documentation.wazuh.com/current/compliance/index.html)
+4. Configure alert routing to email, phone, and Rocket.Chat — [Wazuh Notification Config](https://documentation.wazuh.com/current/user-manual/manager/manual-email-report/index.html)
+5. Set ILM retention policies matching your longest compliance requirement — [Wazuh Index Management](https://documentation.wazuh.com/current/user-manual/wazuh-indexer/wazuh-indexer-tuning.html)
+
+---
+
 ### Fleet
 
-Set Fleet to write osquery results as JSON to a log file that can be picked up by Filebeat, then forward to Wazuh:
+1. Stand up Fleet server and enroll endpoints with the osquery agent — [Fleet Deployment Guide](https://fleetdm.com/docs/deploy/deploy-fleet)
+2. Configure Fleet → Filebeat → Wazuh log pipeline — [Filebeat Setup](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-installation-configuration.html)
+3. Schedule Fleet compliance queries (disk encryption, user accounts, software inventory) — [Fleet Query Library](https://fleetdm.com/docs/using-fleet/queries)
+
+<details>
+<summary>Fleet result log configuration</summary>
 
 ```yaml
 # fleet.yml — result log configuration
@@ -129,6 +159,11 @@ logging:
     config:
       status_log_file: /var/log/fleet/osquery_status.log
 ```
+
+</details>
+
+<details>
+<summary>Filebeat — forward Fleet logs to Wazuh</summary>
 
 ```yaml
 # filebeat.yml
@@ -146,9 +181,16 @@ output.logstash:
   ssl.certificate_authorities: ["/etc/filebeat/wazuh-ca.pem"]
 ```
 
+</details>
+
+---
+
 ### OpenEDR
 
-Deploy the Wazuh agent alongside OpenEDR on each endpoint. Configure the agent to read OpenEDR's JSON telemetry directly, then map MITRE ATT&CK categories to compliance control groups:
+Deploy the Wazuh agent alongside OpenEDR on each endpoint. Configure the agent to read OpenEDR's JSON telemetry directly, then map MITRE ATT&CK categories to compliance control groups.
+
+<details>
+<summary>Wazuh agent — read OpenEDR telemetry and Windows Security Event Log</summary>
 
 ```xml
 <!-- ossec.conf — on each endpoint -->
@@ -166,6 +208,11 @@ Deploy the Wazuh agent alongside OpenEDR on each endpoint. Configure the agent t
 </ossec_config>
 ```
 
+</details>
+
+<details>
+<summary>Wazuh rules — MITRE ATT&CK credential access detection</summary>
+
 ```xml
 <!-- openedr_rules.xml -->
 <group name="openedr,mitre,">
@@ -180,11 +227,19 @@ Deploy the Wazuh agent alongside OpenEDR on each endpoint. Configure the agent t
 </group>
 ```
 
+</details>
+
+---
+
 ### Fail2ban
 
-Detection without response leaves brute force attacks running indefinitely. Fail2ban closes this gap by automatically banning offending IPs at the firewall level. The Wazuh integration runs in two complementary directions.
+1. Install and configure Fail2ban on all internet-facing servers — [Fail2ban Manual](https://www.fail2ban.org/wiki/index.php/MANUAL_0_8)
+2. Wire Wazuh active response to trigger Fail2ban on brute force detection
 
 **Wazuh triggers Fail2ban (active response):** Wazuh detects brute force patterns across SSH, RDP, web applications, and Keycloak login failures, then calls Fail2ban to ban the source IP:
+
+<details>
+<summary>Wazuh active response configuration</summary>
 
 ```xml
 <!-- ossec.conf — on Wazuh Manager -->
@@ -224,7 +279,12 @@ maxretry = 1
 bantime = 3600
 ```
 
+</details>
+
 **Fail2ban logs feed into Wazuh (audit trail):** Every ban and unban becomes a Wazuh event — creating an immutable record of automated responses for PCI DSS Req. 10.2 and SOC 2 CC7:
+
+<details>
+<summary>Fail2ban log ingestion and audit rules</summary>
 
 ```xml
 <!-- ossec.conf — Fail2ban log ingestion -->
@@ -255,7 +315,16 @@ bantime = 3600
 </group>
 ```
 
+</details>
+
 The result is a closed loop: Wazuh detects → Fail2ban blocks → Fail2ban logs the action → Wazuh records it as a compliance event with full timestamp and IP.
+
+---
+
+### MXToolbox
+
+1. Enable MXToolbox Monitor for all sending domains and server IP ranges — [MXToolbox Monitors](https://mxtoolbox.com/monitors/)
+2. Route alerts to the same Rocket.Chat `#security` channel as Wazuh for unified visibility
 
 ---
 
@@ -288,23 +357,5 @@ Fleet's software inventory queries and Wazuh File Integrity Monitoring (FIM) pro
 
 **"How do you enforce MFA and manage user access?"**
 Keycloak enforces MFA at the identity layer for all internal services. Its audit logs, ingested by Wazuh, provide a timestamped record of every authentication event and admin change.
-
----
-
-## Getting Started
-
-Deploy in this order to reach a working compliance baseline as quickly as possible:
-
-1. Deploy Wazuh Manager + Indexer + Dashboard *(min. 4-core, 8GB RAM for production)* — [Wazuh Installation Guide](https://documentation.wazuh.com/current/installation-guide/index.html)
-2. Deploy Keycloak and configure it as SSO provider for all internal services — enable MFA and full event logging — [Keycloak Getting Started](https://www.keycloak.org/getting-started/getting-started-docker)
-3. Install Wazuh agents on all in-scope endpoints and the Keycloak host — [Wazuh Agent Deployment](https://documentation.wazuh.com/current/installation-guide/wazuh-agent/index.html)
-4. Stand up Fleet server and enroll endpoints with the osquery agent — [Fleet Deployment Guide](https://fleetdm.com/docs/deploy/deploy-fleet)
-5. Configure Fleet → Filebeat → Wazuh log pipeline — [Filebeat Setup](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-installation-configuration.html)
-6. Enable Wazuh compliance modules: PCI DSS, HIPAA, NIST 800-53 — [Wazuh Compliance Docs](https://documentation.wazuh.com/current/compliance/index.html)
-7. Schedule Fleet compliance queries (disk encryption, user accounts, software inventory) — [Fleet Query Library](https://fleetdm.com/docs/using-fleet/queries)
-8. Install and configure Fail2ban on all internet-facing servers; wire Wazuh active response — [Fail2ban Manual](https://www.fail2ban.org/wiki/index.php/MANUAL_0_8)
-9. Configure alert routing to email, phone, and Rocket.Chat — [Wazuh Notification Config](https://documentation.wazuh.com/current/user-manual/manager/manual-email-report/index.html)
-10. Enable MXToolbox Monitor for all sending domains and server IP ranges — [MXToolbox Monitors](https://mxtoolbox.com/monitors/)
-11. Set ILM retention policies matching your longest compliance requirement — [Wazuh Index Management](https://documentation.wazuh.com/current/user-manual/wazuh-indexer/wazuh-indexer-tuning.html)
 
 This architecture scales from a 50-endpoint startup pursuing SOC 2 Type I to a 10,000-endpoint enterprise maintaining PCI DSS certification. The open-source foundation keeps licensing costs near zero, and the modular design allows adding commercial EDR feeds, cloud security logs, or network monitoring without replacing the core pipeline.

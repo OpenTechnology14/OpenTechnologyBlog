@@ -1,7 +1,7 @@
 export const CATEGORIES = [
+  "Workflow Management",
   "Dev Tools",
   "Managed Cloud Apps",
-  "Workflow Management",
   "Device & Data",
 ] as const;
 
