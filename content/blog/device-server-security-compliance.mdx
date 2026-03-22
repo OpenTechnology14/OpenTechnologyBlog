@@ -34,6 +34,12 @@ Wazuh is the integration layer. It ingests logs from virtually any source, appli
 
 Fail2ban monitors log files for repeated authentication failures and automatically bans offending IPs via firewall rules. Paired with Wazuh, it closes the loop between detection and response: Wazuh detects brute force patterns and triggers Fail2ban to block the source; Fail2ban's actions are logged back into Wazuh, creating an immutable audit trail of every automated block — exactly the kind of evidence PCI DSS Requirement 10 and SOC 2 CC7 require.
 
+### MXToolbox — Email & Domain Security
+
+While the core stack covers device and server security, email is a primary attack vector and a compliance concern in its own right. MXToolbox provides passive monitoring of your email domain health — verifying that your SPF, DKIM, and DMARC records are correctly configured and alerting when your sending IPs appear on blacklists. For PCI DSS Requirement 12 (security policy) and HIPAA breach notification requirements, a misconfigured DMARC record or blacklisted IP means phishing emails can spoof your domain or breach notifications fail to reach regulators and patients. MXToolbox's continuous blacklist monitoring catches these conditions before they become incidents.
+
+Practical configuration: enable MXToolbox Monitor for your primary sending domain and any server IP ranges that send outbound email. Route alerts to the same Slack `#security` channel used for Wazuh high-severity alerts so domain health issues are visible alongside endpoint and identity events.
+
 ---
 
 ## Integration Setup
@@ -273,14 +279,6 @@ Wazuh ships built-in Fail2ban decoders. Add a custom rule to surface ban events 
 ```
 
 The result is a closed loop: Wazuh detects → Fail2ban blocks → Fail2ban logs the action → Wazuh records it as a compliance event with full timestamp and IP.
-
----
-
-## Email & Domain Security — MXToolbox
-
-While the core stack covers device and server security, email is a primary attack vector and a compliance concern in its own right. MXToolbox provides passive monitoring of your email domain health — verifying that your SPF, DKIM, and DMARC records are correctly configured and alerting when your sending IPs appear on blacklists. For PCI DSS Requirement 12 (security policy) and HIPAA breach notification requirements, a misconfigured DMARC record or blacklisted IP means phishing emails can spoof your domain or breach notifications fail to reach regulators and patients. MXToolbox's continuous blacklist monitoring catches these conditions before they become incidents.
-
-Practical configuration: enable MXToolbox Monitor for your primary sending domain and any server IP ranges that send outbound email. Route alerts to the same Slack `#security` channel used for Wazuh high-severity alerts so domain health issues are visible alongside endpoint and identity events.
 
 ---
 
