@@ -295,16 +295,16 @@ Keycloak enforces MFA at the identity layer for all internal services. Its audit
 
 Deploy in this order to reach a working compliance baseline as quickly as possible:
 
-1. Deploy Wazuh Manager + Indexer + Dashboard *(min. 4-core, 8GB RAM for production)*
-2. Deploy Keycloak and configure it as SSO provider for all internal services — enable MFA and full event logging
-3. Install Wazuh agents on all in-scope endpoints and the Keycloak host
-4. Stand up Fleet server and enroll endpoints with the osquery agent
-5. Configure Fleet → Filebeat → Wazuh log pipeline
-6. Enable Wazuh compliance modules: PCI DSS, HIPAA, NIST 800-53
-7. Schedule Fleet compliance queries (disk encryption, user accounts, software inventory)
-8. Install and configure Fail2ban on all internet-facing servers; wire Wazuh active response
-9. Configure alert routing to email, phone, and Rocket.Chat
-10. Enable MXToolbox Monitor for all sending domains and server IP ranges
-11. Set ILM retention policies matching your longest compliance requirement
+1. Deploy Wazuh Manager + Indexer + Dashboard *(min. 4-core, 8GB RAM for production)* — [Wazuh Installation Guide](https://documentation.wazuh.com/current/installation-guide/index.html)
+2. Deploy Keycloak and configure it as SSO provider for all internal services — enable MFA and full event logging — [Keycloak Getting Started](https://www.keycloak.org/getting-started/getting-started-docker)
+3. Install Wazuh agents on all in-scope endpoints and the Keycloak host — [Wazuh Agent Deployment](https://documentation.wazuh.com/current/installation-guide/wazuh-agent/index.html)
+4. Stand up Fleet server and enroll endpoints with the osquery agent — [Fleet Deployment Guide](https://fleetdm.com/docs/deploy/deploy-fleet)
+5. Configure Fleet → Filebeat → Wazuh log pipeline — [Filebeat Setup](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-installation-configuration.html)
+6. Enable Wazuh compliance modules: PCI DSS, HIPAA, NIST 800-53 — [Wazuh Compliance Docs](https://documentation.wazuh.com/current/compliance/index.html)
+7. Schedule Fleet compliance queries (disk encryption, user accounts, software inventory) — [Fleet Query Library](https://fleetdm.com/docs/using-fleet/queries)
+8. Install and configure Fail2ban on all internet-facing servers; wire Wazuh active response — [Fail2ban Manual](https://www.fail2ban.org/wiki/index.php/MANUAL_0_8)
+9. Configure alert routing to email, phone, and Rocket.Chat — [Wazuh Notification Config](https://documentation.wazuh.com/current/user-manual/manager/manual-email-report/index.html)
+10. Enable MXToolbox Monitor for all sending domains and server IP ranges — [MXToolbox Monitors](https://mxtoolbox.com/monitors/)
+11. Set ILM retention policies matching your longest compliance requirement — [Wazuh Index Management](https://documentation.wazuh.com/current/user-manual/wazuh-indexer/wazuh-indexer-tuning.html)
 
 This architecture scales from a 50-endpoint startup pursuing SOC 2 Type I to a 10,000-endpoint enterprise maintaining PCI DSS certification. The open-source foundation keeps licensing costs near zero, and the modular design allows adding commercial EDR feeds, cloud security logs, or network monitoring without replacing the core pipeline.
