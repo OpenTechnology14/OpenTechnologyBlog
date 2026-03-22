@@ -8,7 +8,7 @@ readTime: "10 min"
 
 *Security Engineering · Technical Deep-Dive*
 
-Security compliance frameworks exist to answer one uncomfortable question: Can you prove your systems are secure? Not claim it — prove it with logs, alerts, and audit trails that hold up under third-party scrutiny. This document walks through a practical architecture combining Fleet (osquery management), OpenEDR (endpoint detection and response), Wazuh (SIEM + compliance monitoring), Keycloak (identity and access management), and Fail2ban (automated brute force response) into a cohesive stack covering every layer — identity, endpoint, detection, and active response — for business devices and servers.
+Security compliance frameworks exist to answer one uncomfortable question: Can you prove your systems are secure? Not claim it — prove it with logs, alerts, and audit trails that hold up under third-party scrutiny.
 
 ---
 
@@ -17,8 +17,6 @@ Security compliance frameworks exist to answer one uncomfortable question: Can y
 ### Keycloak — Identity Layer (Layer 0)
 
 Before any endpoint is queried or log is ingested, identity is the first control plane. Keycloak is an open-source Identity and Access Management (IAM) solution that centralizes authentication across all business devices and servers via SSO, SAML, and OIDC. It enforces MFA, manages fine-grained role-based access, and produces a complete audit log of every login, token issuance, and admin action.
-
-For compliance, Keycloak directly satisfies SOC 2 CC6.1 (logical access controls), HIPAA §164.312(a)(2) (unique user identification and MFA), and PCI DSS Requirement 8 (strong authentication for all users). Its admin event logs are ingested by Wazuh, enabling cross-correlation: a user seen authenticating in Keycloak but absent from Fleet device inventory is a ghost account alert.
 
 ### Fleet — Query & Inventory Layer
 
@@ -176,60 +174,6 @@ Map OpenEDR's MITRE ATT&CK categories to compliance control groups so Wazuh tags
 
 ---
 
-## Key Fleet Compliance Queries
-
-Schedule these osquery queries in Fleet to continuously collect evidence. Results are forwarded to Wazuh automatically.
-
-### Disk Encryption Status — HIPAA / SOC 2
-
-Detects any unencrypted disks across all hosts:
-
-```sql
-SELECT de.name, de.encrypted, de.type, h.hostname
-FROM disk_encryption de
-JOIN system_info h
-WHERE de.encrypted = 0;
-```
-
-### Local Admin Accounts — SOC 2 CC6 / PCI DSS 8
-
-Lists all non-root privileged accounts:
-
-```sql
-SELECT u.username, u.uid, g.groupname
-FROM users u
-JOIN user_groups ug ON u.uid = ug.uid
-JOIN groups g ON ug.gid = g.gid
-WHERE g.groupname IN ('admin', 'sudo', 'wheel')
-  AND u.username != 'root';
-```
-
-### Outdated Packages — PCI DSS 6 / SOC 2 CC7
-
-Cross-references installed packages against a vulnerability list:
-
-```sql
-SELECT name, version, source
-FROM deb_packages
-WHERE name IN ('openssl', 'libssl-dev', 'curl')
-ORDER BY name;
-```
-
----
-
-## Log Retention by Framework
-
-Configure Wazuh's OpenSearch Index Lifecycle Management (ILM) to meet each framework's retention requirements:
-
-| Tier | Duration | Purpose |
-|---|---|---|
-| Hot | 0–30 days | Full resolution, immediate query access for incident response |
-| Warm | 30–365 days | Compressed, available within minutes — satisfies PCI DSS 12-month requirement |
-| Cold/Archive | 1–6 years | Encrypted snapshots to S3-compatible storage — required for HIPAA's 6-year mandate |
-| SIEM access logs | Ongoing | Record of who queried the SIEM and when — required for SOC 2 CC6.1 |
-
----
-
 ## Alerting Configuration
 
 Route Wazuh alerts by severity to ensure the right team is notified at the right time:
@@ -334,9 +278,7 @@ The result is a closed loop: Wazuh detects → Fail2ban blocks → Fail2ban logs
 
 ## Email & Domain Security — MXToolbox
 
-While the core stack covers device and server security, email is a primary attack vector and a compliance concern in its own right. MXToolbox provides passive monitoring of your email domain health — verifying that your SPF, DKIM, and DMARC records are correctly configured and alerting when your sending IPs appear on blacklists.
-
-For PCI DSS Requirement 12 (security policy) and HIPAA breach notification requirements, a misconfigured DMARC record or blacklisted IP means phishing emails can spoof your domain or breach notifications fail to reach regulators and patients. MXToolbox's continuous blacklist monitoring catches these conditions before they become incidents.
+While the core stack covers device and server security, email is a primary attack vector and a compliance concern in its own right. MXToolbox provides passive monitoring of your email domain health — verifying that your SPF, DKIM, and DMARC records are correctly configured and alerting when your sending IPs appear on blacklists. For PCI DSS Requirement 12 (security policy) and HIPAA breach notification requirements, a misconfigured DMARC record or blacklisted IP means phishing emails can spoof your domain or breach notifications fail to reach regulators and patients. MXToolbox's continuous blacklist monitoring catches these conditions before they become incidents.
 
 Practical configuration: enable MXToolbox Monitor for your primary sending domain and any server IP ranges that send outbound email. Route alerts to the same Slack `#security` channel used for Wazuh high-severity alerts so domain health issues are visible alongside endpoint and identity events.
 

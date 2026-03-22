@@ -86,12 +86,12 @@ Click **Sign In** in the top-right corner and use the credentials you just creat
 
 Yes — you can deploy entirely from the Vercel dashboard without touching a terminal (after the initial `git push`). Vercel's serverless functions use an **ephemeral filesystem**, so the local SQLite file won't persist between deployments. For production you need a hosted database. Choose one of the two free options below.
 
-| | Supabase | Turso | PocketBase | Cloudflare Pages |
-|---|---|---|---|---|
-| **Type** | PostgreSQL | SQLite (libSQL) | SQLite (embedded) | Static + Workers |
-| **Migration effort** | Medium — query syntax changes | Low — near-identical to local SQLite | Low — simple REST/SDK | Low — form endpoint only |
-| **Free tier** | 500 MB, 2 projects | 9 GB, 500 databases | Self-hosted (free) | 100k requests/day |
-| **Open source** | Yes | Yes | Yes | Runtime only |
+| | Supabase | PocketBase | Cloudflare Pages |
+|---|---|---|---|
+| **Type** | PostgreSQL | SQLite (embedded) | Static + Workers |
+| **Migration effort** | Medium — query syntax changes | Low — simple REST/SDK | Low — form endpoint only |
+| **Free tier** | 500 MB, 2 projects | Self-hosted (free) | 100k requests/day |
+| **Open source** | Yes | Yes | Runtime only |
 
 ---
 
@@ -245,162 +245,7 @@ After deployment:
 
 ---
 
-## Option B — Turso (libSQL / SQLite)
-
-> Best if you want the simplest possible migration — Turso uses SQLite, so your existing queries work with near-zero changes.
-
-### Step 1 — Create a Turso account and database
-
-1. Go to [turso.tech](https://turso.tech) and sign in (free tier works).
-2. Click **Create database**, choose a name and region.
-3. Once created, click into your database and open the **Shell** tab.
-
-### Step 2 — Run the database schema
-
-Paste and run the following in the Turso shell:
-
-```sql
-CREATE TABLE IF NOT EXISTS users (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  email TEXT UNIQUE NOT NULL,
-  password_hash TEXT NOT NULL,
-  name TEXT,
-  role TEXT NOT NULL DEFAULT 'viewer',
-  created_at TEXT DEFAULT (datetime('now'))
-);
-
-CREATE TABLE IF NOT EXISTS invitations (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  email TEXT UNIQUE NOT NULL,
-  token TEXT UNIQUE NOT NULL,
-  created_by INTEGER REFERENCES users(id),
-  used INTEGER DEFAULT 0,
-  created_at TEXT DEFAULT (datetime('now'))
-);
-
-CREATE TABLE IF NOT EXISTS site_settings (
-  key TEXT PRIMARY KEY,
-  value TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS tech_tools (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL,
-  icon TEXT,
-  logo TEXT,
-  category TEXT NOT NULL,
-  url TEXT,
-  sort_order INTEGER DEFAULT 0
-);
-
-CREATE TABLE IF NOT EXISTS blog_posts (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  slug TEXT UNIQUE NOT NULL,
-  title TEXT NOT NULL,
-  excerpt TEXT,
-  category TEXT NOT NULL,
-  date TEXT NOT NULL,
-  read_time TEXT,
-  content TEXT,
-  published INTEGER DEFAULT 1
-);
-
-INSERT OR IGNORE INTO site_settings (key, value) VALUES
-  ('site_name', 'Open Technology'),
-  ('site_description', 'Exploring the open-source ecosystem — tools, frameworks, and infrastructure for building modern applications without vendor lock-in.');
-```
-
-### Step 3 — Collect your Turso credentials
-
-You will need these for Vercel environment variables:
-
-| What | Where to find it |
-|---|---|
-| **Database URL** | Turso dashboard → your database → **Connect** → copy `libsql://...` URL |
-| **Auth token** | Same **Connect** screen → **Generate token** |
-
-### Step 4 — Update `src/lib/db.ts` and push to GitHub
-
-Switch the data layer from `better-sqlite3` to the Turso client:
-
-```bash
-npm install @libsql/client
-```
-
-Update `src/lib/db.ts` — the main change is that queries become `async`:
-
-```ts
-import { createClient } from "@libsql/client";
-
-const db = createClient({
-  url: process.env.TURSO_DATABASE_URL!,
-  authToken: process.env.TURSO_AUTH_TOKEN,
-});
-
-// Before (better-sqlite3):  db.prepare("SELECT * FROM users").all()
-// After  (@libsql/client):  (await db.execute("SELECT * FROM users")).rows
-```
-
-Then push to GitHub:
-
-```bash
-git add .
-git commit -m "Switch to Turso libSQL"
-git push origin main
-```
-
-### Step 5 — Import your project in the Vercel dashboard
-
-1. Go to [vercel.com](https://vercel.com) and sign in.
-2. Click **Add New → Project**.
-3. Under **Import Git Repository**, select `OpenTechnology14/OpenTechnologyTest` (connect your GitHub account if prompted).
-4. Click **Import**.
-
-### Step 6 — Configure build settings
-
-Vercel auto-detects Next.js. Confirm or set:
-
-| Setting | Value |
-|---|---|
-| **Framework Preset** | Next.js |
-| **Build Command** | `npm run build` |
-| **Output Directory** | `.next` (auto-detected) |
-| **Install Command** | `npm install` |
-| **Node.js Version** | 22.x (recommended) |
-
-### Step 7 — Add environment variables
-
-Still on the same import screen, scroll down to **Environment Variables** and add each one:
-
-| Variable | Value |
-|---|---|
-| `NEXTAUTH_SECRET` | A random secret — generate one at [generate-secret.vercel.app](https://generate-secret.vercel.app/32) |
-| `NEXTAUTH_URL` | Your Vercel URL, e.g. `https://your-app.vercel.app` (update after deploy) |
-| `NEXT_PUBLIC_APP_URL` | Same as `NEXTAUTH_URL` |
-| `TURSO_DATABASE_URL` | Your `libsql://...` URL from Step 3 |
-| `TURSO_AUTH_TOKEN` | Your auth token from Step 3 |
-
-### Step 8 — Deploy
-
-Click **Deploy**. Vercel builds and publishes your site. The first deploy takes about 1–2 minutes. You'll get a live URL like `https://open-technology-test.vercel.app`.
-
-### Step 9 — Create your admin account
-
-Visit `https://your-app.vercel.app/setup` to create the first admin account. This route is only available until the first admin exists.
-
-### Step 10 — Update the production URL (important for invite links)
-
-After deployment:
-
-1. In the Vercel dashboard, go to **Settings → Environment Variables**.
-2. Update `NEXTAUTH_URL` and `NEXT_PUBLIC_APP_URL` to your live URL.
-3. Click **Save** — Vercel will trigger a new deployment automatically.
-
----
-
----
-
-## Option C — PocketBase (Self-Hosted SQLite)
+## Option B — PocketBase (Self-Hosted SQLite)
 
 > Best if you want a fully open-source, zero-cloud-dependency backend. PocketBase is a single Go binary — no Docker, no VM required beyond a small server. Its SDK is nearly identical to Supabase in structure.
 
@@ -499,13 +344,13 @@ In `.env.local` (local) and your Vercel project settings (production):
 |---|---|
 | `POCKETBASE_URL` | Your PocketBase URL, e.g. `https://yourapp.pikapods.net` |
 
-### Step 6 — Deploy to Vercel (same as Options A/B)
+### Step 6 — Deploy to Vercel (same as Option A)
 
-Follow **Steps 5–10** from Option A above. The only difference is the environment variable — replace Supabase/Turso vars with `POCKETBASE_URL`.
+Follow **Steps 5–10** from Option A above. The only difference is the environment variable — replace Supabase vars with `POCKETBASE_URL`.
 
 ---
 
-## Option D — Cloudflare Pages + Worker (Contact Form)
+## Option C — Cloudflare Pages + Worker (Contact Form)
 
 > Best if you want to move away from Vercel entirely **or** just need a zero-backend solution for the contact form. Cloudflare Pages has a generous free tier (100k requests/day) and supports GitHub import just like Vercel. Pages Functions (scoped Workers) let you handle form submissions server-side without any separate service.
 
@@ -641,7 +486,7 @@ Add these same variables that you'd normally set in Vercel:
 | `NEXTAUTH_URL` | Your Cloudflare Pages URL, e.g. `https://yourapp.pages.dev` |
 | `NEXT_PUBLIC_APP_URL` | Same as `NEXTAUTH_URL` |
 
-And add whichever database variable applies (Option A/B/C above).
+And add whichever database variable applies (Option A/B above).
 
 ### Step 6 — Custom domain (optional)
 
@@ -705,12 +550,10 @@ The site rebuilds automatically. No code changes needed.
 | `DATABASE_URL` | Option A | PostgreSQL connection string (Supabase). |
 | `SUPABASE_URL` | Option A | Supabase project URL. |
 | `SUPABASE_ANON_KEY` | Option A | Supabase anonymous API key. |
-| `TURSO_DATABASE_URL` | Option B | Turso `libsql://...` connection URL. |
-| `TURSO_AUTH_TOKEN` | Option B | Turso auth token. |
-| `POCKETBASE_URL` | Option C | PocketBase instance URL (e.g. `https://yourapp.pikapods.net`). |
-| `DISCORD_WEBHOOK_URL` | Option D | Discord webhook URL for contact form notifications. |
-| `RESEND_API_KEY` | Option D | Resend API key for email notifications from contact form. |
-| `CONTACT_EMAIL` | Option D | Destination email for Resend contact form notifications. |
+| `POCKETBASE_URL` | Option B | PocketBase instance URL (e.g. `https://yourapp.pikapods.net`). |
+| `DISCORD_WEBHOOK_URL` | Option C | Discord webhook URL for contact form notifications. |
+| `RESEND_API_KEY` | Option C | Resend API key for email notifications from contact form. |
+| `CONTACT_EMAIL` | Option C | Destination email for Resend contact form notifications. |
 
 ---
 
