@@ -21,6 +21,9 @@ DigitalOcean's 1-Click App marketplace pre-configures dependencies and baseline 
 - Feature-complete alternative to Slack and Microsoft Teams
 - Channels, DMs, video conferencing (Jitsi), file sharing, bots, and a full REST API
 - **$24/month** Droplet (4GB RAM) handles teams under 50 users
+- Configure SMTP (Admin → Settings → Email) so password resets and notifications reach users
+- Restrict open registration (Admin → Settings → Accounts → Registration → Disabled)
+- For larger teams: move MongoDB to a DigitalOcean Managed Database
 
 <Callout type="note" title="1-Click Deploy">
 [Rocket.Chat on DigitalOcean Marketplace →](https://marketplace.digitalocean.com/apps/rocket-chat)
@@ -30,6 +33,8 @@ DigitalOcean's 1-Click App marketplace pre-configures dependencies and baseline 
 
 - Most widely deployed self-hosted file platform
 - Document collaboration (Collabora or OnlyOffice), calendar, contacts, video calls, and a rich app ecosystem
+- Point file storage to DigitalOcean Spaces from the start — migrating later is complex
+- Switch background jobs from AJAX to system cron (Admin → Basic Settings → Background Jobs)
 
 <Callout type="note" title="1-Click Deploy">
 [Nextcloud on DigitalOcean Marketplace →](https://marketplace.digitalocean.com/apps/nextcloud)
@@ -39,10 +44,11 @@ DigitalOcean's 1-Click App marketplace pre-configures dependencies and baseline 
 
 Apply these settings to every deployment before going live. They are ordered by priority.
 
-#### Firewall Rules
+#### Firewall Rules and SSL
 
 - DigitalOcean Droplets have all ports open by default
 - Creating a Cloud Firewall is the single most important hardening step — do this immediately after launch
+- Secure every app with a Let's Encrypt certificate via Certbot before going live
 
 ```bash
 # Firewall Configuration
@@ -59,27 +65,24 @@ sudo nano /etc/ssh/sshd_config
 sudo systemctl restart ssh
 
 # 3. Assign the firewall to your Droplet in the control panel
-```
 
-#### Backups and SSL
-
-- Enable weekly Droplet backups — off by default, costs ~20% of the Droplet monthly price
-- Secure every app with a Let's Encrypt certificate via Certbot
-
-```bash
-# Backups & SSL Configuration
-# Enable backups: DigitalOcean control panel → Droplet → Backups → Enable
-# Cost: ~20% of the Droplet monthly price
-
-# Install Certbot (Ubuntu + Nginx)
+# 4. Install Certbot (Ubuntu + Nginx)
 sudo apt install certbot python3-certbot-nginx -y
 sudo certbot --nginx -d yourdomain.com
 
 # Verify auto-renewal
 sudo certbot renew --dry-run
-
-# Check the renewal timer is active
 sudo systemctl status certbot.timer
+```
+
+#### Backups
+
+- Enable weekly Droplet backups — off by default, costs ~20% of the Droplet monthly price
+
+```bash
+# Backups Configuration
+# Enable backups: DigitalOcean control panel → Droplet → Backups → Enable
+# Cost: ~20% of the Droplet monthly price
 ```
 
 #### Monitoring and Uptime
@@ -103,15 +106,15 @@ curl -sSL https://repos.insights.digitalocean.com/install.sh | sudo bash
 # Add UptimeRobot (uptimerobot.com) for multi-region checks + status page
 ```
 
-#### Networking and Database
+#### Networking, Database and Logging
 
 - Use a Reserved IP so the address survives Droplet resizes and rebuilds
 - Place all Droplets in a VPC to keep internal traffic off the public internet
-- Move Rocket.Chat's MongoDB and Nextcloud's database to Managed Database services before production traffic
-- Configure Nextcloud file storage on DigitalOcean Spaces from the start — migrating later is complex
+- Ship logs to a managed service so they survive a Droplet rebuild and are searchable across servers
+- Cap local log file sizes with logrotate to prevent disk exhaustion
 
 ```bash
-# Networking & Database Configuration
+# Networking, Database & Logging Configuration
 # Reserved IP — survives Droplet resizes and rebuilds
 #   Networking → Reserved IPs → Create → Assign to Droplet
 
@@ -129,49 +132,15 @@ curl -sSL https://repos.insights.digitalocean.com/install.sh | sudo bash
 # Spaces for Nextcloud file storage (start here — migrating later is complex)
 #   Spaces → Create Space → copy endpoint URL and access keys
 #   Nextcloud admin panel → External Storage → Add S3-compatible storage
-```
 
-#### App Configuration
-
-- Configure SMTP on both apps so password resets, notifications, and alerts reach users reliably
-- Disable open registration in Rocket.Chat — only invited users should be able to create accounts
-- Switch Nextcloud background jobs from AJAX to system cron for reliable scheduling under load
-
-```bash
-# App Configuration
-# Rocket.Chat — configure SMTP
-# Admin → Settings → Email → SMTP
-# SMTP Host: smtp.yourdomain.com  Port: 587  TLS: enabled
-
-# Rocket.Chat — restrict open registration
-# Admin → Settings → Accounts → Registration → set to "Disabled"
-
-# Nextcloud — switch background jobs to system cron
-# Admin → Basic Settings → Background Jobs → select "Cron"
-sudo crontab -u www-data -e
-# Add: */5 * * * * php -f /var/www/nextcloud/cron.php
-```
-
-#### Centralized Logging
-
-- Ship logs to a managed service so they survive a Droplet rebuild and are searchable across servers
-- Cap local log file sizes with logrotate to prevent disk exhaustion
-
-```bash
-# Logging Configuration
-# Example: forward logs to Papertrail via rsyslog
+# Centralized logging — forward logs to Papertrail via rsyslog
 sudo apt install rsyslog -y
-
-# Add to /etc/rsyslog.conf
 echo "*.* @logs.papertrailapp.com:XXXXX" | sudo tee -a /etc/rsyslog.conf
 sudo systemctl restart rsyslog
 
 # Cap local log file sizes with logrotate
 sudo nano /etc/logrotate.d/apps
-# weekly
-# rotate 4
-# compress
-# missingok
+# weekly / rotate 4 / compress / missingok
 
 # Monitor Rocket.Chat MongoDB logs (database errors surface here first)
 sudo tail -f /var/log/mongodb/mongod.log
