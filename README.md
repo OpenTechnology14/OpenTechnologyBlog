@@ -66,22 +66,54 @@ See the [official Cloudflare Next.js guide](https://developers.cloudflare.com/pa
 
 ## Contact Form
 
-The contact form in `src/components/ContactForm.tsx` currently shows a success toast on submit. To wire it to a real notification backend, add a Pages Function or API route that forwards submissions to Discord or email via Resend:
+The contact form submits to a `contact_submissions` table in Supabase. Set up the table once and add two environment variables — no server code needed.
 
-**For Discord webhook notifications:**
+### Step 1 — Create the Supabase table
 
-| Variable | Value |
+In your Supabase project, open the **SQL Editor** and run:
+
+```sql
+CREATE TABLE contact_submissions (
+  id BIGSERIAL PRIMARY KEY,
+  email TEXT NOT NULL,
+  message TEXT NOT NULL,
+  category TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Allow anonymous inserts (form submissions from the public site)
+ALTER TABLE contact_submissions ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public inserts"
+  ON contact_submissions
+  FOR INSERT
+  TO anon
+  WITH CHECK (true);
+
+-- Only authenticated users (you) can read submissions
+CREATE POLICY "Allow authenticated reads"
+  ON contact_submissions
+  FOR SELECT
+  TO authenticated
+  USING (true);
+```
+
+### Step 2 — Add environment variables
+
+Add these to your Vercel project under **Settings → Environment Variables**, and to `.env.local` for local development:
+
+| Variable | Where to find it |
 |---|---|
-| `DISCORD_WEBHOOK_URL` | Your Discord webhook URL |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Settings → API → Project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase → Settings → API → `anon` / `public` key |
 
-**For Resend email notifications:**
+### Step 3 — Redeploy
 
-| Variable | Value |
-|---|---|
-| `RESEND_API_KEY` | Your Resend API key (free tier: 3,000 emails/mo) |
-| `CONTACT_EMAIL` | Destination email address |
+```bash
+git commit --allow-empty -m "add supabase env vars" && git push
+```
 
-Add these as environment variables in your Vercel or Cloudflare project settings.
+Vercel picks up the new variables and redeploys automatically. Submissions will appear in your Supabase dashboard under **Table Editor → contact_submissions**.
 
 ---
 
