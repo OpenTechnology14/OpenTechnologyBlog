@@ -108,7 +108,7 @@ Output the SQL for all RLS policies and Next.js middleware.ts
 for route protection.
 </AiPrompt>
 
-<AiPrompt label="Generate README" type="docs">
+<AiPrompt label="README and Future Features" type="docs">
 Read the entire codebase and generate a thorough README.md.
 
 Include:
@@ -123,28 +123,8 @@ Include:
 
 Use clean GitHub-flavoured Markdown. Keep steps numbered and concise.
 Output only the README.md content — no commentary.
-</AiPrompt>
 
-<AiPrompt label="Codebase Cleanup" type="refactor">
-Audit this codebase for quality and consistency, then fix every issue found.
-
-Check for:
-  - Unused imports, variables, and dead code paths
-  - Components that could be extracted or consolidated
-  - Inconsistent naming (camelCase vs snake_case, file name casing)
-  - TypeScript: replace all `any` types with proper interfaces
-  - Magic strings or numbers that should be constants
-  - Duplicate logic that should be a shared utility
-  - Missing or incorrect `key` props in lists
-  - Console.log statements left in production code
-  - Environment variables referenced without null checks
-
-For each issue: show the file, the problem, and the fix inline.
-Apply all fixes. Do not change behaviour — refactor only.
-</AiPrompt>
-
-<AiPrompt label="Feature Ideas" type="improve: features">
-Review my Next.js blog and suggest the highest-impact missing features.
+Then suggest the highest-impact missing features.
 
 For each suggestion include:
   - What it is and why users would want it
@@ -164,8 +144,24 @@ Areas to consider:
 Prioritise by: user impact first, then implementation effort.
 </AiPrompt>
 
-<AiPrompt label="Security Review" type="improve: security">
-Audit this Next.js + Supabase codebase for security vulnerabilities.
+<AiPrompt label="Codebase Cleanup and Security Review" type="refactor">
+Audit this codebase for quality and consistency, then fix every issue found.
+
+Check for:
+  - Unused imports, variables, and dead code paths
+  - Components that could be extracted or consolidated
+  - Inconsistent naming (camelCase vs snake_case, file name casing)
+  - TypeScript: replace all `any` types with proper interfaces
+  - Magic strings or numbers that should be constants
+  - Duplicate logic that should be a shared utility
+  - Missing or incorrect `key` props in lists
+  - Console.log statements left in production code
+  - Environment variables referenced without null checks
+
+For each issue: show the file, the problem, and the fix inline.
+Apply all fixes. Do not change behaviour — refactor only.
+
+Then audit for security vulnerabilities.
 
 Check for:
   - Supabase RLS policies — are all tables locked down correctly?
