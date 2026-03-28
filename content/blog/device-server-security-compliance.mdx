@@ -139,6 +139,7 @@ For a fully managed Keycloak deployment on PikaPods, see [Hosting Without the He
 
 - Manages osquery across all endpoints — servers, workstations, and cloud instances
 - Gives auditors a queryable record of system state over time, not a point-in-time snapshot
+- **WireGuard add-on** — pair Fleet with WireGuard to enforce VPN tunnel presence as a Fleet policy; osquery can verify the WireGuard interface is active on every enrolled device before granting access to internal resources
 
 ```
 # Setup Steps
@@ -397,6 +398,14 @@ Route Wazuh alerts by severity to ensure the right team is notified at the right
 | Level 8–11 (high) | Rocket.Chat #security | New admin accounts, failed login bursts, config drift |
 | Weekly digest | Email | Compliance pass/fail rates and alert trends |
 | Pre-audit export | PDF | Wazuh compliance dashboards export directly for SOC 2 / PCI evidence packages |
+
+---
+
+## Security Frameworks Covered by This Stack
+
+- **NIST Five Functions** — *Priority: Critical.* The strategic framework used to organize the entire network and server defense lifecycle. Each tool in this stack maps directly to one or more of the five functions: Identify (Fleet, Keycloak), Protect (Fail2ban, WireGuard), Detect (Wazuh, OpenEDR, Falco), Respond (Shuffle, Fail2ban), and Recover (Wazuh playbooks, Shuffle workflows).
+- **CWE** — Common Weakness Enumeration coverage is addressed through OpenEDR's behavioral detection and Wazuh's rule library, which flags known weakness patterns (injection, privilege escalation, improper authentication) at the process and log level.
+- **CIS Docker Benchmarks** — *Priority: High.* The gold standard for hardening the containerized server environments where modern apps live. Wazuh ships CIS Docker Benchmark audit rules out of the box; Fleet osquery policies can verify benchmark compliance continuously across every host running containers.
 
 ---
 
