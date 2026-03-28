@@ -4,8 +4,15 @@ import ContactForm from "@/components/ContactForm";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageWrap from "@/components/PageWrap";
+import { getAllPosts } from "@/lib/blog";
+import { CATEGORIES } from "@/data/content";
 
 export default function Home() {
+  const allPosts = getAllPosts();
+  const sortedPosts = [...allPosts].sort(
+    (a, b) => CATEGORIES.indexOf(a.category as typeof CATEGORIES[number]) - CATEGORIES.indexOf(b.category as typeof CATEGORIES[number])
+  );
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
@@ -48,6 +55,20 @@ export default function Home() {
                 </svg>
               </Link>
             </div>
+
+            <ul className="mt-4 space-y-1.5 text-sm text-left">
+              {sortedPosts.map((post) => (
+                <li key={post.slug} className="flex items-start gap-2">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="text-primary hover:underline underline-offset-2 transition-colors"
+                  >
+                    {post.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </PageWrap>
         </div>
 
