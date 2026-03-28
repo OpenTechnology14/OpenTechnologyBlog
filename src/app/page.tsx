@@ -9,9 +9,11 @@ import { CATEGORIES } from "@/data/content";
 
 export default function Home() {
   const allPosts = getAllPosts();
-  const sortedPosts = [...allPosts].sort(
-    (a, b) => CATEGORIES.indexOf(a.category as typeof CATEGORIES[number]) - CATEGORIES.indexOf(b.category as typeof CATEGORIES[number])
-  );
+  const sortedPosts = [...allPosts]
+    .filter((p) => p.slug !== "brave-browser-workflow-management")
+    .sort(
+      (a, b) => CATEGORIES.indexOf(a.category as typeof CATEGORIES[number]) - CATEGORIES.indexOf(b.category as typeof CATEGORIES[number])
+    );
 
   return (
     <div className="flex min-h-screen flex-col">
