@@ -1,18 +1,16 @@
 const saasItems = [
-  { service: "WordPress.com Business", cost: "$300" },
-  { service: "Ghost Pro Creator", cost: "$300" },
-  { service: "Dropbox Business (10 users)", cost: "$1,800" },
+  { service: "WordPress.com Business or Ghost Pro", cost: "$300" },
+  { service: "Auth0 (IAM SaaS, small team)", cost: "$420" },
 ];
-const saasTotal = "$2,400";
+const saasTotal = "$720";
 
 const pikaItems = [
-  { service: "WordPress pod", cost: "~$48" },
-  { service: "Ghost pod", cost: "~$36" },
-  { service: "Nextcloud pod", cost: "~$48" },
+  { service: "WordPress or Ghost pod", cost: "~$48" },
+  { service: "Keycloak pod", cost: "~$36" },
 ];
-const pikaTotal = "~$132";
+const pikaTotal = "~$84";
 
-const savings = { amount: "~$2,268", percent: "~95%" };
+const savings = { amount: "~$636", percent: "~88%" };
 
 export default function PikaPodsSavings() {
   return (
