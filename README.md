@@ -50,6 +50,24 @@ No environment variables are required to run the blog locally.
 
 Every `git push` to `main` triggers an automatic redeploy.
 
+### Adding a Custom Domain on Vercel
+
+1. In the [Vercel dashboard](https://vercel.com/dashboard), open your project and go to **Settings → Domains**.
+2. Type your domain (e.g. `opentechnology.dev`) and click **Add**.
+3. Vercel shows the DNS records to configure at your registrar:
+
+| Type | Name | Value |
+|---|---|---|
+| `A` | `@` | `76.76.21.21` |
+| `CNAME` | `www` | `cname.vercel-dns.com` |
+
+4. Log in to your domain registrar (Namecheap, GoDaddy, Cloudflare, etc.) and add those records.
+5. DNS propagation takes 1–48 hours. Vercel automatically provisions an SSL certificate once it detects the records.
+
+> **Using Cloudflare DNS?** Set the proxy status to **DNS only** (grey cloud) for the `A` record — Vercel needs to see the bare IP to issue its SSL certificate. You can re-enable proxying after the cert is provisioned if desired.
+
+6. Once verified, Vercel marks the domain as **Valid Configuration**. Your site is live at `https://yourdomain.com`.
+
 ### Option B — Cloudflare Pages
 
 1. Go to [pages.cloudflare.com](https://pages.cloudflare.com) and connect your GitHub repo.
