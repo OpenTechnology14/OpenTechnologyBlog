@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, Moon, Sun } from "lucide-react";
 import {
@@ -34,9 +35,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
       <div style={wrapStyle} className="flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md gradient-brand">
-            <span className="text-sm font-bold text-primary-foreground">OT</span>
-          </div>
+          <Image src="/icon.png" alt="Open Technology" width={32} height={32} className="rounded-md" />
           <span className="font-heading text-lg font-bold tracking-tight">Open Technology</span>
         </Link>
 

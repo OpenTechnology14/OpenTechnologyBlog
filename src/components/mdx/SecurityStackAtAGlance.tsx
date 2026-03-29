@@ -2,7 +2,16 @@
 
 import Image from "next/image";
 
-const stack = [
+type StackTool = {
+  name: string;
+  logo: string | null;
+  darkBg?: boolean;
+  icon: string;
+  role: string;
+  license: string;
+};
+
+const stack: StackTool[] = [
   {
     name: "Keycloak",
     logo: "/logos/keycloak.svg",
@@ -47,14 +56,15 @@ const stack = [
   },
   {
     name: "Falco",
-    logo: null,
+    logo: "/logos/falco.svg",
     icon: "🦅",
     role: "Runtime Detection Layer — eBPF syscall interception on Linux servers and containers",
     license: "Open Source · Apache 2.0",
   },
   {
     name: "Shuffle",
-    logo: null,
+    logo: "/logos/shuffle.svg",
+    darkBg: true,
     icon: "🔀",
     role: "SOAR & Automation Layer — connects Wazuh, Fleet, Keycloak, Fail2ban, and Rocket.Chat into response workflows",
     license: "Open Source · Apache 2.0",
@@ -95,7 +105,7 @@ export default function SecurityStackAtAGlance() {
                     className="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center"
                     style={{
                       border: "1.5px solid hsl(var(--border))",
-                      background: "hsl(var(--card))",
+                      background: tool.darkBg ? "#1e1e2e" : "hsl(var(--card))",
                     }}
                   >
                     {tool.logo ? (
