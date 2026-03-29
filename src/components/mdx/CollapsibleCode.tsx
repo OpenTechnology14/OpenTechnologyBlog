@@ -5,11 +5,11 @@ export default function CollapsibleCode({
   return (
     <details
       className="not-prose my-5 rounded-xl overflow-hidden group"
-      style={{ background: '#2a2d35', border: '1px solid rgba(255,255,255,0.09)' }}
+      style={{ background: '#3c3f47', border: '1px solid rgba(255,255,255,0.1)' }}
     >
       <summary
         className="flex items-center gap-2 px-4 py-2.5 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden transition-colors"
-        style={{ background: '#33363f', borderBottom: '1px solid rgba(255,255,255,0.09)' }}
+        style={{ background: '#484b54', borderBottom: '1px solid rgba(255,255,255,0.1)' }}
       >
         <div className="flex items-center gap-1.5 flex-shrink-0">
           <div className="w-2.5 h-2.5 rounded-full" style={{ background: '#ff5f57' }} />
@@ -18,13 +18,13 @@ export default function CollapsibleCode({
         </div>
         <span
           className="group-open:hidden font-mono text-xs tracking-wide"
-          style={{ color: 'rgba(255,255,255,0.45)' }}
+          style={{ color: 'rgba(255,255,255,0.55)' }}
         >
           ▶ show code
         </span>
         <span
           className="hidden group-open:inline font-mono text-xs tracking-wide"
-          style={{ color: 'rgba(255,255,255,0.45)' }}
+          style={{ color: 'rgba(255,255,255,0.55)' }}
         >
           ▼ hide code
         </span>
@@ -32,7 +32,7 @@ export default function CollapsibleCode({
       <pre
         {...props}
         className="overflow-x-auto m-0 rounded-none font-mono text-xs leading-relaxed"
-        style={{ padding: '18px 22px', color: '#a8e6c0', background: '#2a2d35' }}
+        style={{ padding: '18px 22px', color: '#c8efd8', background: '#3c3f47' }}
       >
         {children}
       </pre>
