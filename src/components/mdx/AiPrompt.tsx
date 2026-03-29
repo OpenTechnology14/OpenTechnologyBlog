@@ -11,23 +11,23 @@ export default function AiPrompt({ label, type, children }: AiPromptProps) {
     <details
       className="not-prose my-5 rounded-xl overflow-hidden group"
       style={{
-        background: "#1a1a2e",
-        border: "1px solid rgba(255,255,255,0.08)",
-        boxShadow: "0 4px 24px rgba(0,0,0,0.18)",
+        background: "#3c3f47",
+        border: "1px solid rgba(255,255,255,0.1)",
+        boxShadow: "0 4px 24px rgba(0,0,0,0.12)",
       }}
     >
       <summary
         className="flex items-center justify-between gap-3 px-4 py-3 cursor-pointer select-none [&::-webkit-details-marker]:hidden transition-colors"
         style={{
-          background: "rgba(255,255,255,0.04)",
-          borderBottom: "1px solid transparent",
+          background: "#484b54",
+          borderBottom: "1px solid rgba(255,255,255,0.1)",
         }}
       >
         <div className="flex items-center gap-3 flex-1 min-w-0">
           <span className="text-sm flex-shrink-0">🤖</span>
           <span
             className="font-mono text-xs tracking-widest uppercase truncate"
-            style={{ color: "rgba(255,255,255,0.55)" }}
+            style={{ color: "rgba(255,255,255,0.65)" }}
           >
             AI Prompt — {label}
           </span>
@@ -37,8 +37,8 @@ export default function AiPrompt({ label, type, children }: AiPromptProps) {
             <span
               className="font-mono text-xs px-2.5 py-0.5 rounded"
               style={{
-                background: "rgba(255,255,255,0.08)",
-                color: "rgba(255,255,255,0.4)",
+                background: "rgba(255,255,255,0.1)",
+                color: "rgba(255,255,255,0.5)",
                 letterSpacing: "0.05em",
               }}
             >
@@ -47,7 +47,7 @@ export default function AiPrompt({ label, type, children }: AiPromptProps) {
           )}
           <span
             className="text-sm group-open:rotate-180 transition-transform duration-200"
-            style={{ color: "rgba(255,255,255,0.3)" }}
+            style={{ color: "rgba(255,255,255,0.4)" }}
           >
             ▾
           </span>
@@ -55,7 +55,7 @@ export default function AiPrompt({ label, type, children }: AiPromptProps) {
       </summary>
       <div
         className="font-mono text-xs leading-relaxed whitespace-pre-wrap px-5 py-4"
-        style={{ color: "#c8d8e8" }}
+        style={{ color: "#dce8f0" }}
       >
         {children}
       </div>
