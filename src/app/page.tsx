@@ -63,7 +63,7 @@ export default function Home() {
               </Link>
             </div>
             <p className="mt-3 text-xs text-muted-foreground max-w-[400px]">
-              Open Technology App is a task and workflow management platform built entirely on the open-source stack covered in this blog.
+              Open Technology App is an item, task, and workflow management platform built entirely on the open-source stack covered in this blog.
             </p>
 
             <ul className="mt-4 space-y-1.5 text-sm text-left">
