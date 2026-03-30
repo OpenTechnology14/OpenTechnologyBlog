@@ -29,16 +29,30 @@ export default function Home() {
 
             <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-[480px] mb-7">
               Exploring the open-source ecosystem — tools, frameworks, and infrastructure
-              for building modern applications without vendor lock-in. App hosting is the
-              only layer where going private or paid makes sense for business — and you&apos;ll
-              still save money.{" "}
-              <Link href="/blog" className="underline underline-offset-2 hover:text-foreground transition-colors">
-                Learn more here
-              </Link>
-              . I&apos;m available for a free consultation meeting to help you find the right open-source stack for your project.
+              for building modern applications without vendor lock-in.{" "}
+              I&apos;m available for a free consultation meeting to help you find the right open-source stack for your project.
             </p>
 
             <div className="flex items-center gap-3 flex-wrap justify-center">
+              <Link
+                href="https://www.opentechnologyapp.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground shadow-sm transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]"
+              >
+                Try the App
+                <svg
+                  className="h-3.5 w-3.5"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M3 8h10M9 4l4 4-4 4" />
+                </svg>
+              </Link>
               <Link
                 href="/blog"
                 className="inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]"
@@ -57,6 +71,9 @@ export default function Home() {
                 </svg>
               </Link>
             </div>
+            <p className="mt-3 text-xs text-muted-foreground max-w-[400px]">
+              Open Technology App is a task and workflow management platform built entirely on the open-source stack covered in this blog.
+            </p>
 
             <ul className="mt-4 space-y-1.5 text-sm text-left">
               {sortedPosts.map((post) => (
