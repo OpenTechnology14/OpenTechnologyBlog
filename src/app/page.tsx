@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import TechBullets from "@/components/TechBullets";
 import ContactForm from "@/components/ContactForm";
 import Header from "@/components/Header";
@@ -38,20 +39,10 @@ export default function Home() {
                 href="https://www.opentechnologyapp.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground shadow-sm transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]"
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]"
               >
+                <Image src="/icon.png" alt="" width={18} height={18} className="rounded-sm" />
                 Try the App
-                <svg
-                  className="h-3.5 w-3.5"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M3 8h10M9 4l4 4-4 4" />
-                </svg>
               </Link>
               <Link
                 href="/blog"
