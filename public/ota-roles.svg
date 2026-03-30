@@ -1,0 +1,90 @@
+<svg width="680" height="490" viewBox="0 0 680 490" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>.sans{font-family:Arial,Helvetica,sans-serif;}.serif{font-family:Georgia,'Times New Roman',serif;}</style>
+  </defs>
+
+  <rect width="680" height="490" rx="20" fill="#eef0f2"/>
+
+  <!-- Eyebrow -->
+  <circle cx="44" cy="48" r="4" fill="#2563eb"/>
+  <text x="56" y="53" class="sans" font-size="11" font-weight="500" fill="#2563eb" letter-spacing="1.5">OPENTECHNOLOGYAPP — ACCESS CONTROL</text>
+
+  <!-- Headline -->
+  <text x="44" y="96" class="serif" font-size="36" font-weight="700" fill="#111827">Role-based access,</text>
+  <text x="44" y="138" class="serif" font-size="36" font-weight="700" fill="#111827"><tspan font-style="italic" fill="#2563eb">server-side enforced.</tspan></text>
+  <text x="44" y="167" class="sans" font-size="14" fill="#6b7280">Every role check happens on the server. A demoted user's session is rejected immediately.</text>
+
+  <!-- Role cards -->
+
+  <!-- ADMIN -->
+  <rect x="44" y="186" width="182" height="264" rx="14" fill="#2563eb"/>
+  <!-- shield icon -->
+  <path d="M135 202 L155 210 L155 228 C155 240 146 249 135 252 C124 249 115 240 115 228 L115 210 Z" fill="rgba(255,255,255,0.2)"/>
+  <path d="M135 208 L149 214 L149 228 C149 237 143 244 135 246 C127 244 121 237 121 228 L121 214 Z" fill="rgba(255,255,255,0.3)"/>
+  <text x="135" y="234" text-anchor="middle" class="sans" font-size="14" fill="white">★</text>
+  <text x="135" y="276" text-anchor="middle" class="sans" font-size="13" font-weight="500" fill="#ffffff" letter-spacing="1">ADMIN</text>
+  <line x1="70" y1="286" x2="200" y2="286" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  <!-- Permissions -->
+  <text x="64" y="308" class="sans" font-size="11" fill="rgba(255,255,255,0.6)">✓</text>
+  <text x="78" y="308" class="sans" font-size="11" fill="#bfdbfe">Manage users</text>
+  <text x="64" y="326" class="sans" font-size="11" fill="rgba(255,255,255,0.6)">✓</text>
+  <text x="78" y="326" class="sans" font-size="11" fill="#bfdbfe">All settings</text>
+  <text x="64" y="344" class="sans" font-size="11" fill="rgba(255,255,255,0.6)">✓</text>
+  <text x="78" y="344" class="sans" font-size="11" fill="#bfdbfe">Automations</text>
+  <text x="64" y="362" class="sans" font-size="11" fill="rgba(255,255,255,0.6)">✓</text>
+  <text x="78" y="362" class="sans" font-size="11" fill="#bfdbfe">Full data access</text>
+  <text x="64" y="380" class="sans" font-size="11" fill="rgba(255,255,255,0.6)">✓</text>
+  <text x="78" y="380" class="sans" font-size="11" fill="#bfdbfe">Read/write items</text>
+  <text x="64" y="398" class="sans" font-size="11" fill="rgba(255,255,255,0.6)">✓</text>
+  <text x="78" y="398" class="sans" font-size="11" fill="#bfdbfe">Comments</text>
+  <text x="64" y="416" class="sans" font-size="11" fill="rgba(255,255,255,0.6)">✓</text>
+  <text x="78" y="416" class="sans" font-size="11" fill="#bfdbfe">Time logging</text>
+  <rect x="64" y="430" width="146" height="8" rx="4" fill="rgba(255,255,255,0.15)"/>
+
+  <!-- MEMBER -->
+  <rect x="249" y="186" width="182" height="264" rx="14" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <!-- person icon -->
+  <circle cx="340" cy="218" r="14" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+  <circle cx="340" cy="214" r="6" fill="#2563eb"/>
+  <path d="M326 232 Q340 224 354 232" fill="#2563eb"/>
+  <text x="340" y="276" text-anchor="middle" class="sans" font-size="13" font-weight="500" fill="#111827" letter-spacing="1">MEMBER</text>
+  <line x1="269" y1="286" x2="415" y2="286" stroke="#f3f4f6" stroke-width="1"/>
+  <text x="269" y="308" class="sans" font-size="11" fill="#dc2626">✗</text>
+  <text x="283" y="308" class="sans" font-size="11" fill="#9ca3af">Manage users</text>
+  <text x="269" y="326" class="sans" font-size="11" fill="#dc2626">✗</text>
+  <text x="283" y="326" class="sans" font-size="11" fill="#9ca3af">Settings / automations</text>
+  <text x="269" y="344" class="sans" font-size="11" fill="#2563eb">✓</text>
+  <text x="283" y="344" class="sans" font-size="11" fill="#374151">Read/write items</text>
+  <text x="269" y="362" class="sans" font-size="11" fill="#2563eb">✓</text>
+  <text x="283" y="362" class="sans" font-size="11" fill="#374151">Comments</text>
+  <text x="269" y="380" class="sans" font-size="11" fill="#2563eb">✓</text>
+  <text x="283" y="380" class="sans" font-size="11" fill="#374151">Time logging</text>
+  <text x="269" y="398" class="sans" font-size="11" fill="#2563eb">✓</text>
+  <text x="283" y="398" class="sans" font-size="11" fill="#374151">Full project access</text>
+  <rect x="269" y="430" width="146" height="8" rx="4" fill="#eff6ff"/>
+
+  <!-- VIEWER -->
+  <rect x="454" y="186" width="182" height="264" rx="14" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <!-- eye icon -->
+  <ellipse cx="545" cy="218" rx="14" ry="9" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+  <circle cx="545" cy="218" r="4" fill="#2563eb"/>
+  <text x="545" y="276" text-anchor="middle" class="sans" font-size="13" font-weight="500" fill="#111827" letter-spacing="1">VIEWER</text>
+  <line x1="474" y1="286" x2="620" y2="286" stroke="#f3f4f6" stroke-width="1"/>
+  <text x="474" y="308" class="sans" font-size="11" fill="#dc2626">✗</text>
+  <text x="488" y="308" class="sans" font-size="11" fill="#9ca3af">Manage users</text>
+  <text x="474" y="326" class="sans" font-size="11" fill="#dc2626">✗</text>
+  <text x="488" y="326" class="sans" font-size="11" fill="#9ca3af">Settings / automations</text>
+  <text x="474" y="344" class="sans" font-size="11" fill="#dc2626">✗</text>
+  <text x="488" y="344" class="sans" font-size="11" fill="#9ca3af">Write / edit items</text>
+  <text x="474" y="362" class="sans" font-size="11" fill="#2563eb">✓</text>
+  <text x="488" y="362" class="sans" font-size="11" fill="#374151">Read all items</text>
+  <text x="474" y="380" class="sans" font-size="11" fill="#2563eb">✓</text>
+  <text x="488" y="380" class="sans" font-size="11" fill="#374151">Time logging</text>
+  <text x="474" y="398" class="sans" font-size="11" fill="#2563eb">✓</text>
+  <text x="488" y="398" class="sans" font-size="11" fill="#374151">Public comments</text>
+  <rect x="474" y="430" width="146" height="8" rx="4" fill="#eff6ff"/>
+
+  <!-- Footer callout -->
+  <rect x="44" y="462" width="592" height="14" rx="7" fill="transparent"/>
+  <text x="340" y="474" text-anchor="middle" class="sans" font-size="12" fill="#9ca3af">Demote a user — their next request is rejected server-side. No restart. No delay.</text>
+</svg>

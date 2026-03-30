@@ -1,0 +1,71 @@
+<svg width="680" height="500" viewBox="0 0 680 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>.sans{font-family:Arial,Helvetica,sans-serif;}.serif{font-family:Georgia,'Times New Roman',serif;}</style>
+  </defs>
+
+  <rect width="680" height="500" rx="20" fill="#eef0f2"/>
+
+  <!-- Eyebrow -->
+  <circle cx="44" cy="48" r="4" fill="#2563eb"/>
+  <text x="56" y="53" class="sans" font-size="11" font-weight="500" fill="#2563eb" letter-spacing="1.5">OPENTECHNOLOGYAPP — DEPLOYMENT</text>
+
+  <!-- Headline -->
+  <text x="44" y="96" class="serif" font-size="36" font-weight="700" fill="#111827">Hosted or self-hosted —</text>
+  <text x="44" y="138" class="serif" font-size="36" font-weight="700" fill="#111827"><tspan font-style="italic" fill="#2563eb">you choose.</tspan></text>
+  <text x="44" y="167" class="sans" font-size="14" fill="#6b7280">Every workspace is fully isolated. Your database. Your URL. Your rules.</text>
+
+  <!-- Hosted card -->
+  <rect x="44" y="186" width="286" height="282" rx="14" fill="#2563eb"/>
+  <!-- cloud icon -->
+  <path d="M135 212 C126 212 119 218 119 227 C115 228 112 232 112 236 C112 241 116 244 121 244 L159 244 C164 244 168 241 168 236 C168 232 165 228 161 227 C160 218 153 212 143 212 C140 212 137 213 135 214 Z" fill="rgba(255,255,255,0.25)"/>
+  <text x="143" y="272" text-anchor="middle" class="sans" font-size="13" font-weight="500" fill="#ffffff" letter-spacing="1">HOSTED ORG</text>
+  <text x="143" y="292" text-anchor="middle" class="sans" font-size="22" fill="#ffffff">Starter or Pro</text>
+  <line x1="68" y1="306" x2="306" y2="306" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+
+  <text x="68" y="328" class="sans" font-size="11" fill="rgba(255,255,255,0.6)">✓</text>
+  <text x="82" y="328" class="sans" font-size="12" fill="#bfdbfe">Live in ~2 minutes</text>
+  <text x="68" y="348" class="sans" font-size="11" fill="rgba(255,255,255,0.6)">✓</text>
+  <text x="82" y="348" class="sans" font-size="12" fill="#bfdbfe">Dedicated Supabase database</text>
+  <text x="68" y="368" class="sans" font-size="11" fill="rgba(255,255,255,0.6)">✓</text>
+  <text x="82" y="368" class="sans" font-size="12" fill="#bfdbfe">yourslug.opentechnologyapp.app</text>
+  <text x="68" y="388" class="sans" font-size="11" fill="rgba(255,255,255,0.6)">✓</text>
+  <text x="82" y="388" class="sans" font-size="12" fill="#bfdbfe">Isolated at every layer</text>
+  <text x="68" y="408" class="sans" font-size="11" fill="rgba(255,255,255,0.6)">✓</text>
+  <text x="82" y="408" class="sans" font-size="12" fill="#bfdbfe">Pro: PITR + 8 GB storage</text>
+  <text x="68" y="428" class="sans" font-size="11" fill="rgba(255,255,255,0.6)">✓</text>
+  <text x="82" y="428" class="sans" font-size="12" fill="#bfdbfe">First user is auto-admin</text>
+
+  <rect x="68" y="446" width="150" height="34" rx="8" fill="#ffffff"/>
+  <text x="143" y="468" text-anchor="middle" class="sans" font-size="12" font-weight="500" fill="#2563eb">Subscribe now</text>
+
+  <!-- Self-hosted card -->
+  <rect x="350" y="186" width="286" height="282" rx="14" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <!-- server icon -->
+  <rect x="473" y="206" width="54" height="16" rx="4" fill="none" stroke="#2563eb" stroke-width="2"/>
+  <circle cx="484" cy="214" r="3" fill="#2563eb"/>
+  <rect x="473" y="226" width="54" height="16" rx="4" fill="none" stroke="#2563eb" stroke-width="2"/>
+  <circle cx="484" cy="234" r="3" fill="#2563eb"/>
+  <text x="500" y="272" text-anchor="middle" class="sans" font-size="13" font-weight="500" fill="#111827" letter-spacing="1">SELF-HOSTED</text>
+  <text x="500" y="292" text-anchor="middle" class="serif" font-size="22" font-weight="700" fill="#111827">Free forever</text>
+  <line x1="374" y1="306" x2="612" y2="306" stroke="#f3f4f6" stroke-width="1"/>
+
+  <text x="374" y="328" class="sans" font-size="11" fill="#2563eb">✓</text>
+  <text x="388" y="328" class="sans" font-size="12" fill="#374151">Deploy to Vercel + Supabase</text>
+  <text x="374" y="348" class="sans" font-size="11" fill="#2563eb">✓</text>
+  <text x="388" y="348" class="sans" font-size="12" fill="#374151">No limits on anything</text>
+  <text x="374" y="368" class="sans" font-size="11" fill="#2563eb">✓</text>
+  <text x="388" y="368" class="sans" font-size="12" fill="#374151">Full source code included</text>
+  <text x="374" y="388" class="sans" font-size="11" fill="#2563eb">✓</text>
+  <text x="388" y="388" class="sans" font-size="12" fill="#374151">No feature gates</text>
+  <text x="374" y="408" class="sans" font-size="11" fill="#2563eb">✓</text>
+  <text x="388" y="408" class="sans" font-size="12" fill="#374151">You own the data entirely</text>
+  <text x="374" y="428" class="sans" font-size="11" fill="#2563eb">✓</text>
+  <text x="388" y="428" class="sans" font-size="12" fill="#374151">Up in under 10 minutes</text>
+
+  <rect x="374" y="446" width="150" height="34" rx="8" fill="#f9fafb" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="449" y="468" text-anchor="middle" class="sans" font-size="12" font-weight="500" fill="#374151">Get the source</text>
+
+  <!-- dividing label -->
+  <rect x="322" y="310" width="36" height="36" rx="18" fill="#eef0f2" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="340" y="333" text-anchor="middle" class="sans" font-size="12" font-weight="500" fill="#6b7280">or</text>
+</svg>

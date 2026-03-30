@@ -1,0 +1,96 @@
+<svg width="680" height="540" viewBox="0 0 680 540" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>.sans{font-family:Arial,Helvetica,sans-serif;}.serif{font-family:Georgia,'Times New Roman',serif;}</style>
+  </defs>
+
+  <rect width="680" height="540" rx="20" fill="#eef0f2"/>
+
+  <!-- Eyebrow -->
+  <circle cx="44" cy="48" r="4" fill="#2563eb"/>
+  <text x="56" y="53" class="sans" font-size="11" font-weight="500" fill="#2563eb" letter-spacing="1.5">OPENTECHNOLOGYAPP — WHAT'S COMING</text>
+
+  <!-- Headline -->
+  <text x="44" y="96" class="serif" font-size="36" font-weight="700" fill="#111827">The roadmap is</text>
+  <text x="44" y="138" class="serif" font-size="36" font-weight="700" fill="#111827"><tspan font-style="italic" fill="#2563eb">stacked.</tspan></text>
+  <text x="44" y="167" class="sans" font-size="14" fill="#6b7280">Integrations, security, and productivity upgrades — all in active development.</text>
+
+  <!-- Category: Integrations -->
+  <rect x="44" y="186" width="592" height="28" rx="8" fill="#eff6ff"/>
+  <circle cx="62" cy="200" r="5" fill="#2563eb"/>
+  <text x="76" y="205" class="sans" font-size="12" font-weight="500" fill="#2563eb" letter-spacing="1">INTEGRATIONS</text>
+
+  <!-- Integration items row 1 -->
+  <rect x="44" y="222" width="140" height="72" rx="10" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <rect x="56" y="234" width="28" height="28" rx="7" fill="#eff6ff"/>
+  <text x="70" y="253" text-anchor="middle" font-size="14">✉️</text>
+  <text x="56" y="278" class="sans" font-size="11" font-weight="500" fill="#111827">Email replies</text>
+  <text x="56" y="291" class="sans" font-size="10" fill="#9ca3af">Reply saves as comment</text>
+
+  <rect x="196" y="222" width="140" height="72" rx="10" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <rect x="208" y="234" width="28" height="28" rx="7" fill="#eff6ff"/>
+  <text x="222" y="253" text-anchor="middle" font-size="14">🔗</text>
+  <text x="208" y="278" class="sans" font-size="11" font-weight="500" fill="#111827">GitHub / GitLab</text>
+  <text x="208" y="291" class="sans" font-size="10" fill="#9ca3af">Link PRs, auto-close</text>
+
+  <rect x="348" y="222" width="140" height="72" rx="10" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <rect x="360" y="234" width="28" height="28" rx="7" fill="#eff6ff"/>
+  <text x="374" y="253" text-anchor="middle" font-size="14">📥</text>
+  <text x="360" y="278" class="sans" font-size="11" font-weight="500" fill="#111827">Jira import</text>
+  <text x="360" y="291" class="sans" font-size="10" fill="#9ca3af">One-click project import</text>
+
+  <rect x="500" y="222" width="136" height="72" rx="10" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <rect x="512" y="234" width="28" height="28" rx="7" fill="#eff6ff"/>
+  <text x="526" y="253" text-anchor="middle" font-size="14">🤖</text>
+  <text x="512" y="278" class="sans" font-size="11" font-weight="500" fill="#111827">AI portal assistant</text>
+  <text x="512" y="291" class="sans" font-size="10" fill="#9ca3af">NL triage + deduplication</text>
+
+  <!-- Category: Security -->
+  <rect x="44" y="306" width="592" height="28" rx="8" fill="#fef2f2"/>
+  <circle cx="62" cy="320" r="5" fill="#dc2626"/>
+  <text x="76" y="325" class="sans" font-size="12" font-weight="500" fill="#dc2626" letter-spacing="1">SECURITY &amp; IDENTITY</text>
+
+  <rect x="44" y="342" width="140" height="72" rx="10" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <rect x="56" y="354" width="28" height="28" rx="7" fill="#fef2f2"/>
+  <text x="70" y="373" text-anchor="middle" font-size="14">🔐</text>
+  <text x="56" y="398" class="sans" font-size="11" font-weight="500" fill="#111827">SSO (SAML/OIDC)</text>
+  <text x="56" y="411" class="sans" font-size="10" fill="#9ca3af">Okta, Google, Entra ID</text>
+
+  <rect x="196" y="342" width="140" height="72" rx="10" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <rect x="208" y="354" width="28" height="28" rx="7" fill="#fef2f2"/>
+  <text x="222" y="373" text-anchor="middle" font-size="14">🛡️</text>
+  <text x="208" y="398" class="sans" font-size="11" font-weight="500" fill="#111827">MFA / 2FA</text>
+  <text x="208" y="411" class="sans" font-size="10" fill="#9ca3af">TOTP authenticator app</text>
+
+  <rect x="348" y="342" width="140" height="72" rx="10" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <rect x="360" y="354" width="28" height="28" rx="7" fill="#fef2f2"/>
+  <text x="374" y="373" text-anchor="middle" font-size="14">📋</text>
+  <text x="360" y="398" class="sans" font-size="11" font-weight="500" fill="#111827">Audit log</text>
+  <text x="360" y="411" class="sans" font-size="10" fill="#9ca3af">Tamper-evident admin log</text>
+
+  <rect x="500" y="342" width="136" height="72" rx="10" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <rect x="512" y="354" width="28" height="28" rx="7" fill="#fef2f2"/>
+  <text x="526" y="373" text-anchor="middle" font-size="14">🔑</text>
+  <text x="512" y="398" class="sans" font-size="11" font-weight="500" fill="#111827">JWT rotation</text>
+  <text x="512" y="411" class="sans" font-size="10" fill="#9ca3af">Rotate keys, stay logged in</text>
+
+  <!-- Category: Productivity -->
+  <rect x="44" y="426" width="592" height="28" rx="8" fill="#f0fdf4"/>
+  <circle cx="62" cy="440" r="5" fill="#16a34a"/>
+  <text x="76" y="445" class="sans" font-size="12" font-weight="500" fill="#16a34a" letter-spacing="1">PRODUCTIVITY</text>
+
+  <rect x="44" y="462" width="140" height="52" rx="10" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="56" y="482" class="sans" font-size="11" font-weight="500" fill="#111827">⌨️  Keyboard shortcuts</text>
+  <text x="56" y="497" class="sans" font-size="10" fill="#9ca3af">n, f, /, k/j — all the keys</text>
+
+  <rect x="196" y="462" width="140" height="52" rx="10" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="208" y="482" class="sans" font-size="11" font-weight="500" fill="#111827">⇅  Drag to reorder</text>
+  <text x="208" y="497" class="sans" font-size="10" fill="#9ca3af">Manual queue ordering</text>
+
+  <rect x="348" y="462" width="140" height="52" rx="10" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="360" y="482" class="sans" font-size="11" font-weight="500" fill="#111827">🔁  Async webhooks</text>
+  <text x="360" y="497" class="sans" font-size="10" fill="#9ca3af">Background retry + history</text>
+
+  <rect x="500" y="462" width="136" height="52" rx="10" fill="#ffffff" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="512" y="482" class="sans" font-size="11" font-weight="500" fill="#111827">⚡  List virtualization</text>
+  <text x="512" y="497" class="sans" font-size="10" fill="#9ca3af">Smooth at 1,000s of items</text>
+</svg>
