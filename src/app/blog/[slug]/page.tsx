@@ -22,6 +22,7 @@ import AiPrompt from "@/components/mdx/AiPrompt";
 import ToolFlow from "@/components/mdx/ToolFlow";
 import StackAtAGlance from "@/components/mdx/StackAtAGlance";
 import SecurityStackAtAGlance from "@/components/mdx/SecurityStackAtAGlance";
+import HybridAiSavings from "@/components/mdx/HybridAiSavings";
 import ContactForm from "@/components/ContactForm";
 import React from "react";
 
@@ -91,6 +92,7 @@ const mdxComponents = {
   ToolFlow,
   StackAtAGlance,
   SecurityStackAtAGlance,
+  HybridAiSavings,
 };
 
 const categoryColors: Record<Category, string> = {

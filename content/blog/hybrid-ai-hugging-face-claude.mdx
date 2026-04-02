@@ -1,0 +1,86 @@
+---
+title: "Hybrid AI - Save Money with AI without Compromise - Hugging Face and Claude"
+excerpt: "Route bulk AI work to a self-hosted Hugging Face agent and reserve Claude for precision tasks — full quality, a fraction of the cost."
+category: "Dev Tools"
+date: "2026-04-01"
+readTime: "4 min"
+---
+
+Most developers hit the same ceiling: Claude's $20/mo subscription covers daily use, but the moment you start running audits, drafting docs, and reviewing PRs at scale, API costs climb fast. The fix is a hybrid setup — let a self-hosted Hugging Face agent handle the high-volume, lower-stakes work and keep Claude focused on the tasks that need its precision.
+
+## The Split
+
+```
+├── HF Agent (local / PikaPods) ──► Audits, Docs, Research, Reviews, PRs, Plans
+└── Claude Code (API)           ──► Refactors, Bugs, Migrations
+```
+
+**Hugging Face** handles anything that is repetitive, broad, or exploratory. It runs locally or cheaply on PikaPods and has no per-token billing.
+
+**Claude Code** handles anything that requires deep reasoning, multi-file context, or precision — refactors, bug diagnosis, and migrations where a wrong move costs real time.
+
+---
+
+## Add Both to VS Code
+
+<CollapsibleCode>
+```bash
+# 1. Install the Hugging Face VS Code extension
+#    Open VS Code → Extensions (Cmd+Shift+X) → search "Hugging Face"
+#    Install: "Hugging Face" by Hugging Face
+
+# 2. Configure your HF endpoint (local or PikaPods)
+#    Settings → search "huggingface.inferenceEndpoint"
+#    Set to your endpoint URL, e.g. http://localhost:8080 or your PikaPods URL
+
+# 3. Install Claude Code (if not already installed)
+npm install -g @anthropic-ai/claude-code
+
+# 4. Authenticate Claude Code
+claude
+
+# 5. Optional — set your Anthropic API key in the environment
+export ANTHROPIC_API_KEY=sk-ant-...
+
+# PikaPods: deploy any HF Inference model as a pod at pikapods.com
+# Choose a model (e.g. mistral-7b-instruct), copy the endpoint URL, paste above
+```
+</CollapsibleCode>
+
+---
+
+## AI Prompts by Work Type
+
+Use these as your starting question for each category. Each is designed to surface the most useful output from either model without multiple follow-ups.
+
+<AiPrompt label="Audits" type="hugging face">
+What are the top 5 code quality, security, or performance issues in this file or module? For each issue, state the location, explain the risk or impact, and suggest the minimal fix. Prioritize by severity.
+</AiPrompt>
+
+<AiPrompt label="Docs" type="hugging face">
+Generate complete documentation for this module: a one-paragraph overview, a list of all exported functions/types with parameter descriptions and return values, any important edge cases or usage notes, and a short usage example. Format for a README or JSDoc block.
+</AiPrompt>
+
+<AiPrompt label="Research" type="hugging face">
+Compare the top 3 approaches for solving [problem]. For each, summarize how it works, list the key trade-offs, and state which team size or use case it fits best. End with a concrete recommendation given [my constraints].
+</AiPrompt>
+
+<AiPrompt label="Reviews" type="hugging face">
+Review this code change. Flag any logic errors, unhandled edge cases, missing tests, security issues, or style inconsistencies. For each flag, explain why it matters and what the correct pattern is. Skip cosmetic nits.
+</AiPrompt>
+
+<AiPrompt label="PRs" type="hugging face">
+Write a pull request description for this diff. Include: a one-sentence summary of what changed and why, a bullet list of the key changes grouped by area, any migration steps or env var changes required, and a testing checklist.
+</AiPrompt>
+
+<AiPrompt label="Plans" type="hugging face">
+Break down [feature or change] into an ordered implementation plan. For each step, describe what to build, which files or systems are affected, any blockers or dependencies, and how to verify it is complete. Flag anything that could cause regressions.
+</AiPrompt>
+
+---
+
+## Cost Comparison
+
+<HybridAiSavings />
+
+The math is straightforward: Hugging Face on PikaPods runs around $9/month for a capable inference endpoint. That same budget covers the bulk tasks that would otherwise push your Claude API bill into $60–$120+ territory. Claude stays reserved for the work that actually benefits from its reasoning depth.
