@@ -81,6 +81,7 @@ function MdxTd(props: React.TdHTMLAttributes<HTMLTableCellElement>) {
 
 const mdxComponents = {
   pre: CollapsibleCode,
+  CollapsibleCode,
   table: MdxTable,
   thead: MdxThead,
   tbody: MdxTbody,
