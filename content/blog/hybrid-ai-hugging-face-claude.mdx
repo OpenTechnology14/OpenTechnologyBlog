@@ -36,27 +36,23 @@ Handles anything that is repetitive, broad, or exploratory. Runs locally or chea
 ```
 </CollapsibleCode>
 
-<AiPrompt label="Audits" type="hugging face">
+<AiPrompt label="Audits, Docs, Research, Reviews, PRs, Plans" type="hugging face">
+AUDITS
 What are the top 5 code quality, security, or performance issues in this file or module? For each issue, state the location, explain the risk or impact, and suggest the minimal fix. Prioritize by severity.
-</AiPrompt>
 
-<AiPrompt label="Docs" type="hugging face">
+DOCS
 Generate complete documentation for this module: a one-paragraph overview, a list of all exported functions/types with parameter descriptions and return values, any important edge cases or usage notes, and a short usage example. Format for a README or JSDoc block.
-</AiPrompt>
 
-<AiPrompt label="Research" type="hugging face">
+RESEARCH
 Compare the top 3 approaches for solving [problem]. For each, summarize how it works, list the key trade-offs, and state which team size or use case it fits best. End with a concrete recommendation given [my constraints].
-</AiPrompt>
 
-<AiPrompt label="Reviews" type="hugging face">
+REVIEWS
 Review this code change. Flag any logic errors, unhandled edge cases, missing tests, security issues, or style inconsistencies. For each flag, explain why it matters and what the correct pattern is. Skip cosmetic nits.
-</AiPrompt>
 
-<AiPrompt label="PRs" type="hugging face">
+PRs
 Write a pull request description for this diff. Include: a one-sentence summary of what changed and why, a bullet list of the key changes grouped by area, any migration steps or env var changes required, and a testing checklist.
-</AiPrompt>
 
-<AiPrompt label="Plans" type="hugging face">
+PLANS
 Break down [feature or change] into an ordered implementation plan. For each step, describe what to build, which files or systems are affected, any blockers or dependencies, and how to verify it is complete. Flag anything that could cause regressions.
 </AiPrompt>
 
@@ -83,7 +79,8 @@ export ANTHROPIC_API_KEY=sk-ant-...
 ```
 </CollapsibleCode>
 
-<AiPrompt label="Add Authentication" type="claude code">
+<AiPrompt label="Authentication, README, Cleanup, Accessibility" type="claude code">
+ADD AUTHENTICATION
 Add Supabase Auth to protect the /admin routes:
 
 /app/(admin)/layout.tsx — check for valid Supabase session,
@@ -99,9 +96,8 @@ Supabase Row Level Security policies:
 
 Output the SQL for all RLS policies and Next.js middleware.ts
 for route protection.
-</AiPrompt>
 
-<AiPrompt label="README and Future Features" type="claude code">
+README AND FUTURE FEATURES
 Read the entire codebase and generate a thorough README.md.
 
 Include:
@@ -135,9 +131,8 @@ Areas to consider:
   - Comment system (Giscus or Supabase-backed)
 
 Prioritise by: user impact first, then implementation effort.
-</AiPrompt>
 
-<AiPrompt label="Codebase Cleanup and Security Review" type="claude code">
+CODEBASE CLEANUP AND SECURITY REVIEW
 Audit this codebase for quality and consistency, then fix every issue found.
 
 Check for:
@@ -168,9 +163,8 @@ Check for:
 
 For each issue: severity (critical / high / medium / low),
 the file and line, and the fix with code.
-</AiPrompt>
 
-<AiPrompt label="Accessibility Review" type="claude code">
+ACCESSIBILITY REVIEW
 Audit this Next.js codebase for accessibility issues and fix them all.
 
 Check:
