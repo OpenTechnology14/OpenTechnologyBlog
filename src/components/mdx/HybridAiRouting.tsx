@@ -49,7 +49,7 @@ export default function HybridAiRouting() {
           {/* Divider */}
           <div className="flex sm:flex-col items-center justify-center gap-1 sm:px-1">
             <div className="flex-1 sm:w-px sm:h-full h-px w-full" style={{ background: "hsl(var(--border))" }} />
-            <span className="text-xs font-mono px-1" style={{ color: "hsl(var(--muted-foreground))" }}>or</span>
+            <span className="text-xs font-mono px-1" style={{ color: "hsl(var(--muted-foreground))" }}>+</span>
             <div className="flex-1 sm:w-px sm:h-full h-px w-full" style={{ background: "hsl(var(--border))" }} />
           </div>
 
