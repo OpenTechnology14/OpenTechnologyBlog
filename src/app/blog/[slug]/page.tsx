@@ -23,6 +23,7 @@ import ToolFlow from "@/components/mdx/ToolFlow";
 import StackAtAGlance from "@/components/mdx/StackAtAGlance";
 import SecurityStackAtAGlance from "@/components/mdx/SecurityStackAtAGlance";
 import HybridAiSavings from "@/components/mdx/HybridAiSavings";
+import HybridAiRouting from "@/components/mdx/HybridAiRouting";
 import ContactForm from "@/components/ContactForm";
 import React from "react";
 
@@ -94,6 +95,7 @@ const mdxComponents = {
   StackAtAGlance,
   SecurityStackAtAGlance,
   HybridAiSavings,
+  HybridAiRouting,
 };
 
 const categoryColors: Record<Category, string> = {

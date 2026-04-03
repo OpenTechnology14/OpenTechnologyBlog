@@ -8,12 +8,7 @@ readTime: "4 min"
 
 Most developers hit the same ceiling: Claude's $20/mo subscription covers daily use, but the moment you start running audits, drafting docs, and reviewing PRs at scale, API costs climb fast. The fix is a hybrid setup — let a self-hosted Hugging Face agent handle the high-volume, lower-stakes work and keep Claude focused on the tasks that need its precision.
 
-## Routing Strategy
-
-```
-├── HF Agent (local / PikaPods) ──► Audits, Docs, Research, Reviews, PRs, Plans
-└── Claude Code (API)           ──► Refactors, Bugs, Migrations
-```
+<HybridAiRouting />
 
 ---
 
