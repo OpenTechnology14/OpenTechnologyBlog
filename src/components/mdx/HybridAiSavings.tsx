@@ -1,7 +1,8 @@
 export default function HybridAiSavings() {
   const claudeOnly = [
     { label: "Claude Pro (base)", cost: 20, note: "included" },
-    { label: "Extra usage — 50% overage", cost: 60, note: "API billing" },
+    { label: "Extra usage — Claude API (50%)", cost: 60, note: "API billing" },
+    { label: "Extra usage — Claude API (remaining 50%)", cost: 60, note: "API billing" },
   ];
   const hybrid = [
     { label: "Claude Pro (base)", cost: 20, note: "included" },
@@ -33,25 +34,19 @@ export default function HybridAiSavings() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {/* Claude-only */}
         <div
-          className="rounded-xl border overflow-hidden"
+          className="rounded-xl border overflow-hidden flex flex-col"
           style={{ borderColor: "hsl(var(--border))", background: "hsl(var(--card))" }}
         >
           <div
             className="px-4 py-3 border-b flex items-center gap-2"
-            style={{
-              borderColor: "hsl(var(--border))",
-              background: "hsl(var(--destructive) / 0.08)",
-            }}
+            style={{ borderColor: "hsl(var(--border))", background: "hsl(var(--destructive) / 0.08)" }}
           >
             <span className="text-base">💸</span>
-            <span
-              className="text-xs font-semibold uppercase tracking-wide"
-              style={{ color: "hsl(var(--destructive))" }}
-            >
+            <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: "hsl(var(--destructive))" }}>
               Claude Only
             </span>
           </div>
-          <div className="divide-y" style={{ borderColor: "hsl(var(--border))" }}>
+          <div className="divide-y flex-1" style={{ borderColor: "hsl(var(--border))" }}>
             {claudeOnly.map((row) => (
               <div key={row.label} className="px-4 py-3 flex justify-between items-start gap-2">
                 <div>
@@ -62,31 +57,20 @@ export default function HybridAiSavings() {
                     {row.note}
                   </p>
                 </div>
-                <span
-                  className="text-xs font-mono font-semibold whitespace-nowrap"
-                  style={{ color: "hsl(var(--destructive))" }}
-                >
+                <span className="text-xs font-mono font-semibold whitespace-nowrap" style={{ color: "hsl(var(--destructive))" }}>
                   ${row.cost}/mo
                 </span>
               </div>
             ))}
           </div>
           <div
-            className="px-4 py-3 border-t"
-            style={{
-              borderColor: "hsl(var(--border))",
-              background: "hsl(var(--destructive) / 0.06)",
-            }}
+            className="px-4 py-3 border-t mt-auto"
+            style={{ borderColor: "hsl(var(--border))", background: "hsl(var(--destructive) / 0.06)" }}
           >
             <div className="flex justify-between items-center">
-              <span className="text-xs font-semibold" style={{ color: "hsl(var(--foreground))" }}>
-                Total
-              </span>
+              <span className="text-xs font-semibold" style={{ color: "hsl(var(--foreground))" }}>Total</span>
               <div className="text-right">
-                <p
-                  className="text-xs font-mono font-bold"
-                  style={{ color: "hsl(var(--destructive))" }}
-                >
+                <p className="text-xs font-mono font-bold" style={{ color: "hsl(var(--destructive))" }}>
                   ${claudeTotal}/mo
                 </p>
                 <p className="text-xs" style={{ color: "hsl(var(--muted-foreground))" }}>
@@ -99,25 +83,19 @@ export default function HybridAiSavings() {
 
         {/* Hybrid */}
         <div
-          className="rounded-xl border overflow-hidden"
+          className="rounded-xl border overflow-hidden flex flex-col"
           style={{ borderColor: "hsl(var(--border))", background: "hsl(var(--card))" }}
         >
           <div
             className="px-4 py-3 border-b flex items-center gap-2"
-            style={{
-              borderColor: "hsl(var(--border))",
-              background: "hsl(var(--accent) / 0.08)",
-            }}
+            style={{ borderColor: "hsl(var(--border))", background: "hsl(var(--accent) / 0.08)" }}
           >
             <span className="text-base">🤗</span>
-            <span
-              className="text-xs font-semibold uppercase tracking-wide"
-              style={{ color: "hsl(var(--accent))" }}
-            >
+            <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: "hsl(var(--accent))" }}>
               Hybrid (HF + Claude)
             </span>
           </div>
-          <div className="divide-y" style={{ borderColor: "hsl(var(--border))" }}>
+          <div className="divide-y flex-1" style={{ borderColor: "hsl(var(--border))" }}>
             {hybrid.map((row) => (
               <div key={row.label} className="px-4 py-3 flex justify-between items-start gap-2">
                 <div>
@@ -138,21 +116,13 @@ export default function HybridAiSavings() {
             ))}
           </div>
           <div
-            className="px-4 py-3 border-t"
-            style={{
-              borderColor: "hsl(var(--border))",
-              background: "hsl(var(--accent) / 0.06)",
-            }}
+            className="px-4 py-3 border-t mt-auto"
+            style={{ borderColor: "hsl(var(--border))", background: "hsl(var(--accent) / 0.06)" }}
           >
             <div className="flex justify-between items-center">
-              <span className="text-xs font-semibold" style={{ color: "hsl(var(--foreground))" }}>
-                Total
-              </span>
+              <span className="text-xs font-semibold" style={{ color: "hsl(var(--foreground))" }}>Total</span>
               <div className="text-right">
-                <p
-                  className="text-xs font-mono font-bold"
-                  style={{ color: "hsl(var(--accent))" }}
-                >
+                <p className="text-xs font-mono font-bold" style={{ color: "hsl(var(--accent))" }}>
                   ${hybridTotal}/mo
                 </p>
                 <p className="text-xs" style={{ color: "hsl(var(--muted-foreground))" }}>
@@ -167,10 +137,7 @@ export default function HybridAiSavings() {
       {/* Savings callout */}
       <div
         className="rounded-xl border px-5 py-4 flex items-center gap-4"
-        style={{
-          borderColor: "hsl(var(--primary) / 0.3)",
-          background: "hsl(var(--primary) / 0.07)",
-        }}
+        style={{ borderColor: "hsl(var(--primary) / 0.3)", background: "hsl(var(--primary) / 0.07)" }}
       >
         <span className="text-3xl">🎯</span>
         <div>

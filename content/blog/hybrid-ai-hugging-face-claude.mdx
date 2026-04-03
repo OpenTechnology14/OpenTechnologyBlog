@@ -8,20 +8,18 @@ readTime: "4 min"
 
 Most developers hit the same ceiling: Claude's $20/mo subscription covers daily use, but the moment you start running audits, drafting docs, and reviewing PRs at scale, API costs climb fast. The fix is a hybrid setup — let a self-hosted Hugging Face agent handle the high-volume, lower-stakes work and keep Claude focused on the tasks that need its precision.
 
-## The Split
+## Routing Strategy
 
 ```
 ├── HF Agent (local / PikaPods) ──► Audits, Docs, Research, Reviews, PRs, Plans
 └── Claude Code (API)           ──► Refactors, Bugs, Migrations
 ```
 
-**Hugging Face** handles anything that is repetitive, broad, or exploratory. It runs locally or cheaply on PikaPods and has no per-token billing.
-
-**Claude Code** handles anything that requires deep reasoning, multi-file context, or precision — refactors, bug diagnosis, and migrations where a wrong move costs real time.
-
 ---
 
-## Add Both to VS Code
+## Hugging Face
+
+Handles anything that is repetitive, broad, or exploratory. Runs locally or cheaply on PikaPods with no per-token billing.
 
 <CollapsibleCode>
 ```bash
@@ -33,25 +31,10 @@ Most developers hit the same ceiling: Claude's $20/mo subscription covers daily 
 #    Settings → search "huggingface.inferenceEndpoint"
 #    Set to your endpoint URL, e.g. http://localhost:8080 or your PikaPods URL
 
-# 3. Install Claude Code (if not already installed)
-npm install -g @anthropic-ai/claude-code
-
-# 4. Authenticate Claude Code
-claude
-
-# 5. Optional — set your Anthropic API key in the environment
-export ANTHROPIC_API_KEY=sk-ant-...
-
 # PikaPods: deploy any HF Inference model as a pod at pikapods.com
 # Choose a model (e.g. mistral-7b-instruct), copy the endpoint URL, paste above
 ```
 </CollapsibleCode>
-
----
-
-## AI Prompts by Work Type
-
-Use these as your starting question for each category. Each is designed to surface the most useful output from either model without multiple follow-ups.
 
 <AiPrompt label="Audits" type="hugging face">
 What are the top 5 code quality, security, or performance issues in this file or module? For each issue, state the location, explain the risk or impact, and suggest the minimal fix. Prioritize by severity.
@@ -76,6 +59,29 @@ Write a pull request description for this diff. Include: a one-sentence summary 
 <AiPrompt label="Plans" type="hugging face">
 Break down [feature or change] into an ordered implementation plan. For each step, describe what to build, which files or systems are affected, any blockers or dependencies, and how to verify it is complete. Flag anything that could cause regressions.
 </AiPrompt>
+
+---
+
+## Claude Code
+
+Handles anything that requires deep reasoning, multi-file context, or precision — refactors, bug diagnosis, and migrations where a wrong move costs real time.
+
+<CollapsibleCode>
+```bash
+# Install Claude Code
+npm install -g @anthropic-ai/claude-code
+
+# Authenticate
+claude
+
+# Optional — set your Anthropic API key in the environment
+export ANTHROPIC_API_KEY=sk-ant-...
+
+# Install the Claude Code VS Code extension
+#    Open VS Code → Extensions (Cmd+Shift+X) → search "Claude Code"
+#    Install: "Claude Code" by Anthropic
+```
+</CollapsibleCode>
 
 <AiPrompt label="Add Authentication" type="claude code">
 Add Supabase Auth to protect the /admin routes:
