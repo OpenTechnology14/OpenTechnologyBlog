@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function HybridAiRouting() {
   return (
     <div className="not-prose my-8">
@@ -22,7 +24,7 @@ export default function HybridAiRouting() {
             style={{ borderColor: "hsl(var(--border))", background: "hsl(var(--background))" }}
           >
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-lg">🤗</span>
+              <Image src="/logos/huggingface.svg" alt="Hugging Face" width={22} height={22} />
               <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: "hsl(var(--accent))" }}>
                 Hugging Face Agent
               </span>

@@ -20,6 +20,7 @@ export interface TechTool {
 export const TECH_TOOLS: TechTool[] = [
   { name: "Penpot",      icon: "🎨", logo: "/logos/penpot.svg",      category: "Dev Tools",       url: "https://penpot.app",                description: "Open-source design & prototyping tool",              darkInvert: true },
   { name: "Claude",      icon: "🤖", logo: "/logos/claude.svg",      category: "Dev Tools",       url: "https://claude.ai",                 description: "Anthropic's AI assistant for coding & analysis",             darkInvert: true },
+  { name: "Hugging Face", icon: "🤗", logo: "/logos/huggingface.svg", category: "Dev Tools",       url: "https://huggingface.co",            description: "Open-source AI models and self-hosted inference" },
   { name: "VS Code",     icon: "💻", logo: "/logos/vscode.svg",      category: "Dev Tools",       url: "https://code.visualstudio.com",     description: "Extensible code editor by Microsoft" },
   { name: "Codesandbox", icon: "📦", logo: "/logos/codesandbox.svg", category: "Dev Tools",       url: "https://codesandbox.io",            description: "Browser-based code sandbox & collaboration",         darkInvert: true },
   { name: "Gitlab",          icon: "🦊", logo: "/logos/gitlab.svg",      category: "Dev Tools",   url: "https://gitlab.com",                description: "Git repository hosting with CI/CD pipelines" },
