@@ -24,45 +24,31 @@ INSTALL
 
 CONNECT YOUR ENDPOINT
 1. Open VS Code Settings (Cmd+,)
-2. Search "huggingface.inferenceEndpoint"
-3. Paste your endpoint URL:
-   - Local:    http://localhost:8080
-   - PikaPods: https://your-pod-name.pikapods.net
-
-   PikaPods setup: pikapods.com → New Pod → choose model
-   (e.g. mistral-7b-instruct) → copy the endpoint URL → paste above
+2. Search: huggingface.inferenceEndpoint
+3. Paste your endpoint URL — local: http://localhost:8080 or your PikaPods URL
+   PikaPods setup: pikapods.com → New Pod → choose model (e.g. mistral-7b-instruct) → copy URL
 
 SET A SYSTEM PROMPT
 1. Open the Hugging Face extension panel in the VS Code sidebar
-2. Click the ⚙️ gear icon → "Model Settings" (or "System Prompt")
-3. Paste your system prompt into the System Prompt field
-4. Click Save — it applies to every new conversation with that model
+2. Click the gear icon → Model Settings (or System Prompt)
+3. Paste your system prompt into the field and save
+4. It applies to every new conversation with that model
 
-NEXT.JS APP + WEBSITE SYSTEM PROMPT EXAMPLE
-――――――――――――――――――――――――――――――――――――――――――――
-You are a senior Next.js developer specializing in App Router, TypeScript, Tailwind CSS, and Supabase.
+NEXT.JS SYSTEM PROMPT EXAMPLE
+You are a senior Next.js developer. Stack: App Router, TypeScript, Tailwind CSS v3, shadcn/ui, Supabase, Vercel, pnpm.
 
-Stack context:
-- Framework: Next.js 14+ with App Router and TypeScript
-- Styling: Tailwind CSS v3 with shadcn/ui components
-- Database/Auth: Supabase (Postgres + Row Level Security)
-- Deployment: Vercel
-- Package manager: pnpm
-
-When reviewing code or answering questions:
-- Always cite the file path and line number
+Rules:
+- Always cite file path and line number
 - Prefer server components unless interactivity is required
-- Flag any `any` types — suggest the correct TypeScript interface
-- Flag any missing Supabase RLS policies on mutating routes
+- Flag any "any" types and suggest the correct TypeScript interface
+- Flag missing Supabase RLS policies on mutating routes
 - Suggest pnpm commands, not npm or yarn
 - Keep responses concise: problem → location → fix
-- Do not rewrite working code — patch only what is broken or flagged
+- Do not rewrite working code — patch only what is broken
 
-For audits, rank issues by severity: critical → high → medium → low.
-For docs, output GitHub-flavoured Markdown only.
-For PR descriptions, use this format:
-  WHAT / WHY / HOW TO TEST
-――――――――――――――――――――――――――――――――――――――――――――
+For audits: rank by severity — critical, high, medium, low.
+For docs: output GitHub-flavoured Markdown only.
+For PRs: format as WHAT / WHY / HOW TO TEST.
 </AiPrompt>
 
 **Getting similar performance to Claude for bulk tasks:**
@@ -99,18 +85,14 @@ Break down [feature or change] into an ordered implementation plan. For each ste
 Handles anything that requires deep reasoning, multi-file context, or precision — refactors, bug diagnosis, and migrations where a wrong move costs real time.
 
 <AiPrompt label="Configuration" type="claude code">
-# Install Claude Code
-npm install -g @anthropic-ai/claude-code
+INSTALL
+1. Run: npm install -g @anthropic-ai/claude-code
+2. Authenticate: run "claude" in your terminal and follow the login steps
+3. Optional — set ANTHROPIC_API_KEY in your shell profile for API access
 
-# Authenticate
-claude
-
-# Optional — set your Anthropic API key in the environment
-# export ANTHROPIC_API_KEY=sk-ant-...
-
-# Install the Claude Code VS Code extension
-#    Open VS Code → Extensions (Cmd+Shift+X) → search "Claude Code"
-#    Install: "Claude Code" by Anthropic
+VS CODE EXTENSION
+1. Open VS Code → Extensions (Cmd+Shift+X)
+2. Search "Claude Code" → Install "Claude Code" by Anthropic
 </AiPrompt>
 
 **Getting the most out of Claude Projects:**
