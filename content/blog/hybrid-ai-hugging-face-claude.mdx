@@ -61,9 +61,7 @@ When reviewing code or answering questions:
 For audits, rank issues by severity: critical → high → medium → low.
 For docs, output GitHub-flavoured Markdown only.
 For PR descriptions, use this format:
-  ## What
-  ## Why
-  ## How to test
+  WHAT / WHY / HOW TO TEST
 ――――――――――――――――――――――――――――――――――――――――――――
 </AiPrompt>
 
@@ -216,13 +214,13 @@ Audit this Next.js codebase for accessibility issues and fix them all.
 Check:
   - All images have descriptive alt text (not empty, not "image of")
   - All interactive elements are reachable by keyboard (Tab + Enter/Space)
-  - All form inputs have associated `<label>` elements
+  - All form inputs have associated label elements
   - Color contrast meets WCAG AA (4.5:1 for normal text, 3:1 for large)
   - A visible skip-to-content link appears on keyboard focus
   - Focus rings are visible — not removed via outline: none
   - ARIA roles and labels are used correctly (no misuse of role="button")
   - Error messages are announced to screen readers (role="alert")
-  - Page has a single `<h1>` per route; heading hierarchy is correct
+  - Page has a single h1 per route; heading hierarchy is correct
 
 Show each issue, the file, and the fixed code.
 Apply all fixes in place — do not leave anything as "TODO".
