@@ -16,7 +16,7 @@ Most developers hit the same ceiling: Claude's $20/mo subscription covers daily 
 
 Handles anything that is repetitive, broad, or exploratory. Runs locally or cheaply on PikaPods with no per-token billing.
 
-<AiPrompt label="Configuration" type="hugging face">
+<AiPrompt label="Configuration & Performance" type="hugging face">
 INSTALL
 1. Open VS Code → Extensions (Cmd+Shift+X)
 2. Search "Hugging Face" → Install "Hugging Face" by Hugging Face
@@ -26,13 +26,12 @@ CONNECT YOUR ENDPOINT
 1. Open VS Code Settings (Cmd+,)
 2. Search: huggingface.inferenceEndpoint
 3. Paste your endpoint URL — local: http://localhost:8080 or your PikaPods URL
-   PikaPods setup: pikapods.com → New Pod → choose model (e.g. mistral-7b-instruct) → copy URL
+   PikaPods: pikapods.com → New Pod → choose model → copy URL
 
 SET A SYSTEM PROMPT
 1. Open the Hugging Face extension panel in the VS Code sidebar
 2. Click the gear icon → Model Settings (or System Prompt)
-3. Paste your system prompt into the field and save
-4. It applies to every new conversation with that model
+3. Paste your system prompt and save — applies to every new conversation
 
 NEXT.JS SYSTEM PROMPT EXAMPLE
 You are a senior Next.js developer. Stack: App Router, TypeScript, Tailwind CSS v3, shadcn/ui, Supabase, Vercel, pnpm.
@@ -49,14 +48,113 @@ Rules:
 For audits: rank by severity — critical, high, medium, low.
 For docs: output GitHub-flavoured Markdown only.
 For PRs: format as WHAT / WHY / HOW TO TEST.
+
+GETTING SIMILAR PERFORMANCE TO CLAUDE
+- Use a well-instructed system prompt — define role, output format, and expectations. The more specific you are, the less Claude-level reasoning you need.
+- Choose the right model size — Mistral 7B Instruct and Llama 3 8B for audits, docs, and PR summaries. Step up to 13B or 70B on PikaPods for research and planning.
+- Seed with examples — paste one or two examples of the output format at the start of your prompt. HF models follow patterns well; one good example cuts vague responses significantly.
+- Iterate the system prompt, not the question — if output is inconsistent, refine the system prompt rather than rephrasing each time. A tuned system prompt compounds across every future query.
 </AiPrompt>
 
-**Getting similar performance to Claude for bulk tasks:**
+### Full Stack Setup
 
-- **Use a well-instructed system prompt** — open your HF model's settings and add a system prompt that defines its role, output format, and expectations. The more specific you are, the less Claude-level reasoning you need. Example: *"You are a senior code reviewer. Always cite file and line, rank by severity, and suggest the minimal fix."*
-- **Choose the right model size** — Mistral 7B Instruct and Llama 3 8B are strong for audits, docs, and PR summaries. For research and planning, step up to a 13B or 70B model on PikaPods for noticeably better output.
-- **Seed with examples** — paste one or two examples of the output format you want at the start of your prompt. HF models follow patterns well; a single good example cuts vague responses significantly.
-- **Iterate the system prompt, not the question** — if output quality is inconsistent, refine the system prompt rather than rephrasing the question each time. A tuned system prompt compounds across every future query.
+Wire everything together — from HF endpoints through Supabase vector memory to your Next.js app.
+
+**Step 1 — Create the Hugging Face Layer**
+
+Create two dedicated inference endpoints in your HF account:
+- Coding model: `Qwen/Qwen3-Coder`
+- Embedding model: `sentence-transformers/all-MiniLM-L6-v2`
+
+Save all three env variables before moving on:
+
+```bash
+HF_TOKEN=hf_...
+HF_CODE_ENDPOINT=https://your-code-endpoint.huggingface.cloud
+HF_EMBED_ENDPOINT=https://your-embed-endpoint.huggingface.cloud
+```
+
+**Step 2 — Create Supabase Vector Memory**
+
+The agent needs codebase context before it can do useful work. Supabase pgvector handles storage and similarity search.
+
+```sql
+create extension if not exists vector;
+
+create table code_chunks (
+  id uuid primary key default gen_random_uuid(),
+  file_path text not null,
+  content text not null,
+  embedding vector(384),
+  created_at timestamptz default now()
+);
+
+create index on code_chunks
+using ivfflat (embedding vector_cosine_ops)
+with (lists = 100);
+```
+
+**Step 3 — Connect Next.js**
+
+```bash
+pnpm add @huggingface/inference @supabase/supabase-js
+pnpm add @langchain/langgraph @langchain/core
+```
+
+Create two lib files:
+- `/lib/ai/hf.ts` — HF inference client
+- `/lib/db/supabase.ts` — Supabase + pgvector client
+
+**Step 4 — Build the Repo Indexer**
+
+Create `/scripts/index-repo.ts` to scan your codebase and push vectors to Supabase. Target directories: `app/`, `components/`, `lib/`, `hooks/`, `types/`, `docs/`. Run once on initial setup, then on a post-merge hook to keep the index current.
+
+**Step 5 — LangGraph Agent Flow**
+
+Six-node graph — each node has a clear job:
+
+- `retrieve` → pull relevant code chunks from Supabase
+- `plan` → break the task into steps
+- `generate` → HF Qwen3-Coder produces the output
+- `audit` → self-check against repo conventions
+- `document` → generate inline docs or PR description
+- `finalize` → return structured result
+
+The retrieve node runs a pgvector similarity search first — the model always sees relevant repo context. The generate node uses the HF chat completion endpoint with a system prompt tuned for your stack.
+
+**Step 6 — Deploy to Vercel**
+
+```typescript
+// /app/api/agent/route.ts
+import { NextRequest, NextResponse } from 'next/server'
+import { graph } from '@/lib/ai/graph'
+
+export async function POST(req: NextRequest) {
+  const { task, context } = await req.json()
+  const result = await graph.invoke({ task, context })
+  return NextResponse.json(result)
+}
+```
+
+**VS Code Integration via Continue**
+
+Install the [Continue](https://www.continue.dev) extension and point it at your deployed agent endpoint:
+
+```json
+{
+  "models": [
+    {
+      "title": "HF Agent (Qwen3-Coder)",
+      "provider": "openai",
+      "model": "Qwen/Qwen3-Coder",
+      "apiBase": "https://your-app.vercel.app/api/agent",
+      "apiKey": "hf_your_token_here"
+    }
+  ]
+}
+```
+
+Save this as `.continue/config.json` in your project root.
 
 <AiPrompt label="Audits, Docs, Research, Reviews, PRs, Plans" type="hugging face">
 AUDITS
