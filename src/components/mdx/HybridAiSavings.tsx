@@ -3,11 +3,15 @@ export default function HybridAiSavings() {
     { label: "Claude Pro (base)", cost: 20, note: "included" },
     { label: "Extra usage — Claude API (50%)", cost: 60, note: "API billing" },
     { label: "Extra usage — Claude API (remaining 50%)", cost: 60, note: "API billing" },
+    { label: "Supabase vector memory", cost: 0, note: "free tier — pgvector, 500MB DB" },
+    { label: "Vercel hosting", cost: 0, note: "free hobby tier — API routes included" },
   ];
   const hybrid = [
     { label: "Claude Pro (base)", cost: 20, note: "included" },
     { label: "Extra usage — routed to HF", cost: 0, note: "self-hosted / PikaPods" },
     { label: "HF Inference endpoint (est.)", cost: 9, note: "PikaPods ~$9/mo" },
+    { label: "Supabase vector memory", cost: 0, note: "free tier — pgvector, 500MB DB" },
+    { label: "Vercel hosting", cost: 0, note: "free hobby tier — API routes included" },
   ];
 
   const claudeTotal = claudeOnly.reduce((s, r) => s + r.cost, 0);
@@ -26,7 +30,7 @@ export default function HybridAiSavings() {
           Monthly AI Cost — Claude-Only vs. Hybrid
         </h3>
         <p className="text-xs mt-0.5" style={{ color: "hsl(var(--muted-foreground))" }}>
-          Assumes $20/mo Claude Pro subscription + ~$120 of additional API usage. Hybrid routes 50%+ of that extra load to Hugging Face.
+          Assumes $20/mo Claude Pro subscription + ~$120 of additional API usage. Hybrid routes 50%+ of that extra load to Hugging Face. Supabase and Vercel on free tier — upgrade to Pro ($25 + $20/mo) when you scale.
         </p>
       </div>
 
