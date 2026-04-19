@@ -16,30 +16,7 @@ Most developers hit the same ceiling: Claude's $20/mo subscription covers daily 
 
 Handles anything that is repetitive, broad, or exploratory. Runs locally or cheaply on a Hugging Face endpoint with no per-token billing.
 
-### Local Setup
-
-The fastest way to get started — runs entirely on your machine, no accounts needed.
-
-**Step 1 — Clone your repo**
-
-```bash
-git clone https://github.com/your-org/your-repo.git
-cd your-repo
-```
-
-**Step 2 — Install Ollama and pull the coding model**
-
-Download [Ollama](https://ollama.com) for Mac, Windows, or Linux, then pull the model:
-
-```bash
-ollama pull qwen2.5-coder:7b
-```
-
-Ollama serves the model locally at `http://localhost:11434` — no API key, no usage limits.
-
-**Step 3 — Create a Modelfile with a built-in system prompt**
-
-Create a file named `Modelfile` in your project root. The system prompt below is baked directly into the model so every session starts with the right context automatically — no copy-pasting required.
+Create a file named `Modelfile` in your project root with the system prompt below baked in, then run `ollama create nextjs-dev -f Modelfile`. Every session starts with the right context automatically — no copy-pasting required.
 
 <AiPrompt label="Modelfile — Next.js system prompt" type="hugging face">
 FROM qwen2.5-coder:7b
@@ -141,56 +118,6 @@ You are an expert full-stack web developer specialising in production-grade Next
 """
 </AiPrompt>
 
-Then build the custom model and run it:
-
-```bash
-ollama create nextjs-dev -f Modelfile
-ollama run nextjs-dev
-```
-
-**Step 4 — Install the Continue extension in VS Code**
-
-Open VS Code → Extensions (`Cmd+Shift+X`) → search **Continue** → install **Continue** by Continue.
-
-**Step 5 — Point Continue at your custom model**
-
-Continue auto-detects Ollama on first launch. To configure manually, open `.continue/config.json` in your project root:
-
-```json
-{
-  "models": [
-    {
-      "title": "Next.js Dev (local)",
-      "provider": "ollama",
-      "model": "nextjs-dev"
-    }
-  ]
-}
-```
-
-**Step 6 — Continue indexes your codebase automatically**
-
-On first open, Continue walks your repo and builds a local index. From there, `Cmd+I` opens the inline editor and `Cmd+L` opens the chat sidebar — both have full codebase context without you pasting anything.
-
-**Step 7 — If your device can't run the model locally**
-
-Create a [Hugging Face Inference Endpoint](https://ui.endpoints.huggingface.co) for `Qwen/Qwen2.5-Coder-7B-Instruct` and update your Continue config to point at it instead. The system prompt from your Modelfile can be set in the endpoint's settings on HF.
-
-```json
-{
-  "models": [
-    {
-      "title": "Next.js Dev (HF endpoint)",
-      "provider": "openai",
-      "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
-      "apiBase": "https://your-endpoint.huggingface.cloud/v1/",
-      "apiKey": "hf_your_token_here"
-    }
-  ]
-}
-```
-
-The endpoint runs on HF hardware and bills only for active inference time — typically under $9/mo for bulk coding work.
 
 <AiPrompt label="Audits, Docs, Research, Reviews, PRs, Plans" type="hugging face">
 AUDITS
