@@ -1,23 +1,13 @@
 export default function HybridAiSavings() {
   const claudeOnly = [
-    { label: "Claude Pro (base)", cost: 20, note: "included" },
-    { label: "Extra usage — Claude API (50%)", cost: 60, note: "API billing" },
-    { label: "Extra usage — Claude API (remaining 50%)", cost: 60, note: "API billing" },
-    { label: "Supabase vector memory", cost: 0, note: "free tier — pgvector, 500MB DB" },
-    { label: "Vercel hosting", cost: 0, note: "free hobby tier — API routes included" },
-  ];
-  const hybrid = [
-    { label: "Claude Pro (base)", cost: 20, note: "included" },
-    { label: "Extra usage — routed to HF", cost: 0, note: "self-hosted / PikaPods" },
-    { label: "HF Inference endpoint (est.)", cost: 9, note: "PikaPods ~$9/mo" },
-    { label: "Supabase vector memory", cost: 0, note: "free tier — pgvector, 500MB DB" },
-    { label: "Vercel hosting", cost: 0, note: "free hobby tier — API routes included" },
+    { label: "Claude Pro (base)", display: "$20/mo", note: "included", color: "destructive" },
+    { label: "Extra usage — Claude API", display: "$80+/mo", note: "API billing", color: "destructive" },
   ];
 
-  const claudeTotal = claudeOnly.reduce((s, r) => s + r.cost, 0);
-  const hybridTotal = hybrid.reduce((s, r) => s + r.cost, 0);
-  const saved = claudeTotal - hybridTotal;
-  const savedYearly = saved * 12;
+  const hybrid = [
+    { label: "Local model — Ollama + Modelfile", display: "—", note: "runs on your machine", color: "accent", free: true },
+    { label: "HF inference endpoint (extra usage)", display: "$9/mo", note: "est. huggingface.co", color: "default", free: false },
+  ];
 
   return (
     <div className="not-prose my-8 space-y-4">
@@ -30,7 +20,7 @@ export default function HybridAiSavings() {
           Monthly AI Cost — Claude-Only vs. Hybrid
         </h3>
         <p className="text-xs mt-0.5" style={{ color: "hsl(var(--muted-foreground))" }}>
-          Assumes $20/mo Claude Pro subscription + ~$120 of additional API usage. Hybrid routes 50%+ of that extra load to Hugging Face. Supabase and Vercel on free tier — upgrade to Pro ($25 + $20/mo) when you scale.
+          Assumes $20/mo Claude Pro subscription + $80+ of additional API usage. Hybrid routes bulk work to a local Ollama model — zero per-token cost.
         </p>
       </div>
 
@@ -62,7 +52,7 @@ export default function HybridAiSavings() {
                   </p>
                 </div>
                 <span className="text-xs font-mono font-semibold whitespace-nowrap" style={{ color: "hsl(var(--destructive))" }}>
-                  ${row.cost}/mo
+                  {row.display}
                 </span>
               </div>
             ))}
@@ -75,10 +65,10 @@ export default function HybridAiSavings() {
               <span className="text-xs font-semibold" style={{ color: "hsl(var(--foreground))" }}>Total</span>
               <div className="text-right">
                 <p className="text-xs font-mono font-bold" style={{ color: "hsl(var(--destructive))" }}>
-                  ${claudeTotal}/mo
+                  $100+/mo
                 </p>
                 <p className="text-xs" style={{ color: "hsl(var(--muted-foreground))" }}>
-                  ${claudeTotal * 12}/yr
+                  $1,200+/yr
                 </p>
               </div>
             </div>
@@ -96,7 +86,7 @@ export default function HybridAiSavings() {
           >
             <span className="text-base">🤗</span>
             <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: "hsl(var(--accent))" }}>
-              Hybrid (HF + Claude)
+              Hybrid (Ollama + Claude)
             </span>
           </div>
           <div className="divide-y flex-1" style={{ borderColor: "hsl(var(--border))" }}>
@@ -112,9 +102,9 @@ export default function HybridAiSavings() {
                 </div>
                 <span
                   className="text-xs font-mono font-semibold whitespace-nowrap"
-                  style={{ color: row.cost === 0 ? "hsl(var(--accent))" : "hsl(var(--foreground))" }}
+                  style={{ color: row.free ? "hsl(var(--accent))" : "hsl(var(--foreground))" }}
                 >
-                  {row.cost === 0 ? "FREE" : `$${row.cost}/mo`}
+                  {row.display}
                 </span>
               </div>
             ))}
@@ -127,10 +117,10 @@ export default function HybridAiSavings() {
               <span className="text-xs font-semibold" style={{ color: "hsl(var(--foreground))" }}>Total</span>
               <div className="text-right">
                 <p className="text-xs font-mono font-bold" style={{ color: "hsl(var(--accent))" }}>
-                  ${hybridTotal}/mo
+                  $9/mo
                 </p>
                 <p className="text-xs" style={{ color: "hsl(var(--muted-foreground))" }}>
-                  ${hybridTotal * 12}/yr
+                  $108/yr
                 </p>
               </div>
             </div>
@@ -146,10 +136,10 @@ export default function HybridAiSavings() {
         <span className="text-3xl">🎯</span>
         <div>
           <p className="text-2xl font-bold font-mono" style={{ color: "hsl(var(--primary))" }}>
-            ~${savedYearly}/yr saved
+            ~$1,100+/yr saved
           </p>
           <p className="text-sm" style={{ color: "hsl(var(--muted-foreground))" }}>
-            by routing bulk tasks to Hugging Face — Claude handles the precision work
+            by routing bulk tasks to a local Ollama model — Claude handles the precision work
           </p>
         </div>
       </div>
