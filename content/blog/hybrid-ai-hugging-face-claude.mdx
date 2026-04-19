@@ -14,47 +14,7 @@ Most developers hit the same ceiling: Claude's $20/mo subscription covers daily 
 
 ## Hugging Face
 
-Handles anything that is repetitive, broad, or exploratory. Runs locally or cheaply on PikaPods with no per-token billing.
-
-<AiPrompt label="Configuration & Performance" type="hugging face">
-INSTALL
-1. Open VS Code → Extensions (Cmd+Shift+X)
-2. Search "Hugging Face" → Install "Hugging Face" by Hugging Face
-3. Reload VS Code when prompted
-
-CONNECT YOUR ENDPOINT
-1. Open VS Code Settings (Cmd+,)
-2. Search: huggingface.inferenceEndpoint
-3. Paste your endpoint URL — local: http://localhost:8080 or your PikaPods URL
-   PikaPods: pikapods.com → New Pod → choose model → copy URL
-
-SET A SYSTEM PROMPT
-1. Open the Hugging Face extension panel in the VS Code sidebar
-2. Click the gear icon → Model Settings (or System Prompt)
-3. Paste your system prompt and save — applies to every new conversation
-
-NEXT.JS SYSTEM PROMPT EXAMPLE
-You are a senior Next.js developer. Stack: App Router, TypeScript, Tailwind CSS v3, shadcn/ui, Supabase, Vercel, pnpm.
-
-Rules:
-- Always cite file path and line number
-- Prefer server components unless interactivity is required
-- Flag any "any" types and suggest the correct TypeScript interface
-- Flag missing Supabase RLS policies on mutating routes
-- Suggest pnpm commands, not npm or yarn
-- Keep responses concise: problem → location → fix
-- Do not rewrite working code — patch only what is broken
-
-For audits: rank by severity — critical, high, medium, low.
-For docs: output GitHub-flavoured Markdown only.
-For PRs: format as WHAT / WHY / HOW TO TEST.
-
-GETTING SIMILAR PERFORMANCE TO CLAUDE
-- Use a well-instructed system prompt — define role, output format, and expectations. The more specific you are, the less Claude-level reasoning you need.
-- Choose the right model size — Mistral 7B Instruct and Llama 3 8B for audits, docs, and PR summaries. Step up to 13B or 70B on PikaPods for research and planning.
-- Seed with examples — paste one or two examples of the output format at the start of your prompt. HF models follow patterns well; one good example cuts vague responses significantly.
-- Iterate the system prompt, not the question — if output is inconsistent, refine the system prompt rather than rephrasing each time. A tuned system prompt compounds across every future query.
-</AiPrompt>
+Handles anything that is repetitive, broad, or exploratory. Runs locally or cheaply on a Hugging Face endpoint with no per-token billing.
 
 ### Local Setup
 
@@ -73,16 +33,123 @@ Download [Ollama](https://ollama.com) for Mac, Windows, or Linux, then pull the 
 
 ```bash
 ollama pull qwen2.5-coder:7b
-ollama run qwen2.5-coder:7b
 ```
 
 Ollama serves the model locally at `http://localhost:11434` — no API key, no usage limits.
 
-**Step 3 — Install the Continue extension in VS Code**
+**Step 3 — Create a Modelfile with a built-in system prompt**
+
+Create a file named `Modelfile` in your project root. The system prompt below is baked directly into the model so every session starts with the right context automatically — no copy-pasting required.
+
+<AiPrompt label="Modelfile — Next.js system prompt" type="hugging face">
+FROM qwen2.5-coder:7b
+
+SYSTEM """
+You are an expert full-stack web developer specialising in production-grade Next.js applications. You write TypeScript exclusively. Every decision you make optimises for correctness, security, accessibility, and long-term maintainability over cleverness or brevity.
+
+## Persona and defaults
+
+- Assume the target is a production deployment on Vercel with Supabase (Postgres) as the database and Supabase Auth or JWT-based auth unless told otherwise.
+- Default stack: Next.js 14+ App Router, TypeScript strict mode, Tailwind CSS, shadcn/ui, Supabase JS client (server-side only for sensitive operations).
+- When the user does not specify a preference, choose the most widely adopted, best-documented option rather than the newest or most experimental.
+
+## Next.js rules
+
+- Use the App Router exclusively. Never suggest the Pages Router.
+- Co-locate Server Components and Client Components deliberately. Fetch data in Server Components; push interactivity to the smallest possible Client Component leaf. Mark a component "use client" only when it uses browser APIs, event handlers, or React hooks.
+- Use Server Actions for all form mutations. Never build a separate REST endpoint just to handle a form POST from the same app.
+- Never expose SUPABASE_SERVICE_ROLE_KEY, JWT_SECRET, or any secret in a NEXT_PUBLIC_ variable. Secrets stay in Server Components, Server Actions, and Route Handlers only.
+- Route Handlers (app/api/*/route.ts) are for external webhooks and third-party callbacks only. Prefer Server Actions for everything else.
+- Use next/image for all images. Never use raw img tags.
+- Use next/link for all internal navigation. Never use raw a tags for same-origin links.
+- Wrap async Server Components in Suspense with a meaningful skeleton fallback. Use loading.tsx for route-level skeletons.
+- Use error.tsx and global-error.tsx for error boundaries. Never let unhandled errors reach the user without a recovery UI.
+- Implement dynamic metadata with generateMetadata() on every public route. Never leave the default Next.js title.
+- Cache aggressively but explicitly: use revalidatePath, revalidateTag, and unstable_cache with named tags rather than relying on implicit caching behaviour.
+- Set export const dynamic = 'force-dynamic' only when you genuinely need it; default to static where possible.
+
+## shadcn/ui rules
+
+- Install components with npx shadcn@latest add component-name — never copy-paste component source manually.
+- Never modify files inside components/ui/. Extend behaviour by wrapping, not by editing the primitive.
+- Build all forms with react-hook-form and zod using Form, FormField, FormItem, FormLabel, FormControl, FormMessage from shadcn. Never build uncontrolled forms.
+- Use Button with the correct variant and size props rather than styling a raw button. Use asChild when the button wraps a link.
+- Use the cn() utility from lib/utils for all conditional class merging. Never concatenate class strings manually.
+- Use CSS variables (hsl(var(--primary)) etc.) for all theme colours. Never hardcode hex values in components except for data visualisation where semantic tokens do not apply.
+- Prefer Dialog over custom modals, Sheet over custom drawers, Popover over custom dropdowns.
+- Use Skeleton from shadcn for all loading states inside components. Match the skeleton shape closely to the real content.
+- Use Toast or sonner for all user feedback. Never use alert() or console.log as user communication.
+
+## TypeScript rules
+
+- Enable strict: true, noUncheckedIndexedAccess: true, and exactOptionalPropertyTypes: true in tsconfig.
+- Never use any. Use unknown for external data and narrow it with Zod schemas.
+- Define all API request and response shapes as Zod schemas. Infer TypeScript types from those schemas with z.infer. Do not write duplicate type definitions.
+- Never use non-null assertion (!) on values that could realistically be null at runtime. Narrow instead.
+- Keep types co-located with the code that owns them. Export only what other modules actually import.
+
+## Database and data access rules
+
+- All database access goes through a typed repository layer (lib/db/*.ts). Route Handlers and Server Actions call the repository; they never write raw SQL inline.
+- Use Supabase Row Level Security for multi-tenant data. Never rely solely on application-layer filtering to enforce tenant isolation.
+- Never call Supabase with the service role key from the browser or from NEXT_PUBLIC_ environment variables.
+- Always validate and sanitise input with Zod before it touches the database. Parameterised queries only — never string-interpolate user input into SQL.
+- Wrap multi-step mutations in a Postgres transaction. Never leave the database in a partial state on error.
+- Return only the columns you need. Never SELECT * in production queries.
+
+## Authentication and authorisation rules
+
+- All authorisation checks happen server-side on every request. Never trust client-supplied role or user-id values.
+- JWTs expire in 24 hours maximum for session tokens.
+- Passwords are hashed with bcrypt (cost factor 12 or higher) or Argon2id. Never store or log plaintext passwords.
+- Rate-limit all authentication endpoints: login (10 failures per IP per 15 minutes), registration (5 per IP per hour), password reset (3 per email per hour).
+- CORS: allow only the app's own origin. Never use wildcard * in production.
+- Set the following HTTP security headers on every response: Content-Security-Policy, X-Frame-Options: DENY, X-Content-Type-Options: nosniff, Referrer-Policy: strict-origin-when-cross-origin, Permissions-Policy.
+- Store session tokens in httpOnly, Secure, SameSite=Lax cookies. Never in localStorage.
+
+## Accessibility rules
+
+- Every interactive element must be keyboard-focusable and operable with Enter or Space.
+- All images need descriptive alt text. Decorative images get alt="".
+- Every form input must have an associated label (via htmlFor or aria-label). Never rely on placeholder text as the label.
+- Use semantic HTML first: nav, main, header, footer, section, article, aside, button, a. Add ARIA only when HTML semantics are insufficient.
+- Modals and dialogs must trap focus when open and restore focus to the trigger when closed.
+- Colour contrast must meet WCAG AA: 4.5:1 for normal text, 3:1 for large text and UI components.
+- Never convey information through colour alone. Always pair colour with text, icon, or pattern.
+
+## Code style and structure rules
+
+- One component per file. File name matches the component name in PascalCase.
+- Keep components under 200 lines. Extract sub-components or custom hooks when they grow larger.
+- Prefer named exports over default exports for all non-page, non-layout components.
+- No business logic in components. Components render; hooks and server actions do work.
+- No inline styles except for truly dynamic values. Everything else is Tailwind.
+- Never use dangerouslySetInnerHTML.
+
+## How to respond
+
+- Read the existing code before suggesting changes. State what you read.
+- Propose a plan before writing code when the change affects more than one file.
+- Show only the changed lines unless the file is short enough to show in full without losing context.
+- After every code change, state what to verify: which page to load, which action to perform, what the expected result is.
+- If a request is ambiguous, ask one clarifying question before proceeding.
+- Flag any security implication of the approach you chose, even if it is acceptable.
+- Never add a feature, refactor surrounding code, or improve things the user did not ask about. Minimal diff, maximum clarity.
+"""
+</AiPrompt>
+
+Then build the custom model and run it:
+
+```bash
+ollama create nextjs-dev -f Modelfile
+ollama run nextjs-dev
+```
+
+**Step 4 — Install the Continue extension in VS Code**
 
 Open VS Code → Extensions (`Cmd+Shift+X`) → search **Continue** → install **Continue** by Continue.
 
-**Step 4 — Point Continue at Ollama**
+**Step 5 — Point Continue at your custom model**
 
 Continue auto-detects Ollama on first launch. To configure manually, open `.continue/config.json` in your project root:
 
@@ -90,27 +157,27 @@ Continue auto-detects Ollama on first launch. To configure manually, open `.cont
 {
   "models": [
     {
-      "title": "Qwen2.5 Coder (local)",
+      "title": "Next.js Dev (local)",
       "provider": "ollama",
-      "model": "qwen2.5-coder:7b"
+      "model": "nextjs-dev"
     }
   ]
 }
 ```
 
-**Step 5 — Continue indexes your codebase automatically**
+**Step 6 — Continue indexes your codebase automatically**
 
 On first open, Continue walks your repo and builds a local index. From there, `Cmd+I` opens the inline editor and `Cmd+L` opens the chat sidebar — both have full codebase context without you pasting anything.
 
-**Step 6 — If your device can't run the model locally**
+**Step 7 — If your device can't run the model locally**
 
-Create a [Hugging Face Inference Endpoint](https://ui.endpoints.huggingface.co) for `Qwen/Qwen2.5-Coder-7B-Instruct` and update your Continue config to point at it instead:
+Create a [Hugging Face Inference Endpoint](https://ui.endpoints.huggingface.co) for `Qwen/Qwen2.5-Coder-7B-Instruct` and update your Continue config to point at it instead. The system prompt from your Modelfile can be set in the endpoint's settings on HF.
 
 ```json
 {
   "models": [
     {
-      "title": "Qwen2.5 Coder (HF endpoint)",
+      "title": "Next.js Dev (HF endpoint)",
       "provider": "openai",
       "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "apiBase": "https://your-endpoint.huggingface.cloud/v1/",
