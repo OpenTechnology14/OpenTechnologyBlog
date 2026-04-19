@@ -56,105 +56,71 @@ GETTING SIMILAR PERFORMANCE TO CLAUDE
 - Iterate the system prompt, not the question — if output is inconsistent, refine the system prompt rather than rephrasing each time. A tuned system prompt compounds across every future query.
 </AiPrompt>
 
-### Full Stack Setup
+### Local Setup
 
-Wire everything together — from HF endpoints through Supabase vector memory to your Next.js app.
+The fastest way to get started — runs entirely on your machine, no accounts needed.
 
-**Step 1 — Create the Hugging Face Layer**
-
-Create two dedicated inference endpoints in your HF account:
-- Coding model: `Qwen/Qwen3-Coder`
-- Embedding model: `sentence-transformers/all-MiniLM-L6-v2`
-
-Save all three env variables before moving on:
+**Step 1 — Clone your repo**
 
 ```bash
-HF_TOKEN=hf_...
-HF_CODE_ENDPOINT=https://your-code-endpoint.huggingface.cloud
-HF_EMBED_ENDPOINT=https://your-embed-endpoint.huggingface.cloud
+git clone https://github.com/your-org/your-repo.git
+cd your-repo
 ```
 
-**Step 2 — Create Supabase Vector Memory**
+**Step 2 — Install Ollama and pull the coding model**
 
-The agent needs codebase context before it can do useful work. Supabase pgvector handles storage and similarity search.
-
-```sql
-create extension if not exists vector;
-
-create table code_chunks (
-  id uuid primary key default gen_random_uuid(),
-  file_path text not null,
-  content text not null,
-  embedding vector(384),
-  created_at timestamptz default now()
-);
-
-create index on code_chunks
-using ivfflat (embedding vector_cosine_ops)
-with (lists = 100);
-```
-
-**Step 3 — Connect Next.js**
+Download [Ollama](https://ollama.com) for Mac, Windows, or Linux, then pull the model:
 
 ```bash
-pnpm add @huggingface/inference @supabase/supabase-js
-pnpm add @langchain/langgraph @langchain/core
+ollama pull qwen2.5-coder:7b
+ollama run qwen2.5-coder:7b
 ```
 
-Create two lib files:
-- `/lib/ai/hf.ts` — HF inference client
-- `/lib/db/supabase.ts` — Supabase + pgvector client
+Ollama serves the model locally at `http://localhost:11434` — no API key, no usage limits.
 
-**Step 4 — Build the Repo Indexer**
+**Step 3 — Install the Continue extension in VS Code**
 
-Create `/scripts/index-repo.ts` to scan your codebase and push vectors to Supabase. Target directories: `app/`, `components/`, `lib/`, `hooks/`, `types/`, `docs/`. Run once on initial setup, then on a post-merge hook to keep the index current.
+Open VS Code → Extensions (`Cmd+Shift+X`) → search **Continue** → install **Continue** by Continue.
 
-**Step 5 — LangGraph Agent Flow**
+**Step 4 — Point Continue at Ollama**
 
-Six-node graph — each node has a clear job:
-
-- `retrieve` → pull relevant code chunks from Supabase
-- `plan` → break the task into steps
-- `generate` → HF Qwen3-Coder produces the output
-- `audit` → self-check against repo conventions
-- `document` → generate inline docs or PR description
-- `finalize` → return structured result
-
-The retrieve node runs a pgvector similarity search first — the model always sees relevant repo context. The generate node uses the HF chat completion endpoint with a system prompt tuned for your stack.
-
-**Step 6 — Deploy to Vercel**
-
-```typescript
-// /app/api/agent/route.ts
-import { NextRequest, NextResponse } from 'next/server'
-import { graph } from '@/lib/ai/graph'
-
-export async function POST(req: NextRequest) {
-  const { task, context } = await req.json()
-  const result = await graph.invoke({ task, context })
-  return NextResponse.json(result)
-}
-```
-
-**VS Code Integration via Continue**
-
-Install the [Continue](https://www.continue.dev) extension and point it at your deployed agent endpoint:
+Continue auto-detects Ollama on first launch. To configure manually, open `.continue/config.json` in your project root:
 
 ```json
 {
   "models": [
     {
-      "title": "HF Agent (Qwen3-Coder)",
+      "title": "Qwen2.5 Coder (local)",
+      "provider": "ollama",
+      "model": "qwen2.5-coder:7b"
+    }
+  ]
+}
+```
+
+**Step 5 — Continue indexes your codebase automatically**
+
+On first open, Continue walks your repo and builds a local index. From there, `Cmd+I` opens the inline editor and `Cmd+L` opens the chat sidebar — both have full codebase context without you pasting anything.
+
+---
+
+**If your device can't run the model locally**, create a [Hugging Face Inference Endpoint](https://ui.endpoints.huggingface.co) for `Qwen/Qwen2.5-Coder-7B-Instruct` and update your Continue config to point at it instead:
+
+```json
+{
+  "models": [
+    {
+      "title": "Qwen2.5 Coder (HF endpoint)",
       "provider": "openai",
-      "model": "Qwen/Qwen3-Coder",
-      "apiBase": "https://your-app.vercel.app/api/agent",
+      "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "apiBase": "https://your-endpoint.huggingface.cloud/v1/",
       "apiKey": "hf_your_token_here"
     }
   ]
 }
 ```
 
-Save this as `.continue/config.json` in your project root.
+The endpoint runs on HF hardware and bills only for active inference time — typically under $9/mo for bulk coding work.
 
 <AiPrompt label="Audits, Docs, Research, Reviews, PRs, Plans" type="hugging face">
 AUDITS
