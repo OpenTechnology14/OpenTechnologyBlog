@@ -125,7 +125,8 @@ export default function OtaPricingPage() {
                     position: "absolute",
                     top: 16,
                     right: 16,
-                    background: T.good,
+                    background: "rgba(255,255,255,0.15)",
+                    border: "1px solid rgba(255,255,255,0.3)",
                     color: "#fff",
                     fontSize: 11,
                     fontWeight: 700,
@@ -142,7 +143,7 @@ export default function OtaPricingPage() {
               <ul style={{ listStyle: "none", padding: 0, margin: "0 0 28px" }}>
                 {p.features.map((f) => (
                   <li key={f} style={{ fontSize: 14, padding: "5px 0", opacity: 0.85 }}>
-                    <span style={{ color: T.good, marginRight: 8 }}>&#10003;</span>
+                    <span style={{ color: p.dark ? "#fff" : T.good, marginRight: 8 }}>&#10003;</span>
                     {f}
                   </li>
                 ))}

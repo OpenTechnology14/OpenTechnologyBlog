@@ -163,7 +163,7 @@ export default function OtaHomePage() {
           <Link
             href="/open-technology-app/features"
             style={{
-              color: T.good,
+              color: "#fff",
               fontWeight: 600,
               fontSize: 15,
               textDecoration: "none",
@@ -245,7 +245,8 @@ export default function OtaHomePage() {
               href="/open-technology-app/pricing"
               style={{
                 display: "inline-block",
-                background: T.good,
+                background: "rgba(255,255,255,0.15)",
+                border: "1px solid rgba(255,255,255,0.3)",
                 color: "#fff",
                 padding: "10px 24px",
                 borderRadius: 8,
@@ -265,7 +266,7 @@ export default function OtaHomePage() {
               "No feature paywalls",
             ].map((b) => (
               <li key={b}>
-                <span style={{ color: T.good, marginRight: 10 }}>&#10003;</span>
+                <span style={{ color: "#fff", marginRight: 10 }}>&#10003;</span>
                 {b}
               </li>
             ))}
