@@ -57,6 +57,11 @@ export default function Header() {
                   Blog
                 </Link>
               </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/open-technology-app" className={pathname.startsWith("/open-technology-app") ? "font-semibold" : ""}>
+                  Open Technology App
+                </Link>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
