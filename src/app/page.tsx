@@ -11,7 +11,7 @@ import { CATEGORIES } from "@/data/content";
 export default function Home() {
   const allPosts = getAllPosts();
   const sortedPosts = [...allPosts]
-    .filter((p) => p.slug !== "brave-browser-workflow-management")
+    .filter((p) => !["brave-browser-workflow-management", "digitalocean-rocket-chat-hosting", "pikapods-nextcloud-hosting"].includes(p.slug))
     .sort(
       (a, b) => CATEGORIES.indexOf(a.category as typeof CATEGORIES[number]) - CATEGORIES.indexOf(b.category as typeof CATEGORIES[number])
     );
