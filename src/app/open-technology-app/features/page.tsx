@@ -4,15 +4,16 @@ import Link from "next/link";
 import OtaHeader from "@/components/OtaHeader";
 
 const T = {
-  bg: "#f7f6f2",
-  card: "#ffffff",
-  ink: "#0e0e0e",
-  ink70: "rgba(14,14,14,.72)",
-  ink50: "rgba(14,14,14,.55)",
-  ink30: "rgba(14,14,14,.32)",
-  ink12: "rgba(14,14,14,.12)",
-  ink06: "rgba(14,14,14,.06)",
-  good: "#10b981",
+  bg: "hsl(var(--background))",
+  card: "hsl(var(--card))",
+  ink: "hsl(var(--foreground))",
+  ink70: "hsl(var(--foreground) / 0.72)",
+  ink50: "hsl(var(--muted-foreground))",
+  ink30: "hsl(var(--foreground) / 0.32)",
+  ink12: "hsl(var(--border))",
+  ink06: "hsl(var(--border) / 0.5)",
+  good: "hsl(var(--accent))",
+  primary: "hsl(var(--primary))",
   font: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
 };
 

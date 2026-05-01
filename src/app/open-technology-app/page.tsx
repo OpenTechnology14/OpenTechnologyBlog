@@ -1,28 +1,29 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import OtaHeader from "@/components/OtaHeader";
 
 const T = {
-  bg: "#f7f6f2",
-  card: "#ffffff",
-  ink: "#0e0e0e",
-  ink70: "rgba(14,14,14,.72)",
-  ink50: "rgba(14,14,14,.55)",
-  ink30: "rgba(14,14,14,.32)",
-  ink12: "rgba(14,14,14,.12)",
-  ink06: "rgba(14,14,14,.06)",
-  good: "#10b981",
+  bg: "hsl(var(--background))",
+  card: "hsl(var(--card))",
+  ink: "hsl(var(--foreground))",
+  ink70: "hsl(var(--foreground) / 0.72)",
+  ink50: "hsl(var(--muted-foreground))",
+  ink30: "hsl(var(--foreground) / 0.32)",
+  ink12: "hsl(var(--border))",
+  ink06: "hsl(var(--border) / 0.5)",
+  good: "hsl(var(--accent))",
+  primary: "hsl(var(--primary))",
+  dark: "#0e0e0e",
   font: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
   mono: 'ui-monospace, "SF Mono", Menlo, Consolas, monospace',
 };
 
+const SIGNUP = "https://www.opentechnologyapp.com";
+
 const IMG = "https://www.opentechnologyblog.com";
 
 export default function OtaHomePage() {
-  const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
 
   return (
     <div style={{ background: T.bg, minHeight: "100vh", fontFamily: T.font, color: T.ink }}>
@@ -56,52 +57,24 @@ export default function OtaHomePage() {
               portal included — all under one roof.
             </p>
 
-            {/* Email form */}
-            {submitted ? (
-              <p style={{ color: T.good, fontWeight: 600, fontSize: 15 }}>
-                Thanks! We&apos;ll be in touch.
-              </p>
-            ) : (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setSubmitted(true);
+            {/* CTA */}
+            <div style={{ marginBottom: 28 }}>
+              <a
+                href={SIGNUP}
+                style={{
+                  display: "inline-block",
+                  background: T.primary,
+                  color: "#fff",
+                  padding: "12px 28px",
+                  borderRadius: 8,
+                  fontWeight: 600,
+                  fontSize: 15,
+                  textDecoration: "none",
                 }}
-                style={{ display: "flex", gap: 8, marginBottom: 28 }}
               >
-                <input
-                  type="email"
-                  required
-                  placeholder="you@company.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  style={{
-                    flex: 1,
-                    padding: "10px 14px",
-                    borderRadius: 8,
-                    border: `1px solid ${T.ink12}`,
-                    fontSize: 14,
-                    fontFamily: T.font,
-                    outline: "none",
-                  }}
-                />
-                <button
-                  type="submit"
-                  style={{
-                    background: T.ink,
-                    color: "#fff",
-                    padding: "10px 20px",
-                    borderRadius: 8,
-                    border: "none",
-                    fontWeight: 600,
-                    fontSize: 14,
-                    cursor: "pointer",
-                  }}
-                >
-                  Get early access
-                </button>
-              </form>
-            )}
+                Start free — no credit card
+              </a>
+            </div>
 
             {/* Stats row */}
             <div style={{ display: "flex", gap: 24, fontSize: 13, color: T.ink50 }}>
@@ -175,7 +148,7 @@ export default function OtaHomePage() {
         {/* Dark banner */}
         <div
           style={{
-            background: T.ink,
+            background: T.dark,
             color: "#fff",
             borderRadius: 16,
             padding: "40px 48px",
@@ -245,7 +218,7 @@ export default function OtaHomePage() {
       {/* ===== PRICING PEEK ===== */}
       <section
         style={{
-          background: T.ink,
+          background: T.dark,
           color: "#fff",
           padding: "64px 24px",
           marginTop: 40,
@@ -305,11 +278,11 @@ export default function OtaHomePage() {
         <h2 style={{ fontSize: 32, fontWeight: 700, margin: "0 0 20px" }}>
           Stop duct-taping tools together.
         </h2>
-        <Link
-          href="/open-technology-app/pricing"
+        <a
+          href={SIGNUP}
           style={{
             display: "inline-block",
-            background: T.ink,
+            background: T.primary,
             color: "#fff",
             padding: "12px 28px",
             borderRadius: 8,
@@ -319,7 +292,7 @@ export default function OtaHomePage() {
           }}
         >
           Get started free
-        </Link>
+        </a>
       </section>
 
       {/* ===== FOOTER ===== */}
@@ -357,7 +330,7 @@ export default function OtaHomePage() {
                 Community
               </h4>
               <div style={{ display: "flex", flexDirection: "column", gap: 8, fontSize: 14 }}>
-                <a href="https://www.opentechnologyblog.com" target="_blank" rel="noopener noreferrer" style={{ color: T.ink70, textDecoration: "none" }}>Blog</a>
+                <Link href="/blog" style={{ color: T.ink70, textDecoration: "none" }}>Blog</Link>
               </div>
             </div>
           </div>

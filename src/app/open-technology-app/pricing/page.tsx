@@ -4,17 +4,21 @@ import Link from "next/link";
 import OtaHeader from "@/components/OtaHeader";
 
 const T = {
-  bg: "#f7f6f2",
-  card: "#ffffff",
-  ink: "#0e0e0e",
-  ink70: "rgba(14,14,14,.72)",
-  ink50: "rgba(14,14,14,.55)",
-  ink30: "rgba(14,14,14,.32)",
-  ink12: "rgba(14,14,14,.12)",
-  ink06: "rgba(14,14,14,.06)",
-  good: "#10b981",
+  bg: "hsl(var(--background))",
+  card: "hsl(var(--card))",
+  ink: "hsl(var(--foreground))",
+  ink70: "hsl(var(--foreground) / 0.72)",
+  ink50: "hsl(var(--muted-foreground))",
+  ink30: "hsl(var(--foreground) / 0.32)",
+  ink12: "hsl(var(--border))",
+  ink06: "hsl(var(--border) / 0.5)",
+  good: "hsl(var(--accent))",
+  primary: "hsl(var(--primary))",
+  dark: "#0e0e0e",
   font: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
 };
+
+const SIGNUP = "https://www.opentechnologyapp.com";
 
 const plans = [
   {
@@ -107,7 +111,7 @@ export default function OtaPricingPage() {
             <div
               key={p.name}
               style={{
-                background: p.dark ? T.ink : T.card,
+                background: p.dark ? T.dark : T.card,
                 color: p.dark ? "#fff" : T.ink,
                 borderRadius: 16,
                 padding: 32,
@@ -143,8 +147,10 @@ export default function OtaPricingPage() {
                   </li>
                 ))}
               </ul>
-              <button
+              <a
+                href={SIGNUP}
                 style={{
+                  display: "block",
                   width: "100%",
                   padding: "10px 0",
                   borderRadius: 8,
@@ -155,10 +161,13 @@ export default function OtaPricingPage() {
                   fontSize: 14,
                   cursor: "pointer",
                   fontFamily: T.font,
+                  textDecoration: "none",
+                  textAlign: "center",
+                  boxSizing: "border-box",
                 }}
               >
                 {p.cta}
-              </button>
+              </a>
             </div>
           ))}
         </div>
