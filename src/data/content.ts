@@ -33,6 +33,7 @@ export const TECH_TOOLS: TechTool[] = [
   { name: "Google",          icon: "🔵", logo: "/logos/google.svg",      category: "Managed Cloud Apps",     url: "https://cloud.google.com",          description: "Cloud infrastructure & developer services" },
   { name: "AWS",             icon: "☁️", logo: "/logos/aws.svg",         category: "Managed Cloud Apps",     url: "https://aws.amazon.com",            description: "Amazon Web Services cloud platform",                 darkInvert: true },
   { name: "Microsoft",       icon: "🪟", logo: "/logos/microsoft.svg",   category: "Managed Cloud Apps",     url: "https://azure.microsoft.com",       description: "Azure cloud & developer ecosystem" },
+  { name: "Open Technology App", icon: "⚙️", logo: "/logos/opentechnologyapp.png", category: "Workflow Management", url: "https://www.opentechnologyapp.com", description: "Item, task, and workflow management platform" },
   { name: "Brave",       icon: "🦁", logo: "/logos/brave.svg",       category: "Workflow Management", url: "https://brave.com",             description: "Privacy-first browser with built-in ad blocking" },
   { name: "Bitwarden",   icon: "🔐", logo: "/logos/bitwarden.svg",   category: "Device & Data",       url: "https://bitwarden.com",         description: "Open-source password manager" },
   { name: "Plane",       icon: "✈️", logo: "/logos/plane.png",       category: "Workflow Management", url: "https://plane.so",              description: "Open-source project management & issue tracking" },
