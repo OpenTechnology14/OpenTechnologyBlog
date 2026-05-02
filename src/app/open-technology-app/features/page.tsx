@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import OtaHeader from "@/components/OtaHeader";
 
 const T = {
@@ -89,9 +90,34 @@ const roles = [
 ];
 
 export default function OtaFeaturesPage() {
+  const [lightbox, setLightbox] = useState<string | null>(null);
+
   return (
     <div style={{ background: T.bg, minHeight: "100vh", fontFamily: T.font, color: T.ink }}>
       <OtaHeader />
+
+      {lightbox && (
+        <div
+          onClick={() => setLightbox(null)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 1000,
+            background: "rgba(0,0,0,0.85)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 24,
+            cursor: "zoom-out",
+          }}
+        >
+          <img
+            src={lightbox}
+            alt="Screenshot"
+            style={{ maxWidth: "100%", maxHeight: "90vh", borderRadius: 12, boxShadow: "0 16px 64px rgba(0,0,0,.5)" }}
+          />
+        </div>
+      )}
 
       <main style={{ maxWidth: 1120, margin: "0 auto", padding: "0 24px" }}>
         {/* Back link */}
@@ -118,9 +144,11 @@ export default function OtaFeaturesPage() {
         {features.map((f, i) => {
           const counter = `0${i + 1}/0${features.length}`;
           const textLeft = i % 2 === 0;
+          const imgSrc = `${IMG}/${f.img}`;
           return (
             <div
               key={f.title}
+              className="ota-feature-row"
               style={{
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",
@@ -147,14 +175,26 @@ export default function OtaFeaturesPage() {
               </div>
               <div style={{ direction: "ltr" }}>
                 <img
-                  src={`${IMG}/${f.img}`}
+                  src={imgSrc}
                   alt={f.title}
-                  style={{ width: "100%", borderRadius: 12, boxShadow: "0 4px 24px rgba(0,0,0,.08)" }}
+                  onClick={() => setLightbox(imgSrc)}
+                  style={{ width: "100%", borderRadius: 12, boxShadow: "0 4px 24px rgba(0,0,0,.08)", cursor: "zoom-in" }}
                 />
               </div>
             </div>
           );
         })}
+
+        <style>{`
+          @media (max-width: 640px) {
+            .ota-feature-row {
+              grid-template-columns: 1fr !important;
+              direction: ltr !important;
+              gap: 24px !important;
+              margin-bottom: 48px !important;
+            }
+          }
+        `}</style>
 
         {/* Access Control */}
         <div style={{ padding: "48px 0 80px" }}>

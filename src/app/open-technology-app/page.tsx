@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import OtaHeader from "@/components/OtaHeader";
 
 const T = {
@@ -24,14 +25,39 @@ const SIGNUP = "https://www.opentechnologyapp.com";
 const IMG = "https://www.opentechnologyblog.com";
 
 export default function OtaHomePage() {
+  const [lightbox, setLightbox] = useState<string | null>(null);
 
   return (
     <div style={{ background: T.bg, minHeight: "100vh", fontFamily: T.font, color: T.ink }}>
       <OtaHeader />
 
+      {/* ===== LIGHTBOX ===== */}
+      {lightbox && (
+        <div
+          onClick={() => setLightbox(null)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 1000,
+            background: "rgba(0,0,0,0.85)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 24,
+            cursor: "zoom-out",
+          }}
+        >
+          <img
+            src={lightbox}
+            alt="Screenshot"
+            style={{ maxWidth: "100%", maxHeight: "90vh", borderRadius: 12, boxShadow: "0 16px 64px rgba(0,0,0,.5)" }}
+          />
+        </div>
+      )}
+
       {/* ===== HERO ===== */}
       <section style={{ maxWidth: 1120, margin: "0 auto", padding: "64px 24px 48px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" }}>
+        <div className="ota-hero-grid">
           {/* Left */}
           <div>
             <span
@@ -77,7 +103,7 @@ export default function OtaHomePage() {
             </div>
 
             {/* Stats row */}
-            <div style={{ display: "flex", gap: 24, fontSize: 13, color: T.ink50 }}>
+            <div style={{ display: "flex", gap: 24, fontSize: 13, color: T.ink50, flexWrap: "wrap" }}>
               <span>~2 min go live</span>
               <span style={{ color: T.ink12 }}>|</span>
               <span>Isolated own DB &amp; URL</span>
@@ -87,10 +113,11 @@ export default function OtaHomePage() {
           </div>
 
           {/* Right: screenshots */}
-          <div style={{ position: "relative", minHeight: 380 }}>
+          <div className="ota-hero-images">
             <img
               src={`${IMG}/ota-queues.png`}
               alt="Task queues screenshot"
+              onClick={() => setLightbox(`${IMG}/ota-queues.png`)}
               style={{
                 width: "90%",
                 borderRadius: 12,
@@ -98,11 +125,13 @@ export default function OtaHomePage() {
                 transform: "rotate(0.6deg)",
                 position: "relative",
                 zIndex: 2,
+                cursor: "zoom-in",
               }}
             />
             <img
               src={`${IMG}/ota-dashboards.png`}
               alt="Dashboards screenshot"
+              onClick={() => setLightbox(`${IMG}/ota-dashboards.png`)}
               style={{
                 width: "70%",
                 borderRadius: 12,
@@ -112,11 +141,43 @@ export default function OtaHomePage() {
                 bottom: -20,
                 left: -20,
                 zIndex: 1,
+                cursor: "zoom-in",
               }}
             />
           </div>
         </div>
       </section>
+
+      <style>{`
+        .ota-hero-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 48px;
+          align-items: center;
+        }
+        .ota-hero-images {
+          position: relative;
+          min-height: 380px;
+        }
+        @media (max-width: 640px) {
+          .ota-hero-grid {
+            grid-template-columns: 1fr;
+            gap: 32px;
+          }
+          .ota-hero-images {
+            min-height: 0;
+            position: static;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+          }
+          .ota-hero-images img {
+            position: static !important;
+            width: 100% !important;
+            transform: none !important;
+          }
+        }
+      `}</style>
 
       {/* ===== WHY WE BUILT IT ===== */}
       <section style={{ maxWidth: 1120, margin: "0 auto", padding: "64px 24px" }}>

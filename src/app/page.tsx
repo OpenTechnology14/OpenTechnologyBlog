@@ -36,9 +36,7 @@ export default function Home() {
 
             <div className="flex items-center gap-3 flex-wrap justify-center">
               <Link
-                href="https://www.opentechnologyapp.com/"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/open-technology-app"
                 className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]"
               >
                 <Image src="/icon.png" alt="" width={18} height={18} className="rounded-sm" />
