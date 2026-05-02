@@ -43,24 +43,18 @@ export default function OtaHeader() {
         }}
       >
         {/* Left: logo + name */}
-        <Link
-          href="/open-technology-app"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            textDecoration: "none",
-            color: T.ink,
-            flexShrink: 0,
-          }}
-        >
+        <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
           <img
             src="/icon.png"
             alt="OTA"
             style={{ width: 28, height: 28, borderRadius: 6 }}
           />
-          <span style={{ fontWeight: 600, fontSize: 15 }}>Open Technology App</span>
-        </Link>
+          <span style={{ fontWeight: 600, fontSize: 15, display: "flex", alignItems: "center", gap: 4 }}>
+            <Link href="/" style={{ color: T.ink70, textDecoration: "none" }}>Open Technology</Link>
+            <span style={{ color: T.ink30 }}>/</span>
+            <Link href="/open-technology-app" style={{ color: T.ink, textDecoration: "none" }}>App</Link>
+          </span>
+        </div>
 
         {/* Desktop nav */}
         <nav
