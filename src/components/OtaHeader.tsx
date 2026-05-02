@@ -51,7 +51,7 @@ export default function OtaHeader() {
           />
           <span style={{ fontWeight: 600, fontSize: 15, display: "flex", alignItems: "center", gap: 4 }}>
             <Link href="/" style={{ color: T.ink70, textDecoration: "none" }}>Open Technology</Link>
-            <span style={{ color: T.ink30 }}>/</span>
+            <span style={{ color: T.ink30 }}>&#47;</span>
             <Link href="/open-technology-app" style={{ color: T.ink, textDecoration: "none" }}>App</Link>
           </span>
         </div>
