@@ -31,6 +31,7 @@ const CATEGORIES_LIST = [
 ] as const;
 
 const categoryColors: Record<Category, string> = {
+  "Open Technology App": "bg-accent/10 text-accent border-accent/20",
   "Dev Tools": "bg-primary/10 text-primary border-primary/20",
   "Managed Cloud Apps": "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400",
   "Workflow Management": "bg-ring/10 text-ring border-ring/20",

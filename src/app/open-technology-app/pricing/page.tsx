@@ -35,6 +35,7 @@ const plans = [
       "Community support",
     ],
     cta: "Sign up free",
+    href: SIGNUP,
   },
   {
     name: "One-time license",
@@ -52,6 +53,7 @@ const plans = [
       "Email support",
     ],
     cta: "Buy license",
+    href: "/#contact",
   },
   {
     name: "Org subscription",
@@ -67,6 +69,7 @@ const plans = [
       "Volume pricing",
     ],
     cta: "Join waitlist",
+    href: "/#contact",
   },
 ];
 
@@ -149,7 +152,7 @@ export default function OtaPricingPage() {
                 ))}
               </ul>
               <a
-                href={SIGNUP}
+                href={p.href}
                 style={{
                   display: "block",
                   width: "100%",

@@ -1,4 +1,5 @@
 export const CATEGORIES = [
+  "Open Technology App",
   "Workflow Management",
   "Dev Tools",
   "Managed Cloud Apps",

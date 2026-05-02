@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/tooltip";
 
 const categoryColors: Record<Category, string> = {
+  "Open Technology App": "text-accent",
   "Dev Tools": "text-primary",
   "Managed Cloud Apps": "text-emerald-600 dark:text-emerald-400",
   "Workflow Management": "text-ring",

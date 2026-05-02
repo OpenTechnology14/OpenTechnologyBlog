@@ -13,13 +13,15 @@ export default function PageWrap({
   children,
   className,
   style,
+  id,
 }: {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  id?: string;
 }) {
   return (
-    <div className={cn(className)} style={{ ...wrapStyle, ...style }}>
+    <div id={id} className={cn(className)} style={{ ...wrapStyle, ...style }}>
       {children}
     </div>
   );

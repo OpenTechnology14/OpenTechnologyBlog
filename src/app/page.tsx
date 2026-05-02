@@ -91,7 +91,7 @@ export default function Home() {
         <div className="border-t border-border/50" />
 
         {/* ── Contact ──────────────────────────────────────────────── */}
-        <PageWrap className="py-14 flex flex-col items-center">
+        <PageWrap id="contact" className="py-14 flex flex-col items-center">
           <div className="w-full max-w-md">
             <ContactForm />
           </div>
