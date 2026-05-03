@@ -17,6 +17,25 @@ export const metadata: Metadata = {
   },
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Open Technology App",
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web",
+  description: "Modern task queue manager for teams. Manage customers, tasks, and items with a client portal, live dashboards, and workflow automations.",
+  url: "https://www.opentechnologyblog.com/open-technology-app",
+  offers: [
+    { "@type": "Offer", price: "0", priceCurrency: "USD", name: "Free" },
+    { "@type": "Offer", price: "299", priceCurrency: "USD", name: "One-time license" },
+  ],
+};
+
 export default function OtaLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      {children}
+    </>
+  );
 }

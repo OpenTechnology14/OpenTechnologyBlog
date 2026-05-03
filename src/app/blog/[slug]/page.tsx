@@ -218,8 +218,20 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     ? applyInjections(post.content, injections)
     : [{ content: post.content }];
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.date,
+    author: { "@type": "Organization", name: "Open Technology" },
+    publisher: { "@type": "Organization", name: "Open Technology", url: "https://www.opentechnologyblog.com" },
+    url: `https://www.opentechnologyblog.com/blog/${slug}`,
+  };
+
   return (
     <div className="flex min-h-screen flex-col">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Header />
       <main className="flex-1">
         <PageWrap className="py-12" style={{ maxWidth: '48rem' }}>
