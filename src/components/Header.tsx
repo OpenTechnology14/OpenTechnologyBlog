@@ -40,29 +40,28 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-      <div style={wrapStyle} className="flex h-16 items-center justify-between">
+      <div style={{ ...wrapStyle, height: 56 }} className="flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 shrink-0">
-          <Image src="/icon.png" alt="Open Technology" width={32} height={32} className="rounded-md" />
-          <span className="font-heading text-lg font-bold tracking-tight">Open Technology</span>
+        <Link href="/" className="flex items-center gap-2.5 shrink-0 no-underline">
+          <Image src="/icon.png" alt="Open Technology" width={28} height={28} className="rounded-md" />
+          <span className="font-heading text-[15px] font-semibold tracking-tight">Open Technology</span>
         </Link>
 
-        {/* Nav */}
-        <nav className="hidden sm:flex items-center gap-6">
+        {/* Nav + theme toggle */}
+        <nav className="hidden sm:flex items-center gap-6 text-sm">
           {navLink("/", "Home")}
           {navLink("/blog", "Blog")}
           <Link
             href="/open-technology-app"
-            className="text-sm font-semibold text-primary-foreground bg-primary px-4 py-1.5 rounded-full transition-opacity hover:opacity-90"
+            className="font-semibold text-primary-foreground bg-primary px-4 py-1.5 rounded-full transition-opacity hover:opacity-90 no-underline"
+            style={{ fontSize: 13 }}
           >
             Open Technology App
           </Link>
+          <Button variant="ghost" size="icon" onClick={toggleTheme} className="h-8 w-8">
+            {isDark ? <Sun className="h-[17px] w-[17px]" /> : <Moon className="h-[17px] w-[17px]" />}
+          </Button>
         </nav>
-
-        {/* Theme toggle */}
-        <Button variant="ghost" size="icon" onClick={toggleTheme} className="shrink-0">
-          {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-        </Button>
       </div>
     </header>
   );
