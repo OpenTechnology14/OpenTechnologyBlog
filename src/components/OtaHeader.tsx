@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { Moon, Sun } from "lucide-react";
 
 const T = {
   bg85: "hsl(var(--background) / 0.85)",
@@ -17,6 +18,12 @@ const SIGNUP = "https://www.opentechnologyapp.com";
 
 export default function OtaHeader() {
   const [open, setOpen] = useState(false);
+  const [isDark, setIsDark] = useState(false);
+
+  const toggleTheme = () => {
+    setIsDark((v) => !v);
+    document.documentElement.classList.toggle("dark");
+  };
 
   return (
     <header
@@ -83,6 +90,21 @@ export default function OtaHeader() {
           >
             Get started
           </a>
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: 6,
+              color: T.ink70,
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            {isDark ? <Sun size={17} /> : <Moon size={17} />}
+          </button>
         </nav>
 
         {/* Mobile hamburger */}

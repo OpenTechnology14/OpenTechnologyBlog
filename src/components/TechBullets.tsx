@@ -22,7 +22,7 @@ export default function TechBullets() {
   return (
     <TooltipProvider delayDuration={100}>
       <section className="space-y-6">
-        {CATEGORIES.map((cat) => {
+        {CATEGORIES.filter((cat) => cat !== "Open Technology App").map((cat) => {
           const tools = TECH_TOOLS.filter((t) => t.category === cat);
           return (
             <div key={cat}>

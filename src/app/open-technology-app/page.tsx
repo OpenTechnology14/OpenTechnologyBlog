@@ -28,7 +28,7 @@ export default function OtaHomePage() {
   const [lightbox, setLightbox] = useState<string | null>(null);
 
   return (
-    <div style={{ background: T.bg, minHeight: "100vh", fontFamily: T.font, color: T.ink }}>
+    <div style={{ background: T.bg, minHeight: "100vh", fontFamily: T.font, color: T.ink, overflowX: "hidden" }}>
       <OtaHeader />
 
       {/* ===== LIGHTBOX ===== */}
@@ -206,16 +206,18 @@ export default function OtaHomePage() {
             </div>
           ))}
         </div>
-        {/* Dark banner */}
+        {/* Gradient banner */}
         <div
           style={{
-            background: T.dark,
+            background: "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%)",
             color: "#fff",
             borderRadius: 16,
             padding: "40px 48px",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            gap: 24,
+            flexWrap: "wrap",
           }}
         >
           <p style={{ fontSize: 20, fontWeight: 600, margin: 0, maxWidth: 560 }}>
@@ -229,6 +231,10 @@ export default function OtaHomePage() {
               fontSize: 15,
               textDecoration: "none",
               whiteSpace: "nowrap",
+              background: "rgba(255,255,255,0.2)",
+              padding: "8px 20px",
+              borderRadius: 8,
+              border: "1px solid rgba(255,255,255,0.3)",
             }}
           >
             See features &rarr;
@@ -279,7 +285,7 @@ export default function OtaHomePage() {
       {/* ===== PRICING PEEK ===== */}
       <section
         style={{
-          background: T.dark,
+          background: "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%)",
           color: "#fff",
           padding: "64px 24px",
           marginTop: 40,
@@ -299,15 +305,15 @@ export default function OtaHomePage() {
             <h2 style={{ fontSize: 28, fontWeight: 700, margin: "0 0 12px" }}>
               No feature paywalls.
             </h2>
-            <p style={{ fontSize: 16, opacity: 0.72, margin: "0 0 24px" }}>
+            <p style={{ fontSize: 16, opacity: 0.85, margin: "0 0 24px" }}>
               Every feature works, regardless of tier.
             </p>
             <Link
               href="/open-technology-app/pricing"
               style={{
                 display: "inline-block",
-                background: "rgba(255,255,255,0.15)",
-                border: "1px solid rgba(255,255,255,0.3)",
+                background: "rgba(255,255,255,0.2)",
+                border: "1px solid rgba(255,255,255,0.35)",
                 color: "#fff",
                 padding: "10px 24px",
                 borderRadius: 8,
@@ -327,7 +333,7 @@ export default function OtaHomePage() {
               "No feature paywalls",
             ].map((b) => (
               <li key={b}>
-                <span style={{ color: "#fff", marginRight: 10 }}>&#10003;</span>
+                <span style={{ color: "rgba(255,255,255,0.8)", marginRight: 10 }}>&#10003;</span>
                 {b}
               </li>
             ))}
