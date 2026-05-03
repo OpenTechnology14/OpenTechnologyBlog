@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import OtaHeader from "@/components/OtaHeader";
+import ContactForm from "@/components/ContactForm";
 
 const T = {
   bg: "hsl(var(--background))",
@@ -53,7 +54,7 @@ const plans = [
       "Email support",
     ],
     cta: "Buy license",
-    href: "/#contact",
+    href: "#contact",
   },
   {
     name: "Org subscription",
@@ -69,7 +70,7 @@ const plans = [
       "Volume pricing",
     ],
     cta: "Join waitlist",
-    href: "/#contact",
+    href: "#contact",
   },
 ];
 
@@ -203,10 +204,15 @@ export default function OtaPricingPage() {
         </div>
 
         {/* Slug note */}
-        <div style={{ textAlign: "center", padding: "0 0 80px" }}>
+        <div style={{ textAlign: "center", padding: "0 0 48px" }}>
           <p style={{ fontSize: 14, color: T.ink50 }}>
             Paid orgs are live at <span style={{ fontFamily: 'ui-monospace, "SF Mono", Menlo, Consolas, monospace' }}>yourslug.opentechnologyapp.app</span> within ~2 minutes of subscribing.
           </p>
+        </div>
+
+        {/* ===== CONTACT ===== */}
+        <div id="contact" style={{ maxWidth: 480, margin: "0 auto", padding: "0 0 80px" }}>
+          <ContactForm />
         </div>
       </main>
     </div>

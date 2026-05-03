@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import OtaHeader from "@/components/OtaHeader";
+import ContactForm from "@/components/ContactForm";
 
 const T = {
   bg: "hsl(var(--background))",
@@ -361,6 +362,11 @@ export default function OtaHomePage() {
         >
           Get started free
         </a>
+      </section>
+
+      {/* ===== CONTACT ===== */}
+      <section id="contact" style={{ maxWidth: 480, margin: "0 auto", padding: "0 24px 80px" }}>
+        <ContactForm />
       </section>
 
       {/* ===== FOOTER ===== */}

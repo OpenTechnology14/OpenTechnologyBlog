@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import OtaHeader from "@/components/OtaHeader";
+import ContactForm from "@/components/ContactForm";
 
 const T = {
   bg: "hsl(var(--background))",
@@ -225,6 +226,10 @@ export default function OtaFeaturesPage() {
               </tbody>
             </table>
           </div>
+        </div>
+        {/* ===== CONTACT ===== */}
+        <div id="contact" style={{ maxWidth: 480, margin: "0 auto", padding: "0 0 80px" }}>
+          <ContactForm />
         </div>
       </main>
     </div>
