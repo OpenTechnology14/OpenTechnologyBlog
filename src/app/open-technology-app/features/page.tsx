@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import OtaHeader from "@/components/OtaHeader";
 import ContactForm from "@/components/ContactForm";
@@ -175,11 +176,13 @@ export default function OtaFeaturesPage() {
                 </ul>
               </div>
               <div style={{ direction: "ltr" }}>
-                <img
+                <Image
                   src={imgSrc}
                   alt={f.title}
+                  width={800}
+                  height={500}
                   onClick={() => setLightbox(imgSrc)}
-                  style={{ width: "100%", borderRadius: 12, boxShadow: "0 4px 24px rgba(0,0,0,.08)", cursor: "zoom-in" }}
+                  style={{ width: "100%", height: "auto", borderRadius: 12, boxShadow: "0 4px 24px rgba(0,0,0,.08)", cursor: "zoom-in" }}
                 />
               </div>
             </div>

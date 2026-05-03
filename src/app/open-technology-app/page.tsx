@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import OtaHeader from "@/components/OtaHeader";
 import ContactForm from "@/components/ContactForm";
@@ -115,12 +116,15 @@ export default function OtaHomePage() {
 
           {/* Right: screenshots */}
           <div className="ota-hero-images">
-            <img
+            <Image
               src={`${IMG}/ota-queues.png`}
               alt="Task queues screenshot"
+              width={800}
+              height={500}
               onClick={() => setLightbox(`${IMG}/ota-queues.png`)}
               style={{
                 width: "90%",
+                height: "auto",
                 borderRadius: 12,
                 boxShadow: "0 8px 32px rgba(0,0,0,.12)",
                 transform: "rotate(0.6deg)",
@@ -129,12 +133,15 @@ export default function OtaHomePage() {
                 cursor: "zoom-in",
               }}
             />
-            <img
+            <Image
               src={`${IMG}/ota-dashboards.png`}
               alt="Dashboards screenshot"
+              width={800}
+              height={500}
               onClick={() => setLightbox(`${IMG}/ota-dashboards.png`)}
               style={{
                 width: "70%",
+                height: "auto",
                 borderRadius: 12,
                 boxShadow: "0 8px 32px rgba(0,0,0,.12)",
                 transform: "rotate(-1.5deg)",
@@ -267,10 +274,12 @@ export default function OtaHomePage() {
             >
               <h3 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 6px" }}>{f.title}</h3>
               <p style={{ fontSize: 14, color: T.ink70, margin: "0 0 16px" }}>{f.desc}</p>
-              <img
+              <Image
                 src={`${IMG}/${f.img}`}
                 alt={f.title}
-                style={{ width: "100%", borderRadius: 8 }}
+                width={600}
+                height={380}
+                style={{ width: "100%", height: "auto", borderRadius: 8 }}
               />
             </div>
           ))}
@@ -382,7 +391,7 @@ export default function OtaHomePage() {
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 32 }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-              <img src="/icon.png" alt="OTA" style={{ width: 24, height: 24, borderRadius: 4 }} />
+              <Image src="/icon.png" alt="Open Technology App" width={24} height={24} style={{ borderRadius: 4 }} />
               <span style={{ fontWeight: 600, fontSize: 14 }}>Open Technology App</span>
             </div>
             <p style={{ fontSize: 13, color: T.ink50, margin: 0 }}>
